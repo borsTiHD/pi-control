@@ -1,10 +1,11 @@
 import colors from 'vuetify/es5/util/colors'
+import pkg from './package.json'
 
 export default {
     // Global page headers: https://go.nuxtjs.dev/config-head
     head: {
-        titleTemplate: '%s - pi-control',
-        title: 'pi-control',
+        titleTemplate: '%s',
+        title: pkg.productName,
         htmlAttrs: {
             lang: 'en'
         },
@@ -24,6 +25,7 @@ export default {
 
     // Plugins to run before rendering page: https://go.nuxtjs.dev/config-plugins
     plugins: [
+        { mode: 'client', src: '@/plugins/indexeddb.js' }
     ],
 
     // Auto import components: https://go.nuxtjs.dev/config-components
@@ -71,6 +73,5 @@ export default {
     ],
 
     // Build Configuration: https://go.nuxtjs.dev/config-build
-    build: {
-    }
+    build: {}
 }
