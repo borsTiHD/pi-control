@@ -41,20 +41,28 @@ app.all('/execute', asyncHandler(async(req, res, next) => {
         return new Promise((resolve, reject) => {
             // Spawn Script
             childProcessSpawn.execShell(`${root}/scripts/${script}`, args, (pid, output) => { }, (pid, output, exitCode) => {
-                console.log('[API] -> Script finished. Output: ', output)
-                resolve(output)
+                resolve({ output, exitCode, pid })
+            }, (error) => {
+                reject(error)
             })
         })
     }
 
     // Spawn script
-    const output = await spawn()
+    const response = await spawn().catch((error) => {
+        // REST return
+        res.json({
+            _status: 'error',
+            info: 'Script not successfully executed',
+            error
+        })
+    })
 
     // REST return
     res.json({
         _status: 'ok',
         info: 'Script executed',
-        output
+        response
     })
 }))
 

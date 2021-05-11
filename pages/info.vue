@@ -26,6 +26,11 @@
                     >
                         Help Call
                     </v-btn>
+                    <v-btn
+                        @click="testErrorBtn"
+                    >
+                        Error Call
+                    </v-btn>
                 </v-card-actions>
             </v-card>
         </v-col>
@@ -68,6 +73,19 @@ export default {
                     console.log(error)
                 }).finally(() => {
                     this.loadingHelpBtn = false
+                })
+        },
+        testErrorBtn() {
+            const url = '/execute'
+            this.$axios.post(url, null, {
+                params: {
+                    script: 'not-found'
+                }
+            })
+                .then((res) => {
+                    console.log('Response Data:', res.data)
+                }).catch((error) => {
+                    console.log(error)
                 })
         }
     }

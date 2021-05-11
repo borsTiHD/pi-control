@@ -74,8 +74,9 @@ class ChildProcessClass {
      * @param    {object}       args                -> Übergebene Argumente in Form einer Objektliste >> zb. [ 'arg1', 'arg2' ]
      * @param    {function}     callbackOnStdout    -> Callback Funktion die bei einer Consolenausgabe gestartet wird
      * @param    {function}     callbackOnClose     -> Callback Funktion die bei beenden der Anwendung gestartet wird
+     * @param    {function}     callbackOnError     -> Callback Funktion die bei einem Error gestartet wird
      */
-    execShell(path, args, callbackOnStdout, callbackOnClose) {
+    execShell(path, args, callbackOnStdout, callbackOnClose, callbackOnError) {
         // Ermittelt Datei Endung
         let file = path
         if (isWin) {
@@ -86,7 +87,12 @@ class ChildProcessClass {
 
         try {
             console.log('[ChildProcess] -> Try spawning:', file)
-            const child = execFile(file, args)
+            const child = execFile(file, args, { shell: true }, (error, stdout, stderr) => {
+                if (error) {
+                    console.error('[ChildProcess] -> Error:', error)
+                    callbackOnError(error)
+                }
+            })
 
             // Speichert ChildProzess
             this.childProcess.push(child)
@@ -124,7 +130,8 @@ class ChildProcessClass {
             })
             return child
         } catch (error) {
-            console.log('[ChildProcess] -> Error:', error)
+            console.error('[ChildProcess] -> Error:', error)
+            callbackOnError(error)
             return error
         }
     }
