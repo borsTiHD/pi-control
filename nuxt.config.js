@@ -2,6 +2,7 @@ import colors from 'vuetify/es5/util/colors'
 import pkg from './package.json'
 
 export default {
+    target: 'server',
     // Global page headers: https://go.nuxtjs.dev/config-head
     head: {
         titleTemplate: '%s',
