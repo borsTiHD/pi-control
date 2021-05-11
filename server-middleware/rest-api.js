@@ -2,6 +2,7 @@
 const path = require('path')
 const bodyParser = require('body-parser')
 const app = require('express')()
+const cors = require('cors')
 
 // Middleware for handling errors on promise calls
 const asyncHandler = require('../server-middleware/asyncMiddleware')
@@ -13,6 +14,7 @@ const childProcessSpawn = new ChildProcessClass()
 // ProjectRoot Directory
 const root = path.join(__dirname, '..')
 
+app.use(cors())
 app.use(bodyParser.json())
 
 app.all('/', (req, res) => {

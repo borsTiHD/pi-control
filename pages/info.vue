@@ -42,7 +42,7 @@ export default {
     },
     methods: {
         testBtn() {
-            const url = '/api/v1/execute'
+            const url = '/execute'
             this.loadingTestBtn = true
             this.$axios.post(url, null, {
                 params: {
@@ -59,7 +59,7 @@ export default {
                 })
         },
         testHelpBtn() {
-            const url = '/api/v1/help'
+            const url = '/help'
             this.loadingHelpBtn = true
             this.$axios.post(url)
                 .then((res) => {

@@ -1,8 +1,22 @@
 import colors from 'vuetify/es5/util/colors'
 import pkg from './package.json'
 
+const isDev = process.env.NODE_ENV !== 'production'
+
+// Server Settings
+const server = {
+    port: isDev ? 3000 : 8800, // dev: 3000, production: 8800
+    host: isDev ? 'localhost' : '0', // dev: localhost, production: os-ip-adress
+    timing: false
+}
+
 export default {
+    // Adding server settings
+    ...server,
+
+    // Nuxt target
     target: 'server',
+
     // Global page headers: https://go.nuxtjs.dev/config-head
     head: {
         titleTemplate: '%s',
@@ -48,7 +62,7 @@ export default {
 
     // Axios module configuration: https://go.nuxtjs.dev/config-axios
     axios: {
-        baseURL: 'http://localhost:3000' // Used as fallback if no runtime config is provided
+        baseURL: `${server.host}:${server.port}/api/v1` // Used as fallback if no runtime config is provided - default: 'http://localhost:3000'
     },
 
     publicRuntimeConfig: {
