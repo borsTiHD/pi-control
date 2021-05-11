@@ -61,7 +61,7 @@ export default {
         testHelpBtn() {
             const url = '/help'
             this.loadingHelpBtn = true
-            this.$axios.post(url)
+            this.$axios.get(url)
                 .then((res) => {
                     console.log('Response Data:', res.data)
                 }).catch((error) => {

@@ -1,8 +1,6 @@
 // Imports
 const path = require('path')
-const bodyParser = require('body-parser')
-const app = require('express')()
-const cors = require('cors')
+const express = require('express')
 
 // Middleware for handling errors on promise calls
 const asyncHandler = require('../server-middleware/asyncMiddleware')
@@ -14,8 +12,9 @@ const childProcessSpawn = new ChildProcessClass()
 // ProjectRoot Directory
 const root = path.join(__dirname, '..')
 
-app.use(cors())
-app.use(bodyParser.json())
+// Express Init
+const app = express()
+app.use(express.json())
 
 app.all('/', (req, res) => {
     res.json({

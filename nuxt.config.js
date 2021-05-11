@@ -5,14 +5,16 @@ const isDev = process.env.NODE_ENV !== 'production'
 
 // Server Settings
 const server = {
+    host: isDev ? 'localhost' : '0.0.0.0', // dev: localhost, production: os-ip-adress
     port: isDev ? 3000 : 8800, // dev: 3000, production: 8800
-    host: isDev ? 'localhost' : '0', // dev: localhost, production: os-ip-adress
     timing: false
 }
 
 export default {
     // Adding server settings
-    ...server,
+    server: {
+        ...server
+    },
 
     // Nuxt target
     target: 'server',
@@ -62,9 +64,10 @@ export default {
 
     // Axios module configuration: https://go.nuxtjs.dev/config-axios
     axios: {
-        baseURL: `${server.host}:${server.port}/api/v1` // Used as fallback if no runtime config is provided - default: 'http://localhost:3000'
+        browserBaseURL: '/api/v1'
     },
 
+    /*
     publicRuntimeConfig: {
         axios: {
             browserBaseURL: process.env.BROWSER_BASE_URL
@@ -76,6 +79,7 @@ export default {
             baseURL: process.env.BASE_URL
         }
     },
+    */
 
     // Vuetify module configuration: https://go.nuxtjs.dev/config-vuetify
     vuetify: {
