@@ -1,117 +1,123 @@
 <template>
-  <v-app dark>
-    <v-navigation-drawer
-      v-model="drawer"
-      :mini-variant="miniVariant"
-      :clipped="clipped"
-      fixed
-      app
-    >
-      <v-list>
-        <v-list-item
-          v-for="(item, i) in items"
-          :key="i"
-          :to="item.to"
-          router
-          exact
-        >
-          <v-list-item-action>
-            <v-icon>{{ item.icon }}</v-icon>
-          </v-list-item-action>
-          <v-list-item-content>
-            <v-list-item-title v-text="item.title" />
-          </v-list-item-content>
-        </v-list-item>
-      </v-list>
-    </v-navigation-drawer>
-    <v-app-bar
-      :clipped-left="clipped"
-      fixed
-      app
-    >
-      <v-app-bar-nav-icon @click.stop="drawer = !drawer" />
-      <v-btn
-        icon
-        @click.stop="miniVariant = !miniVariant"
-      >
-        <v-icon>mdi-{{ `chevron-${miniVariant ? 'right' : 'left'}` }}</v-icon>
-      </v-btn>
-      <v-btn
-        icon
-        @click.stop="clipped = !clipped"
-      >
-        <v-icon>mdi-application</v-icon>
-      </v-btn>
-      <v-btn
-        icon
-        @click.stop="fixed = !fixed"
-      >
-        <v-icon>mdi-minus</v-icon>
-      </v-btn>
-      <v-toolbar-title v-text="title" />
-      <v-spacer />
-      <v-btn
-        icon
-        @click.stop="rightDrawer = !rightDrawer"
-      >
-        <v-icon>mdi-menu</v-icon>
-      </v-btn>
-    </v-app-bar>
-    <v-main>
-      <v-container>
-        <nuxt />
-      </v-container>
-    </v-main>
-    <v-navigation-drawer
-      v-model="rightDrawer"
-      :right="right"
-      temporary
-      fixed
-    >
-      <v-list>
-        <v-list-item @click.native="right = !right">
-          <v-list-item-action>
-            <v-icon light>
-              mdi-repeat
-            </v-icon>
-          </v-list-item-action>
-          <v-list-item-title>Switch drawer (click me)</v-list-item-title>
-        </v-list-item>
-      </v-list>
-    </v-navigation-drawer>
-    <v-footer
-      :absolute="!fixed"
-      app
-    >
-      <span>&copy; {{ new Date().getFullYear() }}</span>
-    </v-footer>
-  </v-app>
+    <v-app v-resize="onResize" dark>
+        <app-header />
+        <app-sidebar />
+        <app-settingsbar />
+
+        <v-main>
+            <v-container id="container" fluid :style="`height: ${containerHeight}px;`">
+                <app-alerts />
+                <nuxt keep-alive />
+            </v-container>
+        </v-main>
+
+        <app-footer id="footer" />
+    </v-app>
 </template>
 
 <script>
+import AppHeader from '~/components/layout/Header.vue'
+import AppSidebar from '~/components/layout/Sidebar.vue'
+import AppSettingsbar from '~/components/layout/Settingsbar.vue'
+import AppFooter from '~/components/layout/Footer.vue'
+import AppAlerts from '~/components/alerts/Alerts'
+
 export default {
-  data () {
-    return {
-      clipped: false,
-      drawer: false,
-      fixed: false,
-      items: [
-        {
-          icon: 'mdi-apps',
-          title: 'Welcome',
-          to: '/'
-        },
-        {
-          icon: 'mdi-chart-bubble',
-          title: 'Inspire',
-          to: '/inspire'
+    components: {
+        AppHeader,
+        AppSidebar,
+        AppSettingsbar,
+        AppFooter,
+        AppAlerts
+    },
+    data() {
+        return {
+            containerHeight: 0
         }
-      ],
-      miniVariant: false,
-      right: true,
-      rightDrawer: false,
-      title: 'Vuetify.js'
+    },
+    async created() {
+        // Client Side Init
+        // Lädt ggf. gespeicherte Daten
+        if (process.client) {
+            // Ermittelt DarkMode aus Settings und setzt es
+            const darkMode = await this.$idb.getKeyValue('userSettings', 'preference', 'darkMode')
+            this.$vuetify.theme.dark = darkMode
+
+            // Setzt Container Größe
+            setImmediate(() => {
+                this.onResize()
+            })
+        }
+    },
+    methods: {
+        onResize() {
+            // Setzt Container Höhe für Footer
+            const container = document.getElementById('container')
+            const footer = document.getElementById('footer')
+            this.containerHeight = window.innerHeight - this.getOffset(container).top - this.getOffset(footer).height
+        },
+        getOffset(el) {
+            /**
+             * getOffset() - Ermittelt die X/Y Position eines HTML Elements
+             *             -> // https://stackoverflow.com/a/28222246
+             * @param   {string}    el  -> HTML Element
+             * @returns {object}        -> Returns X/Y Koordinaten in 'px'
+             */
+            const rect = el.getBoundingClientRect()
+            return {
+                left: rect.left + window.scrollX,
+                top: rect.top + window.scrollY,
+                height: rect.height,
+                width: rect.width
+            }
+        }
     }
-  }
 }
 </script>
+
+<style>
+/*****************************************************\
+    No Scollbar on Page
+    \*****************************************************/
+html {
+    overflow-y: hidden !important;
+}
+#container {
+    height: 100vh;
+    overflow-y: auto;
+}
+
+/*****************************************************\
+    Scrollbar
+    \*****************************************************/
+::-webkit-scrollbar {
+    width: 12px;
+}
+::-webkit-scrollbar-corner {
+    background-color: transparent;
+}
+::-webkit-scrollbar-thumb {
+    border-radius: 4px;
+    background-color: rgba(0, 0, 0, 0.3);
+}
+
+/*****************************************************\
+    Unselectable Elements
+    \*****************************************************/
+.unselectable {
+    -webkit-touch-callout: none;
+    -webkit-user-select: none;
+    -khtml-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+}
+.selectable {
+    -webkit-touch-callout: text !important;
+    -webkit-user-select: text !important;
+    -khtml-user-select: text !important;
+    -moz-user-select: text !important;
+    -ms-user-select: text !important;
+    user-select: text !important;
+}
+</style>
