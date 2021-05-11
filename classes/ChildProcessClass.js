@@ -78,11 +78,11 @@ class ChildProcessClass {
      */
     execShell(path, args, callbackOnStdout, callbackOnClose, callbackOnError) {
         // Ermittelt Datei Endung
-        let file = path
+        let file = null
         if (isWin) {
-            file += '.bat'
+            file += `${path}.bat`
         } else if (isLinux) {
-            file += '.sh'
+            file = `sh ${path}.sh`
         }
 
         try {
