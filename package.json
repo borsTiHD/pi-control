@@ -28,6 +28,7 @@
     "eslint-plugin-nuxt": "^2.0.0",
     "eslint-plugin-vue": "^7.7.0",
     "express": "^4.17.1",
+    "fs-extra": "^10.0.0",
     "idb": "^6.0.0",
     "moment": "^2.29.1"
   }
