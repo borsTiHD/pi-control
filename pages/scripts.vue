@@ -10,6 +10,7 @@
 import ListScripts from '~/components/scripts/ListScripts.vue'
 
 export default {
+    name: 'Scripts',
     components: {
         ListScripts
     }

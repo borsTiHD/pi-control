@@ -51,6 +51,7 @@
 
 <script>
 export default {
+    name: 'Index',
     data() {
         return {
             continueRoute: '/info'

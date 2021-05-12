@@ -19,6 +19,7 @@
 
 <script>
 export default {
+    name: 'RunScript',
     props: {
         item: {
             type: Object,

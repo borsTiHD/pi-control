@@ -10,6 +10,7 @@
 import TestsApp from '~/components/dev/Tests.vue'
 
 export default {
+    name: 'Dev',
     components: {
         TestsApp
     }

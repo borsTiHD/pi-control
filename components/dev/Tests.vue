@@ -27,6 +27,7 @@
 
 <script>
 export default {
+    name: 'Tests',
     data() {
         return {
             loadingTestBtn: false,
