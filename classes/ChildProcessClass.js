@@ -80,9 +80,9 @@ class ChildProcessClass {
         // Ermittelt Datei Endung
         let file = null
         if (isWin) {
-            file = `${path}.bat`
+            file = `${path}`
         } else if (isLinux) {
-            file = `sh ${path}.sh`
+            file = `sh ${path}`
         }
 
         try {
