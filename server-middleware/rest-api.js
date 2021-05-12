@@ -34,8 +34,11 @@ app.get('/help', (req, res) => {
 
 app.post('/execute', asyncHandler(async(req, res, next) => {
     const { query } = req
-    const script = query.script
+    const scriptRaw = query.script
     const args = query.args || []
+
+    // Removes 'scripts' folders from path
+    const script = scriptRaw.replace('scripts\\', '')
 
     // Promise for spawning
     const spawn = () => {
@@ -68,22 +71,50 @@ app.post('/execute', asyncHandler(async(req, res, next) => {
 }))
 
 app.get('/scripts/list', asyncHandler(async(req, res, next) => {
+    // Generates unique random IDs for every folder/file
+    const uniqueIds = []
+    let maxIds = 100
+    function generateId(max) {
+        let r = Math.floor(Math.random() * max) + 1
+        if (!uniqueIds.includes(r)) {
+            uniqueIds.push(r)
+        } else {
+            r = generateId(max)
+        }
+        return r
+    }
+
     // Reads all scripts in 'root/scripts/' with subfolders
     // Returns array with all existing files
-    async function getFiles(dir, fileList = []) {
-        const files = await fs.readdir(path.join(dir))
-        for (const file of files) {
-            const stat = await fs.stat(path.join(dir, file))
-            if (stat.isDirectory()) {
-                fileList = await getFiles(path.join(dir, file), fileList)
-            } else fileList.push(path.join(dir, file))
+    async function getFiles(dir) {
+        maxIds += 1 // Increase unique IDs limit
+        const stats = await fs.stat(dir)
+        const fileList = {
+            path: dir,
+            name: path.basename(dir),
+            id: generateId(maxIds)
         }
+
+        if (stats.isDirectory()) {
+            fileList.type = 'folder'
+            const files = await fs.readdir(path.join(dir))
+            maxIds += files.length // Increase unique IDs limit
+            fileList.children = await Promise.all(files.map(async(child) => {
+                const res = getFiles(path.join(dir, child))
+                return res
+            }))
+        } else {
+            // Assuming it's a file. In real life it could be a symlink or something else!
+            fileList.type = 'file'
+        }
+
         return fileList
     }
 
+    // Scanning folder
     const scripts = await getFiles(scriptPath)
 
-    // Return
+    // Return results
     res.json({
         _status: 'ok',
         info: 'Files scannt',
