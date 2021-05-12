@@ -58,8 +58,20 @@ export default {
 
     // Modules: https://go.nuxtjs.dev/config-modules
     modules: [
-    // https://go.nuxtjs.dev/axios
-        '@nuxtjs/axios'
+        // https://go.nuxtjs.dev/axios
+        '@nuxtjs/axios',
+        // https://github.com/Maronato/vue-toastification
+        ['vue-toastification/nuxt', {
+            position: 'bottom-right',
+            timeout: 3000,
+            draggable: false,
+            closeOnClick: true,
+            pauseOnFocusLoss: true,
+            pauseOnHover: true,
+            showCloseButtonOnHover: false,
+            closeButton: 'button',
+            icon: true
+        }]
     ],
 
     // Axios module configuration: https://go.nuxtjs.dev/config-axios
@@ -85,7 +97,8 @@ export default {
     vuetify: {
         customVariables: ['~/assets/variables.scss'],
         theme: {
-            dark: true,
+            dark: true
+            /*
             themes: {
                 dark: {
                     primary: colors.blue.darken2,
@@ -97,6 +110,7 @@ export default {
                     success: colors.green.accent3
                 }
             }
+            */
         }
     },
 
