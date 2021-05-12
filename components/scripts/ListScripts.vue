@@ -75,7 +75,7 @@
         <v-card-actions v-if="!loadingScanFiles">
             <v-row>
                 <v-col class="d-flex mx-3">
-                    <add-script />
+                    <add-script @added="addedScript" />
                 </v-col>
             </v-row>
         </v-card-actions>
@@ -124,6 +124,10 @@ export default {
                 }).finally(() => {
                     this.loadingScanFiles = false
                 })
+        },
+        addedScript() {
+            // Scanning all files again after a new script added
+            this.scanFiles()
         }
     }
 }

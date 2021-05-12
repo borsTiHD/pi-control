@@ -16,6 +16,7 @@ const scriptPath = path.join('.', 'scripts')
 // Express Init
 const app = express()
 app.use(express.json())
+app.use(express.urlencoded({ extended: true })) // for form data
 
 app.all('/', (req, res) => {
     res.json({
@@ -119,6 +120,32 @@ app.get('/scripts/list', asyncHandler(async(req, res, next) => {
         _status: 'ok',
         info: 'Files scannt',
         scripts
+    })
+}))
+
+app.post('/scripts/add', asyncHandler(async(req, res, next) => {
+    const data = req.body
+    const file = `${data.name}.${data.ext}`
+    const filePath = path.join(scriptPath, 'custom', file)
+    const content = data.text
+    await fs.writeFile(filePath, content).then(async() => {
+        console.log('Changed executable permissions.')
+        fs.chmod(filePath, '755')
+    }).catch((error) => {
+        console.error(error)
+        // Return results
+        res.json({
+            _status: 'error',
+            info: 'Couldn\'t write data, please try again',
+            error
+        })
+    })
+
+    // Return results
+    res.json({
+        _status: 'ok',
+        info: 'File added',
+        request: req.body
     })
 }))
 

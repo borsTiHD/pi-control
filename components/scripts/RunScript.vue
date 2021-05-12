@@ -49,9 +49,13 @@ export default {
                 .then((res) => {
                     console.log('[Scripts] -> Executed Script:', res.data)
                     const data = res.data
-                    this.$toast.info(`${data.info}\n${data.response.output === '' ? '' : `Output: ${data.response.output}`}`)
+                    if (data.error || data._status === 'error') {
+                        throw new Error(data.info)
+                    } else {
+                        this.$toast.info(`${data.info}\n${data.response.output === '' ? '' : `Output: ${data.response.output}`}`)
+                    }
                 }).catch((error) => {
-                    this.$toast.error(error)
+                    this.$toast.error(error.message)
                     console.error(error)
                 }).finally(() => {
                     this.loading = false
