@@ -128,7 +128,7 @@ app.post('/scripts/add', asyncHandler(async(req, res, next) => {
     const file = `${data.name}.${data.ext}`
     const filePath = path.join(scriptPath, 'custom', file)
     const content = data.text
-    await fs.writeFile(filePath, content).then(async() => {
+    await fs.outputFile(filePath, content).then(async() => {
         console.log('Changed executable permissions.')
         fs.chmod(filePath, '755')
     }).catch((error) => {
