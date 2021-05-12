@@ -10,7 +10,7 @@
                 v-on="on"
                 @click="runScript"
             >
-                <v-icon>mdi-play-protected-content</v-icon>
+                <v-icon>mdi-play-network-outline</v-icon>
             </v-btn>
         </template>
         <span>Run script</span>
