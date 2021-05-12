@@ -36,14 +36,24 @@ export default {
                     to: '/'
                 },
                 {
-                    icon: 'mdi-information-outline ',
+                    icon: 'mdi-information-outline',
                     title: 'Info',
                     to: '/info'
+                },
+                {
+                    icon: 'mdi-script-text-outline',
+                    title: 'Scripts',
+                    to: '/scripts'
                 },
                 {
                     icon: 'mdi-cogs',
                     title: 'Settings',
                     to: '/settings'
+                },
+                {
+                    icon: 'mdi-bottle-tonic-skull-outline',
+                    title: 'Developement',
+                    to: '/dev'
                 }
             ]
         }
