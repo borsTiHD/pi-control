@@ -11,8 +11,7 @@ const ChildProcessClass = require('../classes/ChildProcessClass')
 const childProcessSpawn = new ChildProcessClass()
 
 // ProjectRoot Directory
-const root = path.join(__dirname, '..')
-const scriptPath = path.join(root, 'scripts')
+const scriptPath = path.join('.', 'scripts')
 
 // Express Init
 const app = express()
@@ -42,7 +41,7 @@ app.post('/execute', asyncHandler(async(req, res, next) => {
     const spawn = () => {
         return new Promise((resolve, reject) => {
             // Spawn Script
-            childProcessSpawn.execShell(`${scriptPath}/${script}`, args, (pid, output) => { }, (pid, output, exitCode) => {
+            childProcessSpawn.execShell(path.join(scriptPath, script), args, (pid, output) => { }, (pid, output, exitCode) => {
                 resolve({ output, exitCode, pid })
             }, (error) => {
                 reject(error)
@@ -82,7 +81,7 @@ app.get('/scripts/list', asyncHandler(async(req, res, next) => {
         return fileList
     }
 
-    const scripts = await getFiles('./scripts')
+    const scripts = await getFiles(scriptPath)
 
     // Return
     res.json({

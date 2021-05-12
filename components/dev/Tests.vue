@@ -39,7 +39,7 @@ export default {
             this.loadingTestBtn = true
             this.$axios.post(url, null, {
                 params: {
-                    script: 'tests/test',
+                    script: 'tests\\test',
                     args: ['a', 'b', 'c']
                 }
             })
