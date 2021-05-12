@@ -72,13 +72,13 @@
                 </v-col>
             </v-row>
         </v-card-text>
-        <v-card-action v-if="!loadingScanFiles">
+        <v-card-actions v-if="!loadingScanFiles">
             <v-row>
                 <v-col class="d-flex mx-3">
                     <add-script />
                 </v-col>
             </v-row>
-        </v-card-action>
+        </v-card-actions>
     </v-card>
 </template>
 
