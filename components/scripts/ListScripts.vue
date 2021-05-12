@@ -40,7 +40,16 @@
             />
         </v-sheet>
         <v-card-text>
-            <v-row v-if="items !== null">
+            <v-row v-if="loadingScanFiles">
+                <v-col cols="12">
+                    <span>Scanning scripts...</span>
+                    <v-progress-linear
+                        indeterminate
+                        color="primary"
+                    />
+                </v-col>
+            </v-row>
+            <v-row v-else>
                 <v-col>
                     <v-treeview
                         rounded
@@ -62,30 +71,31 @@
                     </v-treeview>
                 </v-col>
             </v-row>
-            <v-row v-else>
-                <v-col cols="12">
-                    <span>Scanning scripts...</span>
-                    <v-progress-linear
-                        indeterminate
-                        color="primary"
-                    />
+        </v-card-text>
+        <v-card-action v-if="!loadingScanFiles">
+            <v-row>
+                <v-col class="d-flex mx-3">
+                    <add-script />
                 </v-col>
             </v-row>
-        </v-card-text>
+        </v-card-action>
     </v-card>
 </template>
 
 <script>
 import RunScript from '~/components/scripts/RunScript.vue'
+import AddScript from '~/components/scripts/AddScript.vue'
 
 export default {
+    name: 'ListScripts',
     components: {
-        RunScript
+        RunScript,
+        AddScript
     },
     data() {
         return {
             loadingScanFiles: false,
-            items: null,
+            items: [],
             open: [1, 2],
             search: null,
             caseSensitive: false
