@@ -119,7 +119,8 @@ export default {
         isCustomScript(path) {
             // Validates folder structure
             // Returns true, if the custom path is in there
-            return /^scripts\\custom\\/gm.test(path) || /^scripts\/\/custom\/\//gm.test(path)
+            console.log('CHECKING PATH:', path)
+            return /^scripts\\custom\\/gm.test(path) || /^scripts\/custom\//gm.test(path)
         },
         scanFiles() {
             const url = '/scripts/list'
