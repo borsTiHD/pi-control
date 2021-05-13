@@ -8,7 +8,6 @@
             <v-tooltip top>
                 <template #activator="{ on: tooltip }">
                     <v-btn
-                        dark
                         icon
                         v-bind="attrs"
                         v-on="{ ...tooltip, ...menu }"
