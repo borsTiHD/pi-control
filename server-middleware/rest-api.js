@@ -13,6 +13,15 @@ const childProcessSpawn = new ChildProcessClass()
 // ProjectRoot Directory
 const scriptPath = path.join('.', 'scripts')
 
+// Tests if file is in 'custom' directory
+// Only 'custom' scripts can be deleted
+function isCustomScript(path) {
+    // Validates folder structure
+    // Returns true, if the custom path is in there
+    console.log('CHECKING PATH:', path)
+    return /^scripts\\custom\\/gm.test(path) || /^scripts\/\/custom\/\//gm.test(path)
+}
+
 // Express Init
 const app = express()
 app.use(express.json())
@@ -186,14 +195,6 @@ app.post('/scripts/delete', asyncHandler(async(req, res, next) => {
     const query = req.query
     const { path } = query
 
-    // Tests if file is in 'custom' directory
-    // Only 'custom' scripts can be deleted
-    function isCustomScript(path) {
-        // Validates folder structure
-        // Returns true, if the custom path is in there
-        return /^scripts\\custom\\/gm.test(path) || /^scripts\/\/custom\/\//gm.test(path)
-    }
-
     // Scans stats and delete only if it is a file
     const stats = await fs.stat(path)
     if (stats.isFile() && isCustomScript(path)) {
@@ -231,14 +232,6 @@ app.post('/scripts/edit', asyncHandler(async(req, res, next) => {
     const query = req.query
     const oldFile = JSON.parse(query.oldFile)
     const newFile = JSON.parse(query.newFile)
-
-    // Tests if file is in 'custom' directory
-    // Only 'custom' scripts can be deleted
-    function isCustomScript(path) {
-        // Validates folder structure
-        // Returns true, if the custom path is in there
-        return /^scripts\\custom\\/gm.test(path) || /^scripts\/\/custom\/\//gm.test(path)
-    }
 
     // Scans stats and delete only if it is a file
     const stats = await fs.stat(oldFile.path)
