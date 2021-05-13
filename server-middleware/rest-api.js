@@ -18,8 +18,7 @@ const scriptPath = path.join('.', 'scripts')
 function isCustomScript(path) {
     // Validates folder structure
     // Returns true, if the custom path is in there
-    console.log('CHECKING PATH:', path)
-    return /^scripts\\custom\\/gm.test(path) || /^scripts\/\/custom\/\//gm.test(path)
+    return /^scripts\\custom\\/gm.test(path) /* win path */ || /^scripts\/custom\//gm.test(path) /* linux path */
 }
 
 // Express Init
