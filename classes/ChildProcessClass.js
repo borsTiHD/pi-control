@@ -80,9 +80,9 @@ class ChildProcessClass {
         // Ermittelt Datei Endung
         let file = null
         if (isWin) {
-            file = `${path}`
+            file = `"${path}"` // Quotes: So you can spawn paths with spaces
         } else if (isLinux) {
-            file = `sh ${path}`
+            file = `sh "${path}"` // Quotes: So you can spawn paths with spaces
         }
 
         try {
