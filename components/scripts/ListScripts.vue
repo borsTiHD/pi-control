@@ -67,6 +67,7 @@
                         </template>
                         <template #append="{ item }">
                             <run-script v-if="item.type === 'file'" :item="item" />
+                            <options-menu v-if="item.type === 'file' && isCustomScript(item.path)" :item="item" />
                         </template>
                     </v-treeview>
                 </v-col>
@@ -85,12 +86,14 @@
 <script>
 import RunScript from '~/components/scripts/RunScript.vue'
 import AddScript from '~/components/scripts/AddScript.vue'
+import OptionsMenu from '~/components/scripts/OptionsMenu.vue'
 
 export default {
     name: 'ListScripts',
     components: {
         RunScript,
-        AddScript
+        AddScript,
+        OptionsMenu
     },
     data() {
         return {
@@ -112,6 +115,11 @@ export default {
         this.scanFiles()
     },
     methods: {
+        isCustomScript(path) {
+            // Validates folder structure
+            // Returns true, if the custom path is in there
+            return /^scripts\\custom\\/gm.test(path)
+        },
         scanFiles() {
             const url = '/scripts/list'
             this.loadingScanFiles = true
