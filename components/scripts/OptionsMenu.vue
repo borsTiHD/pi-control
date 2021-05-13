@@ -5,7 +5,7 @@
         right
     >
         <template #activator="{ on: menu, attrs }">
-            <v-tooltip left>
+            <v-tooltip top>
                 <template #activator="{ on: tooltip }">
                     <v-btn
                         dark

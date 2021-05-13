@@ -8,7 +8,7 @@
                 :disabled="loading"
                 v-bind="attrs"
                 v-on="on"
-                @click="runScript"
+                @click="downloadScript"
             >
                 <v-icon>mdi-cloud-download-outline</v-icon>
             </v-btn>
@@ -19,7 +19,7 @@
 
 <script>
 export default {
-    name: 'RunScript',
+    name: 'DownloadScript',
     props: {
         item: {
             type: Object,
@@ -35,26 +35,55 @@ export default {
         }
     },
     methods: {
-        runScript() {
-            const url = '/execute'
+        async downloadScript() {
+            // Request download
+            const url = '/scripts/download/'
             this.loading = true
-            this.$axios.post(url, null, {
-                params: {
-                    script: this.item.path
-                    // args: ['a', 'b', 'c']
-                }
+            await this.$axios.get(url, {
+                responseType: 'blob', // important
+                params: this.item
             })
                 .then((res) => {
-                    console.log('[Scripts] -> Executed Script:', res.data)
+                    try {
+                        // Response header for filename + content type
+                        const headerFileName = res.headers['content-disposition'] // 'x-suggested-filename'
+                        const headerContentType = res.headers['content-type']
+
+                        // Extracted file name
+                        const fileName = headerFileName.match(/filename=".+"/gm).map((item) => {
+                            return item.replace('filename="', '').replace('"', '') // extracting only the filename
+                        })[0] // Returns array and tries to access the first item
+
+                        console.log('Headers:', res.headers)
+                        console.log('fileName:', fileName)
+
+                        // Save File
+                        const blob = new Blob([res.data], { type: headerContentType })
+                        const link = document.createElement('a')
+                        link.href = URL.createObjectURL(blob)
+                        link.download = fileName
+                        link.click()
+                        URL.revokeObjectURL(link.href)
+                    } catch (error) {
+                        console.error(error)
+                    }
+
+                    // Let the user save the file.
+                    // FileSaver.saveAs(res.data, effectiveFileName)
+
+                    /*
                     const data = res.data
+                    console.log('[Download Script] -> Read Script Data:', data)
                     if (data.error || data._status === 'error') {
                         throw new Error(data.info)
                     } else {
-                        this.$toast.info(`${data.info}\n${data.response.output === '' ? '' : `Output: ${data.response.output}`}`)
+                        return data.script
                     }
+                    */
                 }).catch((error) => {
                     this.$toast.error(error.message)
                     console.error(error)
+                    error = true
                 }).finally(() => {
                     this.loading = false
                 })

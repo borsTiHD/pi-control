@@ -162,6 +162,28 @@ app.get('/scripts/read', asyncHandler(async(req, res, next) => {
     })
 }))
 
+app.get('/scripts/download', asyncHandler(async(req, res, next) => {
+    // Query Data
+    const query = req.query
+    // const { id, name, type, path } = query
+    const { name, path } = query
+
+    // Scans stats
+    const stats = await fs.stat(path)
+
+    // Not a folder?
+    if (stats.isFile()) {
+        // Reading file and return result
+        res.download(path, name)
+    } else {
+        res.status(500).json({
+            _status: 'error',
+            info: 'Downloading folders not implemented.',
+            error: 'Request not allowed'
+        })
+    }
+}))
+
 app.post('/scripts/add', asyncHandler(async(req, res, next) => {
     const data = req.body
     const file = `${data.name}.${data.ext}`
@@ -207,6 +229,13 @@ app.post('/scripts/delete', asyncHandler(async(req, res, next) => {
             })
             return next()
         })
+
+        // Return results
+        res.json({
+            _status: 'ok',
+            info: 'File deleted',
+            request: query
+        })
     } else {
         // Return results
         const error = new Error('Couldn\'t delete. Request wasn\'t a file, or wasn\t an custom script.')
@@ -217,13 +246,6 @@ app.post('/scripts/delete', asyncHandler(async(req, res, next) => {
         })
         return next()
     }
-
-    // Return results
-    res.json({
-        _status: 'ok',
-        info: 'File deleted',
-        request: query
-    })
 }))
 
 app.post('/scripts/edit', asyncHandler(async(req, res, next) => {
