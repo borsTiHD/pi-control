@@ -20,7 +20,7 @@
                 <span>Rescan scripts</span>
             </v-tooltip>
         </v-card-title>
-        <v-sheet class="pa-4 primary">
+        <v-sheet v-if="!loadingScanFiles" class="pa-4 primary">
             <v-text-field
                 v-model="search"
                 label="Search Files"
@@ -83,6 +83,7 @@
                 </v-col>
             </v-row>
         </v-card-text>
+        <v-divider class="py-1" />
         <v-card-actions v-if="!loadingScanFiles">
             <v-row>
                 <v-col class="d-flex mx-3">
