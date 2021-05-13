@@ -6,9 +6,9 @@
                 color="primary"
                 class="mr-2"
             >
-                mdi-laptop
+                mdi-cpu-32-bit
             </v-icon>
-            Device
+            CPU
         </v-card-title>
         <v-card-text>
             <v-row v-if="loading">
@@ -55,7 +55,7 @@
 import path from 'path'
 
 export default {
-    name: 'Device',
+    name: 'CpuInfo',
     data() {
         return {
             loading: false,
@@ -65,8 +65,10 @@ export default {
     async created() {
         // Collecting data
         this.loading = true
-        const hardwareInfo = await this.fetchingData(path.join('scripts', 'server', 'cpu', 'show cpu info.sh')).then((data) => this.crawlHardware(data))
-        this.items = hardwareInfo
+        await this.fetchingData(path.join('scripts', 'server', 'misc', 'kernel info.sh')).then((data) => this.crawlKernelInfo(data))
+
+        // Pushing data in Items
+        this.items = []
 
         // Ending loading
         this.loading = false
@@ -89,32 +91,29 @@ export default {
                 })
             return data
         },
-        crawlHardware(data) {
-            // Collecting following stuff
-            /*
-            Hardware        : BCM2711
-            Revision        : d03114
-            Serial          : 100000000a21a527
-            Model           : Raspberry Pi 4 Model B Rev 1.4
-            */
-            function crawlingData(data, search) {
-                const patt = new RegExp(`${search}.+$`, 'gm')
-                const matches = data.match(patt)
-                if (Array.isArray(matches)) {
-                    return matches.map((item) => {
-                        return item.replace(search, '').replace(/^\s+:\s+/gm, '')
+        crawlKernelInfo(data) {
+            // Crawls Kerlen infos -> exp. 'Linux hostname 5.10.17-v7l+ #1414 SMP Fri Apr 30 13:20:47 BST 2021 armv7l GNU/Linux'
+            const arr = data.split(' ')
+            return [
+                { name: 'System:', state: arr[0] },
+                { name: 'Hostname:', state: arr[1] },
+                { name: 'Kernel:', state: data.replace(arr[0], '').replace(arr[1], '').replace(/^\s+/, '') }
+            ]
+        },
+        crawlOperatingSystem(data) {
+            // Crawls OS infos -> searching for. 'Operating System: Raspbian GNU/Linux 10 (buster)'
+            const pattText = 'Operating System:'
+            const patt = new RegExp(`${pattText}.+$`, 'gm')
+            const matches = data.match(patt)
+            if (Array.isArray(matches)) {
+                return {
+                    name: pattText,
+                    state: matches.map((item) => {
+                        return item.replace(pattText, '').replace(/^ +/gm, '')
                     })[0]
                 }
-                return false
             }
-
-            // Return results
-            return [
-                { name: 'Hardware:', state: crawlingData(data, 'Hardware') },
-                { name: 'Revision:', state: crawlingData(data, 'Revision') },
-                { name: 'Serial:', state: crawlingData(data, 'Serial') },
-                { name: 'Model:', state: crawlingData(data, 'Model') }
-            ]
+            return false
         }
     }
 }
