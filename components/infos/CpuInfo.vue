@@ -1,5 +1,5 @@
 <template>
-    <v-card>
+    <v-card class="flex d-flex flex-column">
         <v-card-title class="headline">
             <v-icon
                 large
