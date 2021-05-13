@@ -116,6 +116,9 @@ export default {
                 text: ''
             }
 
+            // Set form data if options delivered
+            if (opts && Object.keys(opts).length > 0) { this.input = opts }
+
             // Opens Modal
             this.showModal = true
 
