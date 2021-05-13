@@ -2,6 +2,9 @@
   "name": "pi-control",
   "productName": "Pi-Control 🐱‍👤",
   "version": "1.0.0",
+  "description": "Pi-Control helps with gathering information, as well as to simplify controlling your raspberry pi.",
+  "author": "borsTiHD",
+  "license": "MIT",
   "repository": {
     "type": "git",
     "url": "https://github.com/borsTiHD/pi-control"
