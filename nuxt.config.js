@@ -1,11 +1,18 @@
-import colors from 'vuetify/es5/util/colors'
+// import colors from 'vuetify/es5/util/colors'
 import pkg from './package.json'
 
 const isDev = process.env.NODE_ENV !== 'production'
 
 // Server Settings
+/*
 const server = {
     host: isDev ? 'localhost' : '0.0.0.0', // dev: localhost, production: os-ip-adress
+    port: isDev ? 3000 : 8800, // dev: 3000, production: 8800
+    timing: false
+}
+*/
+const server = {
+    host: '0.0.0.0', // dev: localhost, production: os-ip-adress
     port: isDev ? 3000 : 8800, // dev: 3000, production: 8800
     timing: false
 }
