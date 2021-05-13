@@ -46,14 +46,40 @@ export default {
     },
     methods: {
         async editScript() {
-            // User prompt for script data
+            // Error flag
             let error = false
+
+            // Request file content over api call
+            const url = '/scripts/read'
+            this.loading = true
+            const script = await this.$axios.get(url, { params: this.item })
+                .then((res) => {
+                    const data = res.data
+                    console.log('[Edit Script] -> Read Script Data:', data)
+                    if (data.error || data._status === 'error') {
+                        throw new Error(data.info)
+                    } else {
+                        return data.script
+                    }
+                }).catch((error) => {
+                    this.$toast.error(error.message)
+                    console.error(error)
+                    error = true
+                }).finally(() => {
+                    this.loading = false
+                })
+            if (error) return false
+
+            // Split filename
+            const file = script.name.split('.')
+
+            // User prompt for script data
             const scriptData = await this.$refs.editScript.show({
-                name: 'test',
-                ext: 'test',
-                text: 'test'
+                name: file[0],
+                ext: file[1],
+                text: script.content
             }).then((res) => res).catch((err) => {
-                console.error('[New Script] -> User canceled.')
+                console.error('[Edit Script] -> User canceled.')
                 console.error(err)
                 error = true
                 return err
@@ -61,31 +87,6 @@ export default {
             if (error) return false
 
             console.log('scriptData:', scriptData)
-
-            /*
-            const url = '/execute'
-            this.loading = true
-            this.$axios.post(url, null, {
-                params: {
-                    script: this.item.path
-                    // args: ['a', 'b', 'c']
-                }
-            })
-                .then((res) => {
-                    console.log('[Scripts] -> Executed Script:', res.data)
-                    const data = res.data
-                    if (data.error || data._status === 'error') {
-                        throw new Error(data.info)
-                    } else {
-                        this.$toast.info(`${data.info}\n${data.response.output === '' ? '' : `Output: ${data.response.output}`}`)
-                    }
-                }).catch((error) => {
-                    this.$toast.error(error.message)
-                    console.error(error)
-                }).finally(() => {
-                    this.loading = false
-                })
-            */
         }
     }
 }

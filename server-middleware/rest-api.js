@@ -61,6 +61,7 @@ app.post('/execute', asyncHandler(async(req, res, next) => {
             info: 'Script not successfully executed',
             error
         })
+        return next(error)
     })
 
     // REST return
@@ -123,6 +124,36 @@ app.get('/scripts/list', asyncHandler(async(req, res, next) => {
     })
 }))
 
+app.get('/scripts/read', asyncHandler(async(req, res, next) => {
+    // Query Data
+    const query = req.query
+    const { id, name, type, path } = query
+
+    // Scans stats
+    const stats = await fs.stat(path)
+
+    // Not a folder?
+    if (!stats.isDirectory()) {
+        // Reading file and return result
+        const content = await fs.readFile(path, 'utf-8')
+        res.json({
+            _status: 'ok',
+            info: 'File scannt',
+            script: { id, name, type, path, stats, content }
+        })
+        return
+    }
+
+    // REST return
+    res.json({
+        _status: 'info',
+        info: 'File was a folder',
+        folder: {
+            stats
+        }
+    })
+}))
+
 app.post('/scripts/add', asyncHandler(async(req, res, next) => {
     const data = req.body
     const file = `${data.name}.${data.ext}`
@@ -134,11 +165,12 @@ app.post('/scripts/add', asyncHandler(async(req, res, next) => {
     }).catch((error) => {
         console.error(error)
         // Return results
-        res.json({
+        res.status(500).json({
             _status: 'error',
             info: 'Couldn\'t write data, please try again',
             error
         })
+        return next()
     })
 
     // Return results
