@@ -3,23 +3,23 @@
         <template #activator="{ on, attrs }">
             <v-btn
                 icon
-                color="red"
+                color="info"
                 :loading="loading"
                 :disabled="loading"
                 v-bind="attrs"
                 v-on="on"
-                @click="deleteScript"
+                @click="runScript"
             >
-                <v-icon>mdi-trash-can-outline</v-icon>
+                <v-icon>mdi-cloud-download-outline</v-icon>
             </v-btn>
         </template>
-        <span>Delete script</span>
+        <span>Download {{ item.type === 'file' ? 'script' : 'folder' }}</span>
     </v-tooltip>
 </template>
 
 <script>
 export default {
-    name: 'DeleteScript',
+    name: 'RunScript',
     props: {
         item: {
             type: Object,
@@ -35,24 +35,26 @@ export default {
         }
     },
     methods: {
-        async deleteScript() {
-            // Request file content over api call
-            const url = '/scripts/delete'
+        runScript() {
+            const url = '/execute'
             this.loading = true
-            this.$axios.post(url, null, { params: this.item })
+            this.$axios.post(url, null, {
+                params: {
+                    script: this.item.path
+                    // args: ['a', 'b', 'c']
+                }
+            })
                 .then((res) => {
-                    this.$emit('deleted')
+                    console.log('[Scripts] -> Executed Script:', res.data)
                     const data = res.data
-                    console.log('[Delete Script] -> Script Delete Response:', data)
                     if (data.error || data._status === 'error') {
                         throw new Error(data.info)
                     } else {
-                        this.$toast.info(`${this.item.name}\n${data.info}`)
+                        this.$toast.info(`${data.info}\n${data.response.output === '' ? '' : `Output: ${data.response.output}`}`)
                     }
                 }).catch((error) => {
                     this.$toast.error(error.message)
                     console.error(error)
-                    error = true
                 }).finally(() => {
                     this.loading = false
                 })

@@ -21,19 +21,22 @@
         </template>
 
         <v-sheet class="d-flex">
-            <edit-script :item="item" @edited="$emit('edited')" />
+            <download-script :item="item" />
+            <edit-script v-if="item.type === 'file'" :item="item" @edited="$emit('edited')" />
             <delete-script :item="item" @deleted="$emit('deleted')" />
         </v-sheet>
     </v-menu>
 </template>
 
 <script>
+import DownloadScript from '~/components/scripts/DownloadScript.vue'
 import EditScript from '~/components/scripts/EditScript.vue'
 import DeleteScript from '~/components/scripts/DeleteScript.vue'
 
 export default {
     name: 'OptionsMenu',
     components: {
+        DownloadScript,
         EditScript,
         DeleteScript
     },
