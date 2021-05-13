@@ -69,6 +69,15 @@
                         <template #append="{ item }">
                             <run-script v-if="item.type === 'file'" :item="item" />
                             <options-menu v-if="item.type === 'file' && isCustomScript(item.path)" :item="item" @edited="editedScript" @deleted="deletedScript" />
+                            <!-- Info: File is locked for editing/deleting -->
+                            <v-btn
+                                v-if="item.type === 'file' && !isCustomScript(item.path)"
+                                icon
+                                color="primary"
+                                disabled
+                            >
+                                <v-icon>mdi-lock-outline</v-icon>
+                            </v-btn>
                         </template>
                     </v-treeview>
                 </v-col>
