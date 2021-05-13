@@ -18,24 +18,22 @@
         </v-tooltip>
 
         <!-- User prompt for new script -->
-        <new-script-prompt ref="userInput" />
+        <script-prompt ref="userInput" />
     </div>
 </template>
 
 <script>
-import NewScriptPrompt from '@/components/prompts/NewScriptPrompt.vue'
+import ScriptPrompt from '@/components/prompts/ScriptPrompt.vue'
 
 export default {
     name: 'AddScript',
     components: {
-        NewScriptPrompt
+        ScriptPrompt
     },
     data() {
         return {
             loading: false
         }
-    },
-    computed: {
     },
     methods: {
         async addScript() {

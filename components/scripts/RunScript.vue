@@ -34,8 +34,6 @@ export default {
             loading: false
         }
     },
-    computed: {
-    },
     methods: {
         runScript() {
             const url = '/execute'
