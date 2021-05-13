@@ -256,12 +256,13 @@ app.post('/scripts/add', asyncHandler(async(req, res, next) => {
 app.post('/scripts/delete', asyncHandler(async(req, res, next) => {
     // Query Data
     const query = req.query
-    const { path } = query
+    const filePath = query.path
 
     // Scans stats and delete only if it is a file
-    const stats = await fs.stat(path)
-    if (stats.isFile() && isCustomScript(path)) {
-        await fs.unlink(path).catch((error) => {
+    const stats = await fs.stat(filePath)
+
+    if (stats.isFile() && isCustomScript(filePath)) {
+        await fs.unlink(filePath).catch((error) => {
             console.error(error)
             // Return results
             res.status(500).json({
@@ -278,15 +279,32 @@ app.post('/scripts/delete', asyncHandler(async(req, res, next) => {
             info: 'File deleted',
             request: query
         })
+    } else if (stats.isDirectory() && (isCustomScript(filePath) || filePath === path.join(scriptPath, 'custom'))) {
+        await fs.rmdir(filePath, { recursive: true }).catch((error) => {
+            console.error(error)
+            // Return results
+            res.status(500).json({
+                _status: 'error',
+                info: 'Couldn\'t delete folder, please try again',
+                error
+            })
+            return next()
+        })
+
+        // Return results
+        res.json({
+            _status: 'ok',
+            info: 'Folder deleted',
+            request: query
+        })
     } else {
         // Return results
-        const error = new Error('Couldn\'t delete. Request wasn\'t a file, or wasn\t an custom script.')
+        const error = new Error('Couldn\'t delete. Request wasn\'t a file, or wasn\t a custom script.')
         res.status(500).json({
             _status: 'error',
             info: 'Something went wrong',
             error: error.message
         })
-        return next()
     }
 }))
 

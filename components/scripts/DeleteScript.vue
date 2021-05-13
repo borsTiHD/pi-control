@@ -47,7 +47,7 @@ export default {
                     if (data.error || data._status === 'error') {
                         throw new Error(data.info)
                     } else {
-                        this.$toast.info(`${this.item.name}\n${data.info}`)
+                        this.$toast.info(`Path: ${this.item.name}\n${data.info}`)
                     }
                 }).catch((error) => {
                     this.$toast.error(error.message)
