@@ -55,6 +55,7 @@
                         rounded
                         hoverable
                         open-on-click
+                        open-all
                         :items="items"
                         :search="search"
                         :filter="filter"
@@ -67,7 +68,7 @@
                         </template>
                         <template #append="{ item }">
                             <run-script v-if="item.type === 'file'" :item="item" />
-                            <options-menu v-if="item.type === 'file' && isCustomScript(item.path)" :item="item" />
+                            <options-menu v-if="item.type === 'file' && isCustomScript(item.path)" :item="item" @deleted="deletedScript" />
                         </template>
                     </v-treeview>
                 </v-col>
@@ -135,6 +136,10 @@ export default {
         },
         addedScript() {
             // Scanning all files again after a new script added
+            this.scanFiles()
+        },
+        deletedScript() {
+            // Scanning all files again after a script got deleted
             this.scanFiles()
         }
     }

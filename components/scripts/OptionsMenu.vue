@@ -22,23 +22,20 @@
 
         <v-sheet class="d-flex">
             <edit-script :item="item" />
-            <v-btn
-                icon
-                color="red"
-            >
-                <v-icon>mdi-trash-can-outline</v-icon>
-            </v-btn>
+            <delete-script :item="item" @deleted="$emit('deleted')" />
         </v-sheet>
     </v-menu>
 </template>
 
 <script>
 import EditScript from '~/components/scripts/EditScript.vue'
+import DeleteScript from '~/components/scripts/DeleteScript.vue'
 
 export default {
     name: 'OptionsMenu',
     components: {
-        EditScript
+        EditScript,
+        DeleteScript
     },
     props: {
         item: {

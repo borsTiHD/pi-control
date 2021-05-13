@@ -181,4 +181,49 @@ app.post('/scripts/add', asyncHandler(async(req, res, next) => {
     })
 }))
 
+app.post('/scripts/delete', asyncHandler(async(req, res, next) => {
+    // Query Data
+    const query = req.query
+    const { path } = query
+
+    // Tests if file is in 'custom' directory
+    // Only 'custom' scripts can be deleted
+    function isCustomScript(path) {
+        // Validates folder structure
+        // Returns true, if the custom path is in there
+        return /^scripts\\custom\\/gm.test(path)
+    }
+
+    // Scans stats and delete only if it is a file
+    const stats = await fs.stat(path)
+    if (stats.isFile() && isCustomScript(path)) {
+        await fs.unlink(path).catch((error) => {
+            console.error(error)
+            // Return results
+            res.status(500).json({
+                _status: 'error',
+                info: 'Couldn\'t delete file, please try again',
+                error
+            })
+            return next()
+        })
+    } else {
+        // Return results
+        const error = new Error('Couldn\'t delete. Request wasn\'t a file, or wasn\t an custom script.')
+        res.status(500).json({
+            _status: 'error',
+            info: 'Something went wrong',
+            error: error.message
+        })
+        return next()
+    }
+
+    // Return results
+    res.json({
+        _status: 'ok',
+        info: 'File deleted',
+        request: query
+    })
+}))
+
 module.exports = app
