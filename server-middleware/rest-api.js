@@ -1,6 +1,7 @@
 // Imports
 const path = require('path')
 const fs = require('fs-extra')
+const archiver = require('archiver')
 const express = require('express')
 
 // Middleware for handling errors on promise calls
@@ -10,8 +11,12 @@ const asyncHandler = require('../server-middleware/asyncMiddleware')
 const ChildProcessClass = require('../classes/ChildProcessClass')
 const childProcessSpawn = new ChildProcessClass()
 
-// ProjectRoot Directory
+// Script Directory
 const scriptPath = path.join('.', 'scripts')
+
+// Windows/Linux checks
+const isWin = process.platform === 'win32'
+const isLinux = process.platform === 'linux'
 
 // Tests if file is in 'custom' directory
 // Only 'custom' scripts can be deleted
@@ -19,6 +24,33 @@ function isCustomScript(path) {
     // Validates folder structure
     // Returns true, if the custom path is in there
     return /^scripts\\custom\\/gm.test(path) /* win path */ || /^scripts\/custom\//gm.test(path) /* linux path */
+}
+
+/**
+ * @param {String} source
+ * @param {String} out
+ * @returns {Promise}
+ * @url https://stackoverflow.com/a/51518100/7625095
+ */
+function zipDirectory(source, out) {
+    // Checks OS for type
+    let type = null
+    if (isLinux || isWin) {
+        type = 'zip'
+    }
+
+    const archive = archiver(type, { zlib: { level: 9 } })
+    const stream = fs.createWriteStream(out)
+
+    return new Promise((resolve, reject) => {
+        archive
+            .directory(source, false)
+            .on('error', (err) => reject(err))
+            .pipe(stream)
+
+        stream.on('close', () => resolve())
+        archive.finalize()
+    })
 }
 
 // Express Init
@@ -165,22 +197,32 @@ app.get('/scripts/read', asyncHandler(async(req, res, next) => {
 app.get('/scripts/download', asyncHandler(async(req, res, next) => {
     // Query Data
     const query = req.query
-    // const { id, name, type, path } = query
-    const { name, path } = query
+    const name = query.name
+    const filePath = query.path
 
     // Scans stats
-    const stats = await fs.stat(path)
+    const stats = await fs.stat(filePath)
 
     // Not a folder?
     if (stats.isFile()) {
         // Reading file and return result
-        res.download(path, name)
+        res.download(filePath, name)
     } else {
-        res.status(500).json({
-            _status: 'error',
-            info: 'Downloading folders not implemented.',
-            error: 'Request not allowed'
-        })
+        const fileName = 'backup.zip'
+        const archiv = path.join(scriptPath, fileName)
+        await zipDirectory(filePath, archiv)
+        await res.download(archiv, fileName)
+
+        // Scans stats
+        const statsBackupFile = await fs.stat(archiv)
+        if (statsBackupFile.isFile()) {
+            await fs.unlink(archiv).catch((error) => {
+                console.error(error)
+                return next()
+            })
+        } else {
+            console.log('[Download] -> tried to delete backup.zip, but nothing happened.')
+        }
     }
 }))
 

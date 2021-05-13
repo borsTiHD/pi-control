@@ -68,7 +68,7 @@
                         </template>
                         <template #append="{ item }">
                             <run-script v-if="item.type === 'file'" :item="item" />
-                            <options-menu v-if="(item.type === 'file' && isCustomScript(item.path)) /* || item.name === 'custom' */" :item="item" @edited="editedScript" @deleted="deletedScript" />
+                            <options-menu v-if="(item.type === 'file' && isCustomScript(item.path)) || item.name === 'custom'" :item="item" @edited="editedScript" @deleted="deletedScript" />
                             <!-- Info: File is locked for editing/deleting -->
                             <v-btn
                                 v-if="!isCustomScript(item.path) && item.name !== 'custom'"
