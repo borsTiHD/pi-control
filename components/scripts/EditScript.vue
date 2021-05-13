@@ -50,9 +50,9 @@ export default {
             let error = false
 
             // Request file content over api call
-            const url = '/scripts/read'
+            const urlRead = '/scripts/read'
             this.loading = true
-            const script = await this.$axios.get(url, { params: this.item })
+            const script = await this.$axios.get(urlRead, { params: this.item })
                 .then((res) => {
                     const data = res.data
                     console.log('[Edit Script] -> Read Script Data:', data)
@@ -86,7 +86,35 @@ export default {
             })
             if (error) return false
 
-            console.log('scriptData:', scriptData)
+            // Creates params for request
+            const params = {
+                oldFile: this.item,
+                newFile: {
+                    name: `${scriptData.name}.${scriptData.ext}`,
+                    content: scriptData.text
+                }
+            }
+
+            // Request file content over api call
+            const urlEdit = '/scripts/edit'
+            this.loading = true
+            this.$axios.post(urlEdit, null, { params })
+                .then((res) => {
+                    this.$emit('edited')
+                    const data = res.data
+                    console.log('[Edit Script] -> Script Edited Response:', data)
+                    if (data.error || data._status === 'error') {
+                        throw new Error(data.info)
+                    } else {
+                        this.$toast.info(`${this.item.name}\n${data.info}`)
+                    }
+                }).catch((error) => {
+                    this.$toast.error(error.message)
+                    console.error(error)
+                    error = true
+                }).finally(() => {
+                    this.loading = false
+                })
         }
     }
 }

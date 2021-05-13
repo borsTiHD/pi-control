@@ -68,7 +68,7 @@
                         </template>
                         <template #append="{ item }">
                             <run-script v-if="item.type === 'file'" :item="item" />
-                            <options-menu v-if="item.type === 'file' && isCustomScript(item.path)" :item="item" @deleted="deletedScript" />
+                            <options-menu v-if="item.type === 'file' && isCustomScript(item.path)" :item="item" @edited="editedScript" @deleted="deletedScript" />
                         </template>
                     </v-treeview>
                 </v-col>
@@ -136,6 +136,10 @@ export default {
         },
         addedScript() {
             // Scanning all files again after a new script added
+            this.scanFiles()
+        },
+        editedScript() {
+            // Scanning all files again after a script got edited
             this.scanFiles()
         },
         deletedScript() {

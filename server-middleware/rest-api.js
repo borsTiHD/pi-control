@@ -160,7 +160,7 @@ app.post('/scripts/add', asyncHandler(async(req, res, next) => {
     const filePath = path.join(scriptPath, 'custom', file)
     const content = data.text
     await fs.outputFile(filePath, content).then(async() => {
-        console.log('Changed executable permissions.')
+        console.log('[Add Script] -> Changed executable permissions.')
         fs.chmod(filePath, '755')
     }).catch((error) => {
         console.error(error)
@@ -224,6 +224,76 @@ app.post('/scripts/delete', asyncHandler(async(req, res, next) => {
         info: 'File deleted',
         request: query
     })
+}))
+
+app.post('/scripts/edit', asyncHandler(async(req, res, next) => {
+    // Query Data
+    const query = req.query
+    const oldFile = JSON.parse(query.oldFile)
+    const newFile = JSON.parse(query.newFile)
+
+    // Tests if file is in 'custom' directory
+    // Only 'custom' scripts can be deleted
+    function isCustomScript(path) {
+        // Validates folder structure
+        // Returns true, if the custom path is in there
+        return /^scripts\\custom\\/gm.test(path)
+    }
+
+    // Scans stats and delete only if it is a file
+    const stats = await fs.stat(oldFile.path)
+    if (stats.isFile() && isCustomScript(oldFile.path)) {
+        const oldFileNameRegexp = new RegExp(`${oldFile.name}$`, 'gm') // Matches old filename (only the end of the path)
+        const newPath = oldFile.path.replace(oldFileNameRegexp, newFile.name)
+
+        console.log('oldFile.path:', oldFile.path)
+        console.log('newPath:', newPath)
+
+        // Renames file, if old and new names are different
+        if (oldFile.name !== newFile.name) {
+            await fs.rename(oldFile.path, newPath).catch((error) => {
+                console.error(error)
+                // Return results
+                res.status(500).json({
+                    _status: 'error',
+                    info: 'Couldn\'t rename file, please try again',
+                    error
+                })
+                return next()
+            })
+        }
+
+        // Overwrite file with new content
+        await fs.outputFile(newPath, newFile.content).then(async() => {
+            console.log('[Edit Script] -> Changed executable permissions.')
+            fs.chmod(newPath, '755')
+        }).catch((error) => {
+            console.error(error)
+            // Return results
+            res.status(500).json({
+                _status: 'error',
+                info: 'Couldn\'t write data, please try again',
+                error
+            })
+            return next()
+        })
+
+        // Return results
+        res.json({
+            _status: 'ok',
+            info: 'File edited successfully',
+            request: query
+        })
+    } else {
+        // Return results
+        const error = new Error('Couldn\'t edit script. Request wasn\'t a file, or wasn\t an custom script.')
+        res.status(500).json({
+            _status: 'error',
+            info: 'Something went wrong',
+            error: error.message
+        })
+        return next()
+    }
 }))
 
 module.exports = app

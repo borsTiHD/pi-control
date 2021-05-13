@@ -21,7 +21,7 @@
         </template>
 
         <v-sheet class="d-flex">
-            <edit-script :item="item" />
+            <edit-script :item="item" @edited="$emit('edited')" />
             <delete-script :item="item" @deleted="$emit('deleted')" />
         </v-sheet>
     </v-menu>
