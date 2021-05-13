@@ -56,10 +56,14 @@ export default {
                 .then((res) => {
                     this.$emit('added')
                     const data = res.data
-                    console.log('[New Script] -> Added new script:', data)
-                    this.$toast.info(`${data.info}`)
+                    if (data.error || data._status === 'error') {
+                        throw new Error(data.info)
+                    } else {
+                        console.log('[New Script] -> Added new script:', data)
+                        this.$toast.info(`${data.info}`)
+                    }
                 }).catch((error) => {
-                    this.$toast.error(error)
+                    this.$toast.error(error.message)
                     console.error(error)
                 }).finally(() => {
                     this.loading = false
