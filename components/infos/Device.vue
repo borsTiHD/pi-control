@@ -63,22 +63,17 @@ export default {
         }
     },
     async created() {
+        // Collecting data
         this.loading = true
         const kernelData = await this.fetchingData(path.join('scripts', 'server', 'misc', 'kernel info.sh')).then((data) => this.crawlKernelInfo(data))
         const operatingSystem = await this.fetchingData(path.join('scripts', 'server', 'misc', 'operating system.sh')).then((data) => this.crawlOperatingSystem(data))
 
-        console.log(kernelData)
-        console.log(operatingSystem)
+        // Pushing data in Items
+        this.items = []
+        kernelData.forEach((item) => { this.items.push(item) })
+        this.items.push(operatingSystem)
 
-        /*
-        this.items = [
-            {
-                name: 'test',
-                state: 'test'
-            }
-        ]
-        */
-
+        // Ending loading
         this.loading = false
     },
     methods: {
@@ -102,11 +97,11 @@ export default {
         crawlKernelInfo(data) {
             // Crawls Kerlen infos -> exp. 'Linux hostname 5.10.17-v7l+ #1414 SMP Fri Apr 30 13:20:47 BST 2021 armv7l GNU/Linux'
             const arr = data.split(' ')
-            return {
-                sysname: arr[0],
-                nodename: arr[1],
-                kernel: data.replace(arr[0], '').replace(arr[1], '').replace(/^\s+/, '')
-            }
+            return [
+                { name: 'Sysname:', state: arr[0] },
+                { name: 'Nodename:', state: arr[1] },
+                { name: 'Kernel:', state: data.replace(arr[0], '').replace(arr[1], '').replace(/^\s+/, '') }
+            ]
         },
         crawlOperatingSystem(data) {
             // Crawls OS infos -> searching for. 'Operating System: Raspbian GNU/Linux 10 (buster)'
@@ -114,9 +109,12 @@ export default {
             const patt = new RegExp(`${pattText}.+$`, 'gm')
             const matches = data.match(patt)
             if (Array.isArray(matches)) {
-                return matches.map((item) => {
-                    return item.replace(pattText, '').replace(/^ +/gm, '')
-                })[0]
+                return {
+                    name: pattText,
+                    state: matches.map((item) => {
+                        return item.replace(pattText, '').replace(/^ +/gm, '')
+                    })[0]
+                }
             }
             return false
         }
