@@ -39,7 +39,7 @@ app.post('/execute', asyncHandler(async(req, res, next) => {
     const args = query.args || []
 
     // Removes 'scripts' folders from path
-    const script = scriptRaw.replace('scripts\\', '')
+    const script = scriptRaw.replace('scripts\\', '').replace('scripts/', '')
 
     // Promise for spawning
     const spawn = () => {
@@ -191,7 +191,7 @@ app.post('/scripts/delete', asyncHandler(async(req, res, next) => {
     function isCustomScript(path) {
         // Validates folder structure
         // Returns true, if the custom path is in there
-        return /^scripts\\custom\\/gm.test(path)
+        return /^scripts\\custom\\/gm.test(path) || /^scripts\/custom\//gm.test(path)
     }
 
     // Scans stats and delete only if it is a file
@@ -237,7 +237,7 @@ app.post('/scripts/edit', asyncHandler(async(req, res, next) => {
     function isCustomScript(path) {
         // Validates folder structure
         // Returns true, if the custom path is in there
-        return /^scripts\\custom\\/gm.test(path)
+        return /^scripts\\custom\\/gm.test(path) || /^scripts\/custom\//gm.test(path)
     }
 
     // Scans stats and delete only if it is a file
