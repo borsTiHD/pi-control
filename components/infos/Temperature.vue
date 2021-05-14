@@ -56,7 +56,7 @@ export default {
             loading: false,
             temp: false,
             scripts: {
-                temp: path.join('server', 'misc', 'SoC temp in celsius.sh')
+                temp: path.join('server', 'cpu', 'SoC temp in celsius.sh')
             }
         }
     },
