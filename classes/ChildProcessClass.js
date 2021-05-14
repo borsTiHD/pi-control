@@ -86,7 +86,7 @@ class ChildProcessClass {
         }
 
         try {
-            console.log('[ChildProcess] -> Try spawning:', file)
+            console.log('[ChildProcess] -> Spawning:', file)
             const child = execFile(file, args, { shell: true }, (error, stdout, stderr) => {
                 if (error) {
                     console.error('[ChildProcess] -> Error:', error)
