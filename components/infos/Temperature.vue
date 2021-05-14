@@ -6,9 +6,9 @@
                 color="primary"
                 class="mr-2"
             >
-                mdi-chip
+                mdi-thermometer
             </v-icon>
-            CPU
+            Temperature
             <v-tooltip right>
                 <template #activator="{ on, attrs }">
                     <v-btn
@@ -39,7 +39,7 @@
             </v-row>
             <v-row v-else>
                 <v-col cols="12">
-                    <span v-for="(item, index) in cpuLoad" :key="index">{{ item }}</span>
+                    {{ temp }}
                 </v-col>
             </v-row>
         </v-card-text>
@@ -50,15 +50,13 @@
 import path from 'path'
 
 export default {
-    name: 'CpuInfo',
+    name: 'Temperature',
     data() {
         return {
             loading: false,
-            cpuCores: 0,
-            cpuLoad: [],
+            temp: false,
             scripts: {
-                cpuCores: path.join('server', 'cpu', 'cores.sh'),
-                topScript: path.join('server', 'misc', 'top.sh')
+                temp: path.join('server', 'misc', 'SoC temp in celsius.sh')
             }
         }
     },
@@ -67,39 +65,12 @@ export default {
     },
     methods: {
         async scanFiles() {
-            // Loading
+            // Collecting data
             this.loading = true
-
-            // Collecting Data
-            this.cpuCores = await this.$runScript(this.scripts.cpuCores).catch((error) => {
+            this.temp = await this.$runScript(this.scripts.temp).catch((error) => {
                 console.error(error)
             })
-            const topData = await this.$runScript(this.scripts.topScript).catch((error) => {
-                console.error(error)
-            })
-
-            // Crawled 'top' data
-            if (typeof topData === 'string' || topData instanceof String) {
-                this.cpuLoad = this.crawlCpuLoad(topData)
-            }
-
-            // Ending loading
             this.loading = false
-        },
-        crawlCpuLoad(data) {
-            // Crawls response from 'top -b -n1'
-            // Filters cpu load
-            // Returns array with 3 loads for 1min, 5min, 15min
-            const arr = data.split('\n')
-            if (Array.isArray(arr) && arr.length > 1) {
-                const loadAvgString = 'load average:'
-                const loadAvgRegexp = new RegExp(`${loadAvgString}.+$`, 'g')
-                return arr[0].match(loadAvgRegexp).map((item) => {
-                    const arr = item.replace(loadAvgString, '').replace(/^\s+/, '').split(', ')
-                    return arr
-                })[0]
-            }
-            return []
         }
     }
 }

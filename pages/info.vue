@@ -7,6 +7,9 @@
             <cpu-info />
         </v-col>
         <v-col cols="12" sm="8" md="6" lg="4" class="d-flex flex-column">
+            <temperature />
+        </v-col>
+        <v-col cols="12" sm="8" md="6" lg="4" class="d-flex flex-column">
             <system />
         </v-col>
         <v-col cols="12" sm="8" md="6" lg="4" class="d-flex flex-column">
@@ -20,6 +23,7 @@ import System from '~/components/infos/System.vue'
 import Device from '~/components/infos/Device.vue'
 import CpuInfo from '~/components/infos/CpuInfo.vue'
 import Uptime from '~/components/infos/Uptime.vue'
+import Temperature from '~/components/infos/Temperature.vue'
 
 export default {
     name: 'Info',
@@ -27,7 +31,8 @@ export default {
         System,
         Device,
         CpuInfo,
-        Uptime
+        Uptime,
+        Temperature
     }
 }
 </script>
