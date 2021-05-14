@@ -39,7 +39,7 @@
             </v-row>
             <v-row v-else>
                 <v-col cols="12">
-                    {{ memory }}
+                    {{ disk }}
                 </v-col>
             </v-row>
         </v-card-text>
