@@ -54,8 +54,10 @@ export default {
     data() {
         return {
             loading: false,
+            cpuCores: 0,
             cpuLoad: [],
             scripts: {
+                cpuCores: path.join('server', 'cpu', 'cores.sh'),
                 topScript: path.join('server', 'misc', 'top.sh')
             }
         }
@@ -65,9 +67,13 @@ export default {
     },
     methods: {
         async scanFiles() {
-            // Collecting data
+            // Loading
             this.loading = true
-            this.items = []
+
+            // Collecting Data
+            this.cpuCores = await this.$runScript(this.scripts.cpuCores).catch((error) => {
+                console.error(error)
+            })
             const topData = await this.$runScript(this.scripts.topScript).catch((error) => {
                 console.error(error)
             })
@@ -83,6 +89,7 @@ export default {
         crawlCpuLoad(data) {
             // Crawls response from 'top -b -n1'
             // Filters cpu load
+            // Returns array with 3 loads for 1min, 5min, 15min
             const arr = data.split('\n')
             if (Array.isArray(arr) && arr.length > 1) {
                 const loadAvgString = 'load average:'
