@@ -61,16 +61,18 @@ export default {
             loading: false,
             items: [],
             scripts: {
-                cpuScript: path.join('server', 'cpu', 'show cpu info.sh')
+                cpuScript: path.join('server', 'misc', 'top.sh')
             }
         }
     },
     async created() {
         // Collecting data
         this.loading = true
-        await this.$runScript(this.scripts.cpuScript).then((data) => this.crawlKernelInfo(data)).catch((error) => {
+        const cpuData = await this.$runScript(this.scripts.cpuScript).then((data) => this.crawlTopResponse(data)).catch((error) => {
             console.error(error)
         })
+
+        console.log('cpuData', cpuData)
 
         // Pushing data in Items
         this.items = []
@@ -79,14 +81,11 @@ export default {
         this.loading = false
     },
     methods: {
-        crawlKernelInfo(data) {
-            // Crawls Kerlen infos -> exp. 'Linux hostname 5.10.17-v7l+ #1414 SMP Fri Apr 30 13:20:47 BST 2021 armv7l GNU/Linux'
-            const arr = data.split(' ')
-            return [
-                { name: 'System:', state: arr[0] },
-                { name: 'Hostname:', state: arr[1] },
-                { name: 'Kernel:', state: data.replace(arr[0], '').replace(arr[1], '').replace(/^\s+/, '') }
-            ]
+        crawlTopResponse(data) {
+            // Crawls response from 'top -b -n1'
+            const arr = data.split('\n')
+            console.log('arr', arr)
+            return arr
         }
     }
 }
