@@ -39,29 +39,7 @@
             </v-row>
             <v-row v-else>
                 <v-col cols="12">
-                    <v-simple-table dense>
-                        <template #default>
-                            <thead>
-                                <tr>
-                                    <th class="text-left">
-                                        Name
-                                    </th>
-                                    <th class="text-left">
-                                        State
-                                    </th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr
-                                    v-for="item in items"
-                                    :key="item.name"
-                                >
-                                    <td>{{ item.name }}</td>
-                                    <td>{{ item.state }}</td>
-                                </tr>
-                            </tbody>
-                        </template>
-                    </v-simple-table>
+                    <p v-for="(item, index) in cpuLoad" :key="index">{{ item }}</p>
                 </v-col>
             </v-row>
         </v-card-text>
@@ -76,9 +54,9 @@ export default {
     data() {
         return {
             loading: false,
-            items: [],
+            cpuLoad: [],
             scripts: {
-                cpuScript: path.join('server', 'misc', 'top.sh')
+                topScript: path.join('server', 'misc', 'top.sh')
             }
         }
     },
@@ -90,30 +68,31 @@ export default {
             // Collecting data
             this.loading = true
             this.items = []
-            const cpuData = await this.$runScript(this.scripts.cpuScript).then((data) => this.crawlTopResponse(data)).catch((error) => {
+            const topData = await this.$runScript(this.scripts.topScript).catch((error) => {
                 console.error(error)
             })
 
-            if (cpuData) {
-                console.log('')
+            // Crawled 'top' data
+            if (typeof topData === 'string' || topData instanceof String) {
+                this.cpuLoad = this.crawlCpuLoad(topData)
             }
-
-            // Pushing data in Items
-            this.items = []
 
             // Ending loading
             this.loading = false
         },
-        crawlTopResponse(data) {
+        crawlCpuLoad(data) {
             // Crawls response from 'top -b -n1'
+            // Filters cpu load
             const arr = data.split('\n')
-
-            const uptimeUserLoads = arr[0]
-
-            console.log('arr[0], arr[1]', arr[0], arr[1])
-            console.log('uptimeUserLoads', uptimeUserLoads)
-
-            return arr
+            if (Array.isArray(arr) && arr.length > 1) {
+                const loadAvgString = 'load average:'
+                const loadAvgRegexp = new RegExp(`${loadAvgString}.+$`, 'g')
+                return arr[0].match(loadAvgRegexp).map((item) => {
+                    const arr = item.replace(loadAvgString, '').replace(/^\s+/, '').split(', ')
+                    return arr
+                })[0]
+            }
+            return []
         }
     }
 }
