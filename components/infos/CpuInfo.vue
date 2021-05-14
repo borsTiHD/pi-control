@@ -94,7 +94,9 @@ export default {
                 console.error(error)
             })
 
-            console.log('cpuData', cpuData)
+            if (cpuData) {
+                console.log('')
+            }
 
             // Pushing data in Items
             this.items = []
@@ -105,7 +107,12 @@ export default {
         crawlTopResponse(data) {
             // Crawls response from 'top -b -n1'
             const arr = data.split('\n')
+
+            const uptimeUserLoads = arr[0]
+
             console.log('arr[0], arr[1]', arr[0], arr[1])
+            console.log('uptimeUserLoads', uptimeUserLoads)
+
             return arr
         }
     }
