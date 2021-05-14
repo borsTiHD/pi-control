@@ -89,6 +89,7 @@ export default {
         async scanFiles() {
             // Collecting data
             this.loading = true
+            this.items = []
             const cpuData = await this.$runScript(this.scripts.cpuScript).then((data) => this.crawlTopResponse(data)).catch((error) => {
                 console.error(error)
             })
@@ -104,7 +105,7 @@ export default {
         crawlTopResponse(data) {
             // Crawls response from 'top -b -n1'
             const arr = data.split('\n')
-            console.log('arr', arr)
+            console.log('arr[0], arr[1]', arr[0], arr[1])
             return arr
         }
     }

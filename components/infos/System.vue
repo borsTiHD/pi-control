@@ -88,7 +88,9 @@ export default {
     },
     methods: {
         async scanFiles() {
+            // Sets loading state and deletes all items
             this.loading = true
+            this.items = []
 
             // Collecting kernel data
             try {
