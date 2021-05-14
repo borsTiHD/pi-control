@@ -9,6 +9,23 @@
                 mdi-raspberry-pi
             </v-icon>
             Device
+            <v-tooltip right>
+                <template #activator="{ on, attrs }">
+                    <v-btn
+                        icon
+                        color="primary"
+                        class="ml-2"
+                        :loading="loading"
+                        :disabled="loading"
+                        v-bind="attrs"
+                        v-on="on"
+                        @click="scanFiles"
+                    >
+                        <v-icon>mdi-cached</v-icon>
+                    </v-btn>
+                </template>
+                <span>Rescan</span>
+            </v-tooltip>
         </v-card-title>
         <v-card-text>
             <v-row v-if="loading">
@@ -66,14 +83,17 @@ export default {
         }
     },
     async created() {
-        // Collecting data
-        this.loading = true
-        this.items = await this.$runScript(this.scripts.hardwareScript).then((data) => this.crawlHardware(data)).catch((error) => {
-            console.error(error)
-        })
-        this.loading = false
+        this.scanFiles()
     },
     methods: {
+        async scanFiles() {
+            // Collecting data
+            this.loading = true
+            this.items = await this.$runScript(this.scripts.hardwareScript).then((data) => this.crawlHardware(data)).catch((error) => {
+                console.error(error)
+            })
+            this.loading = false
+        },
         crawlHardware(data) {
             // Collecting following stuff
             /*

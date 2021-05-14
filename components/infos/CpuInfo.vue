@@ -9,6 +9,23 @@
                 mdi-chip
             </v-icon>
             CPU
+            <v-tooltip right>
+                <template #activator="{ on, attrs }">
+                    <v-btn
+                        icon
+                        color="primary"
+                        class="ml-2"
+                        :loading="loading"
+                        :disabled="loading"
+                        v-bind="attrs"
+                        v-on="on"
+                        @click="scanFiles"
+                    >
+                        <v-icon>mdi-cached</v-icon>
+                    </v-btn>
+                </template>
+                <span>Rescan</span>
+            </v-tooltip>
         </v-card-title>
         <v-card-text>
             <v-row v-if="loading">
@@ -66,21 +83,24 @@ export default {
         }
     },
     async created() {
-        // Collecting data
-        this.loading = true
-        const cpuData = await this.$runScript(this.scripts.cpuScript).then((data) => this.crawlTopResponse(data)).catch((error) => {
-            console.error(error)
-        })
-
-        console.log('cpuData', cpuData)
-
-        // Pushing data in Items
-        this.items = []
-
-        // Ending loading
-        this.loading = false
+        this.scanFiles()
     },
     methods: {
+        async scanFiles() {
+            // Collecting data
+            this.loading = true
+            const cpuData = await this.$runScript(this.scripts.cpuScript).then((data) => this.crawlTopResponse(data)).catch((error) => {
+                console.error(error)
+            })
+
+            console.log('cpuData', cpuData)
+
+            // Pushing data in Items
+            this.items = []
+
+            // Ending loading
+            this.loading = false
+        },
         crawlTopResponse(data) {
             // Crawls response from 'top -b -n1'
             const arr = data.split('\n')

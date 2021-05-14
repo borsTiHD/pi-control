@@ -9,6 +9,23 @@
                 mdi-laptop
             </v-icon>
             System
+            <v-tooltip right>
+                <template #activator="{ on, attrs }">
+                    <v-btn
+                        icon
+                        color="primary"
+                        class="ml-2"
+                        :loading="loading"
+                        :disabled="loading"
+                        v-bind="attrs"
+                        v-on="on"
+                        @click="scanFiles"
+                    >
+                        <v-icon>mdi-cached</v-icon>
+                    </v-btn>
+                </template>
+                <span>Rescan</span>
+            </v-tooltip>
         </v-card-title>
         <v-card-text>
             <v-row v-if="loading">
@@ -66,29 +83,32 @@ export default {
             }
         }
     },
-    async created() {
-        this.loading = true
-
-        // Collecting kernel data
-        try {
-            const kernelData = await this.$runScript(this.scripts.kernelScript).then((data) => this.crawlKernelInfo(data))
-            if (Array.isArray(kernelData)) { kernelData.forEach((item) => { this.items.push(item) }) }
-        } catch (err) {
-            console.error(err)
-        }
-
-        // Collecting operating system data
-        try {
-            const operatingSystem = await this.$runScript(this.scripts.operatingSystemScript).then((data) => this.crawlOperatingSystem(data))
-            this.items.push(operatingSystem)
-        } catch (err) {
-            console.error(err)
-        }
-
-        // Ending loading
-        this.loading = false
+    created() {
+        this.scanFiles()
     },
     methods: {
+        async scanFiles() {
+            this.loading = true
+
+            // Collecting kernel data
+            try {
+                const kernelData = await this.$runScript(this.scripts.kernelScript).then((data) => this.crawlKernelInfo(data))
+                if (Array.isArray(kernelData)) { kernelData.forEach((item) => { this.items.push(item) }) }
+            } catch (err) {
+                console.error(err)
+            }
+
+            // Collecting operating system data
+            try {
+                const operatingSystem = await this.$runScript(this.scripts.operatingSystemScript).then((data) => this.crawlOperatingSystem(data))
+                this.items.push(operatingSystem)
+            } catch (err) {
+                console.error(err)
+            }
+
+            // Ending loading
+            this.loading = false
+        },
         crawlKernelInfo(data) {
             // Crawls Kerlen infos -> exp. 'Linux hostname 5.10.17-v7l+ #1414 SMP Fri Apr 30 13:20:47 BST 2021 armv7l GNU/Linux'
             const arr = data.split(' ')
