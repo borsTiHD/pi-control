@@ -6,7 +6,7 @@
                 color="primary"
                 class="mr-2"
             >
-                mdi-cpu-32-bit
+                mdi-chip
             </v-icon>
             CPU
         </v-card-title>

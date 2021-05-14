@@ -6,7 +6,7 @@
                 color="primary"
                 class="mr-2"
             >
-                mdi-laptop
+                mdi-raspberry-pi
             </v-icon>
             Device
         </v-card-title>
