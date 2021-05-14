@@ -49,7 +49,8 @@ export default {
 
     // Plugins to run before rendering page: https://go.nuxtjs.dev/config-plugins
     plugins: [
-        { mode: 'client', src: '@/plugins/indexeddb.js' }
+        { mode: 'client', src: '@/plugins/indexeddb.js' },
+        { mode: 'client', src: '@/plugins/run-script.js' }
     ],
 
     // Auto import components: https://go.nuxtjs.dev/config-components

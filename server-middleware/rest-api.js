@@ -73,19 +73,19 @@ app.get('/help', (req, res) => {
     })
 })
 
-app.post('/execute', asyncHandler(async(req, res, next) => {
+app.post('/scripts/execute', asyncHandler(async(req, res, next) => {
     const { query } = req
     const scriptRaw = query.script
     const args = query.args || []
 
-    // Removes 'scripts' folders from path
-    const script = scriptRaw.replace('scripts\\', '').replace('scripts/', '')
+    // Building 'script' path
+    const script = path.join(scriptPath, scriptRaw.replace('scripts\\', '').replace('scripts/', ''))
 
     // Promise for spawning
     const spawn = () => {
         return new Promise((resolve, reject) => {
             // Spawn Script
-            childProcessSpawn.execShell(path.join(scriptPath, script), args, (pid, output) => { }, (pid, output, exitCode) => {
+            childProcessSpawn.execShell(script, args, (pid, output) => { }, (pid, output, exitCode) => {
                 resolve({ output, exitCode, pid })
             }, (error) => {
                 reject(error)
@@ -107,7 +107,7 @@ app.post('/execute', asyncHandler(async(req, res, next) => {
     // REST return
     res.json({
         _status: 'ok',
-        info: 'Script executed',
+        info: 'Script successfully executed',
         response
     })
 }))
