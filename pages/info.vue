@@ -9,6 +9,9 @@
         <v-col cols="12" sm="8" md="6" lg="4" class="d-flex flex-column">
             <cpu-info />
         </v-col>
+        <v-col cols="12" sm="8" md="6" lg="4" class="d-flex flex-column">
+            <uptime />
+        </v-col>
     </v-row>
 </template>
 
@@ -16,13 +19,15 @@
 import System from '~/components/infos/System.vue'
 import Device from '~/components/infos/Device.vue'
 import CpuInfo from '~/components/infos/CpuInfo.vue'
+import Uptime from '~/components/infos/Uptime.vue'
 
 export default {
     name: 'Info',
     components: {
         System,
         Device,
-        CpuInfo
+        CpuInfo,
+        Uptime
     }
 }
 </script>
