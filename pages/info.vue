@@ -10,6 +10,12 @@
             <temperature />
         </v-col>
         <v-col cols="12" sm="8" md="6" lg="4" class="d-flex flex-column">
+            <memory />
+        </v-col>
+        <v-col cols="12" sm="8" md="6" lg="4" class="d-flex flex-column">
+            <diskspace />
+        </v-col>
+        <v-col cols="12" sm="8" md="6" lg="4" class="d-flex flex-column">
             <system />
         </v-col>
         <v-col cols="12" sm="8" md="6" lg="4" class="d-flex flex-column">
@@ -24,6 +30,8 @@ import Device from '~/components/infos/Device.vue'
 import CpuInfo from '~/components/infos/CpuInfo.vue'
 import Uptime from '~/components/infos/Uptime.vue'
 import Temperature from '~/components/infos/Temperature.vue'
+import Memory from '~/components/infos/Memory.vue'
+import Diskspace from '~/components/infos/Diskspace.vue'
 
 export default {
     name: 'Info',
@@ -32,7 +40,9 @@ export default {
         Device,
         CpuInfo,
         Uptime,
-        Temperature
+        Temperature,
+        Memory,
+        Diskspace
     }
 }
 </script>
