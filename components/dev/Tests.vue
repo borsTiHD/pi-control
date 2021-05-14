@@ -36,7 +36,7 @@ export default {
     },
     methods: {
         testBtn() {
-            const url = '/execute'
+            const url = '/scripts/execute'
             this.loadingTestBtn = true
             this.$axios.post(url, null, {
                 params: {
@@ -65,7 +65,7 @@ export default {
                 })
         },
         testErrorBtn() {
-            const url = '/execute'
+            const url = '/scripts/execute'
             this.$axios.post(url, null, {
                 params: {
                     script: 'not-found'

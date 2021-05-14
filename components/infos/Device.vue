@@ -59,36 +59,21 @@ export default {
     data() {
         return {
             loading: false,
-            items: []
+            items: [],
+            scripts: {
+                hardwareScript: path.join('server', 'cpu', 'show cpu info.sh')
+            }
         }
     },
     async created() {
         // Collecting data
         this.loading = true
-        const hardwareInfo = await this.fetchingData(path.join('scripts', 'server', 'cpu', 'show cpu info.sh')).then((data) => this.crawlHardware(data))
-        this.items = hardwareInfo
-
-        // Ending loading
+        this.items = await this.$runScript(this.scripts.hardwareScript).then((data) => this.crawlHardware(data)).catch((error) => {
+            console.error(error)
+        })
         this.loading = false
     },
     methods: {
-        async fetchingData(script) {
-            const url = '/execute'
-            const data = await this.$axios.post(url, null, { params: { script } })
-                .then((res) => {
-                    const data = res.data
-                    console.log(`[Device] -> Executed Script (${script}):`, data)
-                    if (data.error || data._status === 'error') {
-                        throw new Error(data.info)
-                    } else {
-                        return data.response.output
-                    }
-                }).catch((error) => {
-                    this.$toast.error(error.message)
-                    console.error(error)
-                })
-            return data
-        },
         crawlHardware(data) {
             // Collecting following stuff
             /*

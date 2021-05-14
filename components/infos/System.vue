@@ -59,41 +59,36 @@ export default {
     data() {
         return {
             loading: false,
-            items: []
+            items: [],
+            scripts: {
+                kernelScript: path.join('server', 'misc', 'kernel info.sh'),
+                operatingSystemScript: path.join('server', 'misc', 'operating system.sh')
+            }
         }
     },
     async created() {
-        // Collecting data
         this.loading = true
-        const kernelData = await this.fetchingData(path.join('scripts', 'server', 'misc', 'kernel info.sh')).then((data) => this.crawlKernelInfo(data))
-        const operatingSystem = await this.fetchingData(path.join('scripts', 'server', 'misc', 'operating system.sh')).then((data) => this.crawlOperatingSystem(data))
 
-        // Pushing data in Items
-        this.items = []
-        kernelData.forEach((item) => { this.items.push(item) })
-        this.items.push(operatingSystem)
+        // Collecting kernel data
+        try {
+            const kernelData = await this.$runScript(this.scripts.kernelScript).then((data) => this.crawlKernelInfo(data))
+            if (Array.isArray(kernelData)) { kernelData.forEach((item) => { this.items.push(item) }) }
+        } catch (err) {
+            console.error(err)
+        }
+
+        // Collecting operating system data
+        try {
+            const operatingSystem = await this.$runScript(this.scripts.operatingSystemScript).then((data) => this.crawlOperatingSystem(data))
+            this.items.push(operatingSystem)
+        } catch (err) {
+            console.error(err)
+        }
 
         // Ending loading
         this.loading = false
     },
     methods: {
-        async fetchingData(script) {
-            const url = '/execute'
-            const data = await this.$axios.post(url, null, { params: { script } })
-                .then((res) => {
-                    const data = res.data
-                    console.log(`[Device] -> Executed Script (${script}):`, data)
-                    if (data.error || data._status === 'error') {
-                        throw new Error(data.info)
-                    } else {
-                        return data.response.output
-                    }
-                }).catch((error) => {
-                    this.$toast.error(error.message)
-                    console.error(error)
-                })
-            return data
-        },
         crawlKernelInfo(data) {
             // Crawls Kerlen infos -> exp. 'Linux hostname 5.10.17-v7l+ #1414 SMP Fri Apr 30 13:20:47 BST 2021 armv7l GNU/Linux'
             const arr = data.split(' ')

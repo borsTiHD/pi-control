@@ -35,29 +35,15 @@ export default {
         }
     },
     methods: {
-        runScript() {
-            const url = '/execute'
+        async runScript() {
             this.loading = true
-            this.$axios.post(url, null, {
-                params: {
-                    script: this.item.path
-                    // args: ['a', 'b', 'c']
-                }
-            })
-                .then((res) => {
-                    console.log('[Scripts] -> Executed Script:', res.data)
-                    const data = res.data
-                    if (data.error || data._status === 'error') {
-                        throw new Error(data.info)
-                    } else {
-                        this.$toast.info(`${data.info}\n${data.response.output === '' ? '' : `Output: ${data.response.output}`}`)
-                    }
-                }).catch((error) => {
-                    this.$toast.error(error.message)
-                    console.error(error)
-                }).finally(() => {
-                    this.loading = false
-                })
+            try {
+                const data = await this.$runScript(this.item.path /* , ['a', 'b', 'c'] */)
+                this.$toast.info(`Script executed.\n${data === '' ? '' : `Output: ${data}`}`)
+            } catch (error) {
+                console.error(error)
+            }
+            this.loading = false
         }
     }
 }

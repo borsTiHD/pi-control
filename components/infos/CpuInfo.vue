@@ -59,13 +59,18 @@ export default {
     data() {
         return {
             loading: false,
-            items: []
+            items: [],
+            scripts: {
+                cpuScript: path.join('server', 'cpu', 'show cpu info.sh')
+            }
         }
     },
     async created() {
         // Collecting data
         this.loading = true
-        await this.fetchingData(path.join('scripts', 'server', 'misc', 'kernel info.sh')).then((data) => this.crawlKernelInfo(data))
+        await this.$runScript(this.scripts.cpuScript).then((data) => this.crawlKernelInfo(data)).catch((error) => {
+            console.error(error)
+        })
 
         // Pushing data in Items
         this.items = []
@@ -74,23 +79,6 @@ export default {
         this.loading = false
     },
     methods: {
-        async fetchingData(script) {
-            const url = '/execute'
-            const data = await this.$axios.post(url, null, { params: { script } })
-                .then((res) => {
-                    const data = res.data
-                    console.log(`[Device] -> Executed Script (${script}):`, data)
-                    if (data.error || data._status === 'error') {
-                        throw new Error(data.info)
-                    } else {
-                        return data.response.output
-                    }
-                }).catch((error) => {
-                    this.$toast.error(error.message)
-                    console.error(error)
-                })
-            return data
-        },
         crawlKernelInfo(data) {
             // Crawls Kerlen infos -> exp. 'Linux hostname 5.10.17-v7l+ #1414 SMP Fri Apr 30 13:20:47 BST 2021 armv7l GNU/Linux'
             const arr = data.split(' ')
@@ -99,21 +87,6 @@ export default {
                 { name: 'Hostname:', state: arr[1] },
                 { name: 'Kernel:', state: data.replace(arr[0], '').replace(arr[1], '').replace(/^\s+/, '') }
             ]
-        },
-        crawlOperatingSystem(data) {
-            // Crawls OS infos -> searching for. 'Operating System: Raspbian GNU/Linux 10 (buster)'
-            const pattText = 'Operating System:'
-            const patt = new RegExp(`${pattText}.+$`, 'gm')
-            const matches = data.match(patt)
-            if (Array.isArray(matches)) {
-                return {
-                    name: pattText,
-                    state: matches.map((item) => {
-                        return item.replace(pattText, '').replace(/^ +/gm, '')
-                    })[0]
-                }
-            }
-            return false
         }
     }
 }
