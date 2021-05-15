@@ -26,7 +26,7 @@
 
 <script>
 import path from 'path'
-import { mapActions } from 'vuex'
+import { mapGetters, mapActions } from 'vuex'
 
 import System from '~/components/infos/System.vue'
 import Device from '~/components/infos/Device.vue'
@@ -74,6 +74,7 @@ export default {
             },
             intervalTimer: 1000 * 5,
             interval: {
+                uptime: null,
                 cpuLoad: null,
                 memory: null,
                 temperature: null
@@ -81,6 +82,9 @@ export default {
         }
     },
     computed: {
+        ...mapGetters({
+            getAutoRefresh: 'settings/getAutoRefresh'
+        }),
         cpuLoading() {
             // Because we load multiple scripts, the child component gets this computed value for loading state
             if (this.loading.cpuCores && this.loading.topScript) return true
@@ -94,26 +98,30 @@ export default {
     },
     created() {
         // Initial collecting data with 'alias'
-        this.scanAlias('uptime')
         this.scanAlias('disk')
         this.scanAlias('hardware')
         this.scanAlias('system')
     },
     activated() {
         // Initial collecting after every component activation
+        this.scanAlias('uptime')
         this.scanAlias('cpu')
         this.scanAlias('memory')
         this.scanAlias('temperature')
 
         // Clearing existing intervals
+        if (this.interval.uptime) { clearInterval(this.interval.uptime) }
         if (this.interval.cpuLoad) { clearInterval(this.interval.cpuLoad) }
         if (this.interval.memory) { clearInterval(this.interval.memory) }
         if (this.interval.temperature) { clearInterval(this.interval.temperature) }
 
-        // Interval for collecting data
-        this.interval.cpuLoad = setInterval(() => { this.scanAlias('cpu') }, this.intervalTimer) // CPU Load
-        this.interval.memory = setInterval(() => { this.scanAlias('memory') }, this.intervalTimer) // Memory Data
-        this.interval.temperature = setInterval(() => { this.scanAlias('temperature') }, this.intervalTimer) // Temperature
+        // Interval for collecting data if 'AutoRefresh' is activated in settings
+        if (this.getAutoRefresh) {
+            this.interval.uptime = setInterval(() => { this.scanAlias('uptime') }, this.intervalTimer) // Uptime
+            this.interval.cpuLoad = setInterval(() => { this.scanAlias('cpu') }, this.intervalTimer) // CPU Load
+            this.interval.memory = setInterval(() => { this.scanAlias('memory') }, this.intervalTimer) // Memory Data
+            this.interval.temperature = setInterval(() => { this.scanAlias('temperature') }, this.intervalTimer) // Temperature
+        }
     },
     deactivated() {
         // Clearing intervals on leaving
