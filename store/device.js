@@ -3,7 +3,8 @@ export const state = () => ({
     kernelData: null,
     operatingSystem: null,
     hardwareData: null,
-    diskData: null
+    diskData: null,
+    memoryData: null
 })
 
 // Sync functions for setting data
@@ -19,6 +20,9 @@ export const mutations = {
     },
     setDiskData(state, payload) {
         state.diskData = payload
+    },
+    setMemoryData(state, payload) {
+        state.memoryData = payload
     }
 }
 
@@ -35,6 +39,9 @@ export const actions = {
     },
     setDiskData({ commit }, payload) {
         commit('setDiskData', payload)
+    },
+    setMemoryData({ commit }, payload) {
+        commit('setMemoryData', payload)
     }
 }
 
@@ -51,5 +58,8 @@ export const getters = {
     },
     getDiskData(state) {
         return state.diskData
+    },
+    getMemoryData(state) {
+        return state.memoryData
     }
 }

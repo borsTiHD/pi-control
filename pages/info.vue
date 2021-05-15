@@ -10,7 +10,7 @@
             <temperature />
         </v-col>
         <v-col cols="12" sm="8" md="6" lg="4" class="d-flex flex-column">
-            <memory />
+            <memory :loading="loading.memory" @rescan="scanMemoryData" />
         </v-col>
         <v-col cols="12" sm="8" md="6" lg="4" class="d-flex flex-column">
             <diskspace :loading="loading.disk" @rescan="scanDiskData" />
@@ -52,13 +52,15 @@ export default {
             loading: {
                 system: false,
                 hardware: false,
-                disk: false
+                disk: false,
+                memory: false
             },
             scripts: {
                 kernel: path.join('server', 'misc', 'kernel info.sh'),
                 operatingSystem: path.join('server', 'misc', 'operating system.sh'),
                 hardwareScript: path.join('server', 'cpu', 'show cpu info.sh'),
-                disk: path.join('server', 'disk', 'df.sh')
+                disk: path.join('server', 'disk', 'df.sh'),
+                memory: path.join('server', 'memory', 'free.sh')
             }
         }
     },
@@ -67,30 +69,30 @@ export default {
         this.scanSystemData()
         this.scanHardwareData()
         this.scanDiskData()
+        this.scanMemoryData()
     },
     methods: {
         ...mapActions({
             setKernelData: 'device/setKernelData',
             setOperatingSystem: 'device/setOperatingSystem',
             setHardwareData: 'device/setHardwareData',
-            setDiskData: 'device/setDiskData'
+            setDiskData: 'device/setDiskData',
+            setMemoryData: 'device/setMemoryData'
         }),
         async scanSystemData() {
             // Sets loading state
             this.loading.system = true
 
-            // Collecting kernel data
-            try {
-                const kernelData = await this.$runScript(this.scripts.kernel)
-                if (kernelData && (typeof kernelData === 'string' || kernelData instanceof String)) this.setKernelData(kernelData) // Save in store
+            try { // Collecting kernel data
+                const data = await this.$runScript(this.scripts.kernel)
+                if (data && (typeof data === 'string' || data instanceof String)) this.setKernelData(data) // Save in store
             } catch (err) {
                 console.error(err)
             }
 
-            // Collecting operating system data
-            try {
-                const operatingSystem = await this.$runScript(this.scripts.operatingSystem)
-                if (operatingSystem && (typeof operatingSystem === 'string' || operatingSystem instanceof String)) this.setOperatingSystem(operatingSystem) // Save in store
+            try { // Collecting operating system data
+                const data = await this.$runScript(this.scripts.data)
+                if (data && (typeof data === 'string' || data instanceof String)) this.setOperatingSystem(data) // Save in store
             } catch (err) {
                 console.error(err)
             }
@@ -102,10 +104,9 @@ export default {
             // Sets loading state
             this.loading.hardware = true
 
-            // Collecting hardware data
-            try {
-                const hardwareData = await this.$runScript(this.scripts.hardwareScript)
-                if (hardwareData && (typeof hardwareData === 'string' || hardwareData instanceof String)) this.setHardwareData(hardwareData) // Save in store
+            try { // Collecting hardware data
+                const data = await this.$runScript(this.scripts.hardwareScript)
+                if (data && (typeof data === 'string' || data instanceof String)) this.setHardwareData(data) // Save in store
             } catch (err) {
                 console.error(err)
             }
@@ -117,16 +118,29 @@ export default {
             // Sets loading state
             this.loading.disk = true
 
-            // Collecting disk data
-            try {
-                const disk = await this.$runScript(this.scripts.disk)
-                if (disk && (typeof disk === 'string' || disk instanceof String)) this.setDiskData(disk) // Save in store
+            try { // Collecting disk data
+                const data = await this.$runScript(this.scripts.disk)
+                if (data && (typeof data === 'string' || data instanceof String)) this.setDiskData(data) // Save in store
             } catch (err) {
                 console.error(err)
             }
 
             // Ending loading
             this.loading.disk = false
+        },
+        async scanMemoryData() {
+            // Sets loading state
+            this.loading.memory = true
+
+            try { // Collecting memory data
+                const data = await this.$runScript(this.scripts.memory)
+                if (data && (typeof data === 'string' || data instanceof String)) this.setMemoryData(data) // Save in store
+            } catch (err) {
+                console.error(err)
+            }
+
+            // Ending loading
+            this.loading.memory = false
         }
     }
 }
