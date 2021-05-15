@@ -93,29 +93,29 @@ export default {
     },
     created() {
         // Initial collecting data with 'alias'
-        this.scanAlias('cpu')
         this.scanAlias('uptime')
-        this.scanAlias('temperature')
         this.scanAlias('disk')
-        this.scanAlias('memory')
         this.scanAlias('hardware')
         this.scanAlias('system')
     },
     activated() {
-        // Interval for collecting CPU Load
+        // Initial collecting after every component activation
+        this.scanAlias('cpu')
+        this.scanAlias('memory')
+        this.scanAlias('temperature')
+
+        // Clearing existing intervals
         if (this.interval.cpuLoad) { clearInterval(this.interval.cpuLoad) }
-        this.interval.cpuLoad = setInterval(() => { this.scanAlias('cpu') }, this.intervalTimer)
-
-        // Interval for collecting Memory Data
         if (this.interval.memory) { clearInterval(this.interval.memory) }
-        this.interval.memory = setInterval(() => { this.scanAlias('memory') }, this.intervalTimer)
-
-        // Interval for collecting Temperature
         if (this.interval.temperature) { clearInterval(this.interval.temperature) }
-        this.interval.temperature = setInterval(() => { this.scanAlias('temperature') }, this.intervalTimer)
+
+        // Interval for collecting data
+        this.interval.cpuLoad = setInterval(() => { this.scanAlias('cpu') }, this.intervalTimer) // CPU Load
+        this.interval.memory = setInterval(() => { this.scanAlias('memory') }, this.intervalTimer) // Memory Data
+        this.interval.temperature = setInterval(() => { this.scanAlias('temperature') }, this.intervalTimer) // Temperature
     },
     deactivated() {
-        // Clearing Intervals
+        // Clearing intervals on leaving
         if (this.interval.cpuLoad) { clearInterval(this.interval.cpuLoad) }
         if (this.interval.memory) { clearInterval(this.interval.memory) }
         if (this.interval.temperature) { clearInterval(this.interval.temperature) }
@@ -137,7 +137,7 @@ export default {
             this.loading[loading] = true
 
             try { // Collecting uptime data
-                const data = await this.$runScript(script)
+                const data = await this.$runScript(script, null, true)
                 if (data && (typeof data === 'string' || data instanceof String)) storeAction(data) // Save in store
             } catch (err) {
                 console.error(err)
