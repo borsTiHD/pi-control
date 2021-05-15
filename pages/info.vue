@@ -58,7 +58,7 @@ export default {
             scripts: {
                 kernel: path.join('server', 'misc', 'kernel info.sh'),
                 operatingSystem: path.join('server', 'misc', 'operating system.sh'),
-                hardwareScript: path.join('server', 'cpu', 'show cpu info.sh'),
+                hardware: path.join('server', 'cpu', 'show cpu info.sh'),
                 disk: path.join('server', 'disk', 'df.sh'),
                 memory: path.join('server', 'memory', 'free.sh')
             }
@@ -91,7 +91,7 @@ export default {
             }
 
             try { // Collecting operating system data
-                const data = await this.$runScript(this.scripts.data)
+                const data = await this.$runScript(this.scripts.operatingSystem)
                 if (data && (typeof data === 'string' || data instanceof String)) this.setOperatingSystem(data) // Save in store
             } catch (err) {
                 console.error(err)
@@ -105,7 +105,7 @@ export default {
             this.loading.hardware = true
 
             try { // Collecting hardware data
-                const data = await this.$runScript(this.scripts.hardwareScript)
+                const data = await this.$runScript(this.scripts.hardware)
                 if (data && (typeof data === 'string' || data instanceof String)) this.setHardwareData(data) // Save in store
             } catch (err) {
                 console.error(err)
