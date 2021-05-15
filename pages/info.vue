@@ -110,9 +110,9 @@ export default {
         if (this.interval.temperature) { clearInterval(this.interval.temperature) }
 
         // Interval for collecting data
-        this.interval.cpuLoad = setInterval(() => { this.scanAlias('cpu') }, this.intervalTimer) // CPU Load
-        this.interval.memory = setInterval(() => { this.scanAlias('memory') }, this.intervalTimer) // Memory Data
-        this.interval.temperature = setInterval(() => { this.scanAlias('temperature') }, this.intervalTimer) // Temperature
+        this.interval.cpuLoad = setInterval(() => { this.scanAlias('cpu', false) }, this.intervalTimer) // CPU Load
+        this.interval.memory = setInterval(() => { this.scanAlias('memory', false) }, this.intervalTimer) // Memory Data
+        this.interval.temperature = setInterval(() => { this.scanAlias('temperature', false) }, this.intervalTimer) // Temperature
     },
     deactivated() {
         // Clearing intervals on leaving
@@ -134,7 +134,7 @@ export default {
         }),
         async scanData(script, loading, storeAction) {
             // Sets loading state
-            this.loading[loading] = true
+            if (loading !== false) { this.loading[loading] = true }
 
             try { // Collecting uptime data
                 const data = await this.$runScript(script, null, true)
@@ -144,38 +144,38 @@ export default {
             }
 
             // Ending loading
-            this.loading[loading] = false
+            if (loading !== false) { this.loading[loading] = false }
         },
-        scanAlias(method) {
+        scanAlias(method, loading = true) {
             switch (method) {
                 case 'cpu':
-                    this.scanData(this.scripts.cpuCores, 'cpuCores', (data) => { this.setCpuCores(data) })
-                    this.scanData(this.scripts.topScript, 'topScript', (data) => { this.setTopData(data) })
+                    this.scanData(this.scripts.cpuCores, loading ? 'cpuCores' : false, (data) => { this.setCpuCores(data) })
+                    this.scanData(this.scripts.topScript, loading ? 'topScript' : false, (data) => { this.setTopData(data) })
                     break
 
                 case 'system':
-                    this.scanData(this.scripts.kernel, 'kernel', (data) => { this.setKernelData(data) })
-                    this.scanData(this.scripts.operatingSystem, 'operatingSystem', (data) => { this.setOperatingSystem(data) })
+                    this.scanData(this.scripts.kernel, loading ? 'kernel' : false, (data) => { this.setKernelData(data) })
+                    this.scanData(this.scripts.operatingSystem, loading ? 'operatingSystem' : false, (data) => { this.setOperatingSystem(data) })
                     break
 
                 case 'uptime':
-                    this.scanData(this.scripts.uptime, 'uptime', (data) => { this.setUptimeData(data) })
+                    this.scanData(this.scripts.uptime, loading ? 'uptime' : false, (data) => { this.setUptimeData(data) })
                     break
 
                 case 'hardware':
-                    this.scanData(this.scripts.hardware, 'hardware', (data) => { this.setHardwareData(data) })
+                    this.scanData(this.scripts.hardware, loading ? 'hardware' : false, (data) => { this.setHardwareData(data) })
                     break
 
                 case 'disk':
-                    this.scanData(this.scripts.disk, 'disk', (data) => { this.setDiskData(data) })
+                    this.scanData(this.scripts.disk, loading ? 'disk' : false, (data) => { this.setDiskData(data) })
                     break
 
                 case 'memory':
-                    this.scanData(this.scripts.memory, 'memory', (data) => { this.setMemoryData(data) })
+                    this.scanData(this.scripts.memory, loading ? 'memory' : false, (data) => { this.setMemoryData(data) })
                     break
 
                 case 'temperature':
-                    this.scanData(this.scripts.temperature, 'temperature', (data) => { this.setTemperatureData(data) })
+                    this.scanData(this.scripts.temperature, loading ? 'temperature' : false, (data) => { this.setTemperatureData(data) })
                     break
 
                 default:
