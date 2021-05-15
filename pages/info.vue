@@ -101,16 +101,9 @@ export default {
     },
     activated() {
         // Initial collecting after every component activation
-        // 'this.created' prevents double scanning on the first time
-        if (this.created) {
-            console.log('created')
-            this.scanAlias('cpu')
-            this.scanAlias('memory')
-            this.scanAlias('temperature')
-        } else {
-            console.log('not created')
-            this.created = true
-        }
+        this.scanAlias('cpu')
+        this.scanAlias('memory')
+        this.scanAlias('temperature')
 
         // Clearing existing intervals
         if (this.interval.cpuLoad) { clearInterval(this.interval.cpuLoad) }
