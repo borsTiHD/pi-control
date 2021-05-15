@@ -16,10 +16,10 @@
             <diskspace />
         </v-col>
         <v-col cols="12" sm="8" md="6" lg="4" class="d-flex flex-column">
-            <system :loading="loading.system" @rescan="scanSystem" />
+            <system :loading="loading.system" @rescan="scanSystemData" />
         </v-col>
         <v-col cols="12" sm="8" md="6" lg="4" class="d-flex flex-column">
-            <device />
+            <device :loading="loading.hardware" @rescan="scanHardwareData" />
         </v-col>
     </v-row>
 </template>
@@ -50,24 +50,28 @@ export default {
     data() {
         return {
             loading: {
-                system: false
+                system: false,
+                hardware: false
             },
             scripts: {
                 kernel: path.join('server', 'misc', 'kernel info.sh'),
-                operatingSystem: path.join('server', 'misc', 'operating system.sh')
+                operatingSystem: path.join('server', 'misc', 'operating system.sh'),
+                hardwareScript: path.join('server', 'cpu', 'show cpu info.sh')
             }
         }
     },
     created() {
-        this.scanSystem() // Initial system scan
+        this.scanSystemData() // Initial scan
+        this.scanHardwareData() // Initial scan
     },
     methods: {
         ...mapActions({
             setKernelData: 'device/setKernelData',
-            setOperatingSystem: 'device/setOperatingSystem'
+            setOperatingSystem: 'device/setOperatingSystem',
+            setHardwareData: 'device/setHardwareData'
         }),
-        async scanSystem() {
-            // Sets loading state and deletes all items
+        async scanSystemData() {
+            // Sets loading state
             this.loading.system = true
 
             // Collecting kernel data
@@ -88,6 +92,21 @@ export default {
 
             // Ending loading
             this.loading.system = false
+        },
+        async scanHardwareData() {
+            // Sets loading state
+            this.loading.hardware = true
+
+            // Collecting hardware data
+            try {
+                const hardwareData = await this.$runScript(this.scripts.hardwareScript)
+                if (hardwareData && (typeof hardwareData === 'string' || hardwareData instanceof String)) this.setHardwareData(hardwareData) // Save in store
+            } catch (err) {
+                console.error(err)
+            }
+
+            // Ending loading
+            this.loading.hardware = false
         }
     }
 }

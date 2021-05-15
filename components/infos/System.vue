@@ -19,7 +19,7 @@
                         :disabled="loading"
                         v-bind="attrs"
                         v-on="on"
-                        @click="scanFiles"
+                        @click="$emit('rescan')"
                     >
                         <v-icon>mdi-cached</v-icon>
                     </v-btn>
@@ -117,9 +117,6 @@ export default {
         }
     },
     methods: {
-        scanFiles() {
-            this.$emit('rescan')
-        },
         crawlKernelInfo(data) {
             if (!data) return false
             // Crawls Kerlen infos -> exp. 'Linux hostname 5.10.17-v7l+ #1414 SMP Fri Apr 30 13:20:47 BST 2021 armv7l GNU/Linux'

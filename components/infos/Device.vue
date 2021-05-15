@@ -19,7 +19,7 @@
                         :disabled="loading"
                         v-bind="attrs"
                         v-on="on"
-                        @click="scanFiles"
+                        @click="$emit('rescan')"
                     >
                         <v-icon>mdi-cached</v-icon>
                     </v-btn>
@@ -37,7 +37,7 @@
                     />
                 </v-col>
             </v-row>
-            <v-row v-else>
+            <v-row v-else-if="!loading && items.length > 0">
                 <v-col cols="12">
                     <v-simple-table dense>
                         <template #default>
@@ -64,37 +64,56 @@
                     </v-simple-table>
                 </v-col>
             </v-row>
+            <v-row v-else>
+                <v-col cols="12">
+                    <v-alert
+                        text
+                        prominent
+                        type="error"
+                        icon="mdi-cloud-alert"
+                    >
+                        {{ textNoData }}
+                    </v-alert>
+                </v-col>
+            </v-row>
         </v-card-text>
     </v-card>
 </template>
 
 <script>
-import path from 'path'
+import { mapGetters } from 'vuex'
 
 export default {
     name: 'Device',
-    data() {
-        return {
-            loading: false,
-            items: [],
-            scripts: {
-                hardwareScript: path.join('server', 'cpu', 'show cpu info.sh')
-            }
+    props: {
+        loading: {
+            type: Boolean,
+            default: false
         }
     },
-    async created() {
-        this.scanFiles()
+    data() {
+        return {
+            textNoData: 'No data could be determined. Please rescan manually.'
+        }
+    },
+    computed: {
+        ...mapGetters({
+            getHardwareData: 'device/getHardwareData'
+        }),
+        items() {
+            // Result for return
+            const items = []
+
+            // Kernel Data
+            const hardwareData = this.crawlHardware(this.getHardwareData)
+            if (hardwareData) { hardwareData.forEach((item) => { items.push(item) }) }
+
+            return items
+        }
     },
     methods: {
-        async scanFiles() {
-            // Collecting data
-            this.loading = true
-            this.items = await this.$runScript(this.scripts.hardwareScript).then((data) => this.crawlHardware(data)).catch((error) => {
-                console.error(error)
-            })
-            this.loading = false
-        },
         crawlHardware(data) {
+            if (!data) return false
             // Collecting following stuff
             /*
             Hardware        : BCM2711

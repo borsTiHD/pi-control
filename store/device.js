@@ -1,7 +1,8 @@
 // Root Store
 export const state = () => ({
     kernelData: null,
-    operatingSystem: null
+    operatingSystem: null,
+    hardwareData: null
 })
 
 // Sync functions for setting data
@@ -11,6 +12,9 @@ export const mutations = {
     },
     setOperatingSystem(state, payload) {
         state.operatingSystem = payload
+    },
+    setHardwareData(state, payload) {
+        state.hardwareData = payload
     }
 }
 
@@ -21,6 +25,9 @@ export const actions = {
     },
     setOperatingSystem({ commit }, payload) {
         commit('setOperatingSystem', payload)
+    },
+    setHardwareData({ commit }, payload) {
+        commit('setHardwareData', payload)
     }
 }
 
@@ -31,5 +38,8 @@ export const getters = {
     },
     getOperatingSystem(state) {
         return state.operatingSystem
+    },
+    getHardwareData(state) {
+        return state.hardwareData
     }
 }
