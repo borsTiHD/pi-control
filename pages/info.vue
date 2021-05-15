@@ -70,6 +70,12 @@ export default {
                 disk: path.join('server', 'disk', 'df.sh'),
                 memory: path.join('server', 'memory', 'free.sh'),
                 temperature: path.join('server', 'cpu', 'SoC temp in celsius.sh')
+            },
+            intervalTimer: 1000 * 5,
+            interval: {
+                cpuLoad: null,
+                memory: null,
+                temperature: null
             }
         }
     },
@@ -94,6 +100,25 @@ export default {
         this.scanAlias('memory')
         this.scanAlias('hardware')
         this.scanAlias('system')
+    },
+    activated() {
+        // Interval for collecting CPU Load
+        if (this.interval.cpuLoad) { clearInterval(this.interval.cpuLoad) }
+        this.interval.cpuLoad = setInterval(() => { this.scanAlias('cpu') }, this.intervalTimer)
+
+        // Interval for collecting Memory Data
+        if (this.interval.memory) { clearInterval(this.interval.memory) }
+        this.interval.memory = setInterval(() => { this.scanAlias('memory') }, this.intervalTimer)
+
+        // Interval for collecting Temperature
+        if (this.interval.temperature) { clearInterval(this.interval.temperature) }
+        this.interval.temperature = setInterval(() => { this.scanAlias('temperature') }, this.intervalTimer)
+    },
+    deactivated() {
+        // Clearing Intervals
+        if (this.interval.cpuLoad) { clearInterval(this.interval.cpuLoad) }
+        if (this.interval.memory) { clearInterval(this.interval.memory) }
+        if (this.interval.temperature) { clearInterval(this.interval.temperature) }
     },
     methods: {
         ...mapActions({
