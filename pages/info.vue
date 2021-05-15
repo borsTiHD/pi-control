@@ -49,6 +49,7 @@ export default {
     },
     data() {
         return {
+            created: false,
             loading: {
                 uptime: false,
                 kernel: false,
@@ -100,9 +101,16 @@ export default {
     },
     activated() {
         // Initial collecting after every component activation
-        this.scanAlias('cpu')
-        this.scanAlias('memory')
-        this.scanAlias('temperature')
+        // 'this.created' prevents double scanning on the first time
+        if (this.created) {
+            console.log('created')
+            this.scanAlias('cpu')
+            this.scanAlias('memory')
+            this.scanAlias('temperature')
+        } else {
+            console.log('not created')
+            this.created = true
+        }
 
         // Clearing existing intervals
         if (this.interval.cpuLoad) { clearInterval(this.interval.cpuLoad) }
@@ -112,7 +120,7 @@ export default {
         // Interval for collecting data
         this.interval.cpuLoad = setInterval(() => { this.scanAlias('cpu', false) }, this.intervalTimer) // CPU Load
         this.interval.memory = setInterval(() => { this.scanAlias('memory', false) }, this.intervalTimer) // Memory Data
-        this.interval.temperature = setInterval(() => { this.scanAlias('temperature', false) }, this.intervalTimer) // Temperature
+        this.interval.temperature = setInterval(() => { this.scanAlias('temperature') }, this.intervalTimer) // Temperature
     },
     deactivated() {
         // Clearing intervals on leaving

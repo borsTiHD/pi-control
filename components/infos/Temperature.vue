@@ -28,7 +28,7 @@
             </v-tooltip>
         </v-card-title>
         <v-card-text>
-            <v-row v-if="loading">
+            <v-row v-if="loading && !data">
                 <v-col cols="12">
                     <span>Collecting data...</span>
                     <v-progress-linear
@@ -37,7 +37,7 @@
                     />
                 </v-col>
             </v-row>
-            <v-row v-else-if="!loading && data">
+            <v-row v-else-if="data">
                 <v-col cols="12">
                     {{ data }}
                 </v-col>
