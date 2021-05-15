@@ -1,7 +1,7 @@
 <template>
     <v-row justify="center">
         <v-col cols="12" sm="8" md="6" lg="4" class="d-flex flex-column">
-            <uptime />
+            <uptime :loading="loading.uptime" @rescan="scanUptimeData" />
         </v-col>
         <v-col cols="12" sm="8" md="6" lg="4" class="d-flex flex-column">
             <cpu-info :loading="loading.cpu" @rescan="scanCpuData" />
@@ -50,6 +50,7 @@ export default {
     data() {
         return {
             loading: {
+                uptime: false,
                 system: false,
                 hardware: false,
                 cpu: false,
@@ -58,6 +59,7 @@ export default {
                 temperature: false
             },
             scripts: {
+                uptime: path.join('server', 'misc', 'uptime.sh'),
                 kernel: path.join('server', 'misc', 'kernel info.sh'),
                 operatingSystem: path.join('server', 'misc', 'operating system.sh'),
                 hardware: path.join('server', 'cpu', 'show cpu info.sh'),
@@ -71,6 +73,7 @@ export default {
     },
     created() {
         // Initial collecting data
+        this.scanUptimeData()
         this.scanSystemData()
         this.scanHardwareData()
         this.scanCpuData()
@@ -80,6 +83,7 @@ export default {
     },
     methods: {
         ...mapActions({
+            setUptimeData: 'device/setUptimeData',
             setKernelData: 'device/setKernelData',
             setOperatingSystem: 'device/setOperatingSystem',
             setHardwareData: 'device/setHardwareData',
@@ -89,6 +93,20 @@ export default {
             setMemoryData: 'device/setMemoryData',
             setTemperatureData: 'device/setTemperatureData'
         }),
+        async scanUptimeData() {
+            // Sets loading state
+            this.loading.uptime = true
+
+            try { // Collecting uptime data
+                const data = await this.$runScript(this.scripts.uptime)
+                if (data && (typeof data === 'string' || data instanceof String)) this.setUptimeData(data) // Save in store
+            } catch (err) {
+                console.error(err)
+            }
+
+            // Ending loading
+            this.loading.uptime = false
+        },
         async scanSystemData() {
             // Sets loading state
             this.loading.system = true

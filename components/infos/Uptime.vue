@@ -19,7 +19,7 @@
                         :disabled="loading"
                         v-bind="attrs"
                         v-on="on"
-                        @click="scanFiles"
+                        @click="$emit('rescan')"
                     >
                         <v-icon>mdi-cached</v-icon>
                     </v-btn>
@@ -37,9 +37,21 @@
                     />
                 </v-col>
             </v-row>
+            <v-row v-else-if="!loading && data">
+                <v-col cols="12">
+                    {{ data }}
+                </v-col>
+            </v-row>
             <v-row v-else>
                 <v-col cols="12">
-                    {{ uptime }}
+                    <v-alert
+                        text
+                        prominent
+                        type="error"
+                        icon="mdi-cloud-alert"
+                    >
+                        {{ textNoData }}
+                    </v-alert>
                 </v-col>
             </v-row>
         </v-card-text>
@@ -47,30 +59,28 @@
 </template>
 
 <script>
-import path from 'path'
+import { mapGetters } from 'vuex'
 
 export default {
     name: 'Uptime',
-    data() {
-        return {
-            loading: false,
-            uptime: false,
-            scripts: {
-                uptime: path.join('server', 'misc', 'uptime.sh')
-            }
+    props: {
+        loading: {
+            type: Boolean,
+            default: false
         }
     },
-    async created() {
-        this.scanFiles()
+    data() {
+        return {
+            textNoData: 'No data could be determined. Please rescan manually.'
+        }
     },
-    methods: {
-        async scanFiles() {
-            // Collecting data
-            this.loading = true
-            this.uptime = await this.$runScript(this.scripts.uptime).catch((error) => {
-                console.error(error)
-            })
-            this.loading = false
+    computed: {
+        ...mapGetters({
+            getUptimeData: 'device/getUptimeData'
+        }),
+        data() {
+            if (this.getUptimeData) return this.getUptimeData
+            return false
         }
     }
 }

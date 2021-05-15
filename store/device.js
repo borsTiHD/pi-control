@@ -1,5 +1,6 @@
 // Root Store
 export const state = () => ({
+    uptime: null,
     kernelData: null,
     operatingSystem: null,
     hardwareData: null,
@@ -12,6 +13,9 @@ export const state = () => ({
 
 // Sync functions for setting data
 export const mutations = {
+    setUptimeData(state, payload) {
+        state.uptime = payload
+    },
     setKernelData(state, payload) {
         state.kernelData = payload
     },
@@ -40,6 +44,9 @@ export const mutations = {
 
 // Async functions for setting data and calling mutations
 export const actions = {
+    setUptimeData({ commit }, payload) {
+        commit('setUptimeData', payload)
+    },
     setKernelData({ commit }, payload) {
         commit('setKernelData', payload)
     },
@@ -68,6 +75,9 @@ export const actions = {
 
 // Getting computed data
 export const getters = {
+    getUptimeData(state) {
+        return state.uptime
+    },
     getKernelData(state) {
         return state.kernelData
     },
