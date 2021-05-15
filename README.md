@@ -26,7 +26,7 @@ $ yarn install
 # serve with hot reload at localhost:3000
 $ yarn dev
 
-# build for production and launch server
+# build for production and launch server (localhost:8800)
 $ yarn build
 $ yarn start
 ```
@@ -37,7 +37,7 @@ $ yarn start
 # yarn pm2 install
 $ yarn global add pm2 --prefix /usr/local
 
-# start app
+# start app (localhost:8800)
 $ pm2 start
 
 # check status by
