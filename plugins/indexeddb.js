@@ -57,12 +57,12 @@ class IndexedDb {
                 switch (oldVersion) {
                     case 0:
                         upgradeV0toV1()
+                        // falls through
+                    case 1:
+                        upgradeV1toV2()
                         break // break entfernen wenn weitere Upgrades hinzukommen
                         // falls through
                     /*
-                    case 1:
-                        upgradeDB3fromV1toV2()
-                        // falls through
                     case 2:
                         await upgradeDB3fromV2toV3()
                         break
@@ -71,11 +71,18 @@ class IndexedDb {
                         console.error(this.err.DB_VERSION_UNKNOWN)
                 }
 
-                // Erstellt Datenbank Struktur
+                // Creates database
                 function upgradeV0toV1() {
                     // User Einstellungen
                     db.createObjectStore('preference')
                     transaction.objectStore('preference').put(true, 'darkMode')
+                }
+
+                // Update for 'autoRefresh' setting
+                function upgradeV1toV2() {
+                    // User Einstellungen
+                    db.createObjectStore('system')
+                    transaction.objectStore('system').put(true, 'autoRefresh')
                 }
 
                 /*

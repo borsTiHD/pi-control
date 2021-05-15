@@ -16,6 +16,8 @@
 </template>
 
 <script>
+import { mapActions } from 'vuex'
+
 import AppHeader from '~/components/layout/Header.vue'
 import AppSidebar from '~/components/layout/Sidebar.vue'
 import AppSettingsbar from '~/components/layout/Settingsbar.vue'
@@ -36,22 +38,28 @@ export default {
         }
     },
     async created() {
-        // Client Side Init
-        // Lädt ggf. gespeicherte Daten
+        // Clientside Init + Loading iDB data
         if (process.client) {
-            // Ermittelt DarkMode aus Settings und setzt es
+            // Getting 'darkmode' setting from iDB
             const darkMode = await this.$idb.getKeyValue('userSettings', 'preference', 'darkMode')
-            this.$vuetify.theme.dark = darkMode
+            this.$vuetify.theme.dark = darkMode // Set vuetify mode
 
-            // Setzt Container Größe
+            // Getting 'autoRefresh' setting from iDB
+            const autoRefresh = await this.$idb.getKeyValue('userSettings', 'system', 'autoRefresh')
+            this.setAutoRefresh(autoRefresh) // Put in store
+
+            // Setting container height
             setImmediate(() => {
                 this.onResize()
             })
         }
     },
     methods: {
+        ...mapActions({
+            setAutoRefresh: 'settings/setAutoRefresh'
+        }),
         onResize() {
-            // Setzt Container Höhe für Footer
+            // Setting container height for footer
             const container = document.getElementById('container')
             const footer = document.getElementById('footer')
             this.containerHeight = window.innerHeight - this.getOffset(container).top - this.getOffset(footer).height
@@ -78,7 +86,7 @@ export default {
 <style>
 /*****************************************************\
     No Scollbar on Page
-    \*****************************************************/
+\*****************************************************/
 html {
     overflow-y: hidden !important;
 }
@@ -89,7 +97,7 @@ html {
 
 /*****************************************************\
     Scrollbar
-    \*****************************************************/
+\*****************************************************/
 ::-webkit-scrollbar {
     width: 12px;
 }
@@ -103,7 +111,7 @@ html {
 
 /*****************************************************\
     Unselectable Elements
-    \*****************************************************/
+\*****************************************************/
 .unselectable {
     -webkit-touch-callout: none;
     -webkit-user-select: none;

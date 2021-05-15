@@ -13,6 +13,7 @@ export const mutations = {
 // Async functions for setting data and calling mutations
 export const actions = {
     setAutoRefresh({ commit }, payload) {
+        this.$idb.putKeyValue('userSettings', 'system', 'autoRefresh', payload) // Set iDB value
         commit('setAutoRefresh', payload)
     }
 }
