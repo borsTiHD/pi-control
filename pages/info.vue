@@ -97,10 +97,12 @@ export default {
         }
     },
     created() {
-        // Initial collecting data with 'alias'
-        this.scanAlias('disk')
-        this.scanAlias('hardware')
-        this.scanAlias('system')
+        if (process.client) {
+            // Initial collecting data with 'alias'
+            this.scanAlias('disk')
+            this.scanAlias('hardware')
+            this.scanAlias('system')
+        }
     },
     activated() {
         // Initial collecting after every component activation
