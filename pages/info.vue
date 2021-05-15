@@ -73,7 +73,8 @@ export default {
     },
     created() {
         // Initial collecting data
-        this.scanUptimeData()
+        // this.scanUptimeData()
+        this.scanData(this.scripts.uptime, 'uptime', (data) => { this.setUptimeData(data) })
         this.scanSystemData()
         this.scanHardwareData()
         this.scanCpuData()
@@ -93,6 +94,20 @@ export default {
             setMemoryData: 'device/setMemoryData',
             setTemperatureData: 'device/setTemperatureData'
         }),
+        async scanData(script, loading, storeAction) {
+            // Sets loading state
+            this.loading[loading] = true
+
+            try { // Collecting uptime data
+                const data = await this.$runScript(script)
+                if (data && (typeof data === 'string' || data instanceof String)) storeAction(data) // Save in store
+            } catch (err) {
+                console.error(err)
+            }
+
+            // Ending loading
+            this.loading[loading] = false
+        },
         async scanUptimeData() {
             // Sets loading state
             this.loading.uptime = true
