@@ -1,25 +1,25 @@
 <template>
     <v-row justify="center">
         <v-col cols="12" sm="8" md="6" lg="4" class="d-flex flex-column">
-            <uptime :loading="loading.uptime" @rescan="scanUptimeData" />
+            <uptime :loading="loading.uptime" @rescan="scanData(scripts.uptime, 'uptime', (data) => { setUptimeData(data) })" />
         </v-col>
         <v-col cols="12" sm="8" md="6" lg="4" class="d-flex flex-column">
             <cpu-info :loading="loading.cpu" @rescan="scanCpuData" />
         </v-col>
         <v-col cols="12" sm="8" md="6" lg="4" class="d-flex flex-column">
-            <temperature :loading="loading.temperature" @rescan="scanTempData" />
+            <temperature :loading="loading.temperature" @rescan="scanData(scripts.temperature, 'temperature', (data) => { setTemperatureData(data) })" />
         </v-col>
         <v-col cols="12" sm="8" md="6" lg="4" class="d-flex flex-column">
-            <memory :loading="loading.memory" @rescan="scanMemoryData" />
+            <memory :loading="loading.memory" @rescan="scanData(scripts.memory, 'memory', (data) => { setMemoryData(data) })" />
         </v-col>
         <v-col cols="12" sm="8" md="6" lg="4" class="d-flex flex-column">
-            <diskspace :loading="loading.disk" @rescan="scanDiskData" />
+            <diskspace :loading="loading.disk" @rescan="scanData(scripts.disk, 'disk', (data) => { setDiskData(data) })" />
         </v-col>
         <v-col cols="12" sm="8" md="6" lg="4" class="d-flex flex-column">
             <system :loading="loading.system" @rescan="scanSystemData" />
         </v-col>
         <v-col cols="12" sm="8" md="6" lg="4" class="d-flex flex-column">
-            <device :loading="loading.hardware" @rescan="scanHardwareData" />
+            <device :loading="loading.hardware" @rescan="scanData(scripts.hardware, 'hardware', (data) => { setHardwareData(data) })" />
         </v-col>
     </v-row>
 </template>
@@ -67,20 +67,20 @@ export default {
                 topScript: path.join('server', 'misc', 'top.sh'),
                 disk: path.join('server', 'disk', 'df.sh'),
                 memory: path.join('server', 'memory', 'free.sh'),
-                temp: path.join('server', 'cpu', 'SoC temp in celsius.sh')
+                temperature: path.join('server', 'cpu', 'SoC temp in celsius.sh')
             }
         }
     },
     created() {
         // Initial collecting data
-        // this.scanUptimeData()
         this.scanData(this.scripts.uptime, 'uptime', (data) => { this.setUptimeData(data) })
+        this.scanData(this.scripts.hardware, 'hardware', (data) => { this.setHardwareData(data) })
+        this.scanData(this.scripts.disk, 'disk', (data) => { this.setDiskData(data) })
+        this.scanData(this.scripts.memory, 'memory', (data) => { this.setMemoryData(data) })
+        this.scanData(this.scripts.temperature, 'temperature', (data) => { this.setTemperatureData(data) })
+
         this.scanSystemData()
-        this.scanHardwareData()
         this.scanCpuData()
-        this.scanDiskData()
-        this.scanMemoryData()
-        this.scanTempData()
     },
     methods: {
         ...mapActions({
@@ -108,20 +108,6 @@ export default {
             // Ending loading
             this.loading[loading] = false
         },
-        async scanUptimeData() {
-            // Sets loading state
-            this.loading.uptime = true
-
-            try { // Collecting uptime data
-                const data = await this.$runScript(this.scripts.uptime)
-                if (data && (typeof data === 'string' || data instanceof String)) this.setUptimeData(data) // Save in store
-            } catch (err) {
-                console.error(err)
-            }
-
-            // Ending loading
-            this.loading.uptime = false
-        },
         async scanSystemData() {
             // Sets loading state
             this.loading.system = true
@@ -143,20 +129,6 @@ export default {
             // Ending loading
             this.loading.system = false
         },
-        async scanHardwareData() {
-            // Sets loading state
-            this.loading.hardware = true
-
-            try { // Collecting hardware data
-                const data = await this.$runScript(this.scripts.hardware)
-                if (data && (typeof data === 'string' || data instanceof String)) this.setHardwareData(data) // Save in store
-            } catch (err) {
-                console.error(err)
-            }
-
-            // Ending loading
-            this.loading.hardware = false
-        },
         async scanCpuData() {
             // Sets loading state
             this.loading.cpu = true
@@ -177,48 +149,6 @@ export default {
 
             // Ending loading
             this.loading.cpu = false
-        },
-        async scanDiskData() {
-            // Sets loading state
-            this.loading.disk = true
-
-            try { // Collecting disk data
-                const data = await this.$runScript(this.scripts.disk)
-                if (data && (typeof data === 'string' || data instanceof String)) this.setDiskData(data) // Save in store
-            } catch (err) {
-                console.error(err)
-            }
-
-            // Ending loading
-            this.loading.disk = false
-        },
-        async scanMemoryData() {
-            // Sets loading state
-            this.loading.memory = true
-
-            try { // Collecting memory data
-                const data = await this.$runScript(this.scripts.memory)
-                if (data && (typeof data === 'string' || data instanceof String)) this.setMemoryData(data) // Save in store
-            } catch (err) {
-                console.error(err)
-            }
-
-            // Ending loading
-            this.loading.memory = false
-        },
-        async scanTempData() {
-            // Sets loading state
-            this.loading.temperature = true
-
-            try { // Collecting temperature data
-                const data = await this.$runScript(this.scripts.temp)
-                if (data && (typeof data === 'string' || data instanceof String)) this.setTemperatureData(data) // Save in store
-            } catch (err) {
-                console.error(err)
-            }
-
-            // Ending loading
-            this.loading.temperature = false
         }
     }
 }
