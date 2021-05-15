@@ -1,25 +1,25 @@
 <template>
     <v-row justify="center">
         <v-col cols="12" sm="8" md="6" lg="4" class="d-flex flex-column">
-            <uptime :loading="loading.uptime" @rescan="scanData(scripts.uptime, 'uptime', (data) => { setUptimeData(data) })" />
+            <uptime :loading="loading.uptime" @rescan="scanAlias('uptime')" />
         </v-col>
         <v-col cols="12" sm="8" md="6" lg="4" class="d-flex flex-column">
-            <cpu-info :loading="loading.cpu" @rescan="scanCpuData" />
+            <cpu-info :loading="cpuLoading" @rescan="scanAlias('cpu')" />
         </v-col>
         <v-col cols="12" sm="8" md="6" lg="4" class="d-flex flex-column">
-            <temperature :loading="loading.temperature" @rescan="scanData(scripts.temperature, 'temperature', (data) => { setTemperatureData(data) })" />
+            <temperature :loading="loading.temperature" @rescan="scanAlias('temperature')" />
         </v-col>
         <v-col cols="12" sm="8" md="6" lg="4" class="d-flex flex-column">
-            <memory :loading="loading.memory" @rescan="scanData(scripts.memory, 'memory', (data) => { setMemoryData(data) })" />
+            <memory :loading="loading.memory" @rescan="scanAlias('memory')" />
         </v-col>
         <v-col cols="12" sm="8" md="6" lg="4" class="d-flex flex-column">
-            <diskspace :loading="loading.disk" @rescan="scanData(scripts.disk, 'disk', (data) => { setDiskData(data) })" />
+            <diskspace :loading="loading.disk" @rescan="scanAlias('disk')" />
         </v-col>
         <v-col cols="12" sm="8" md="6" lg="4" class="d-flex flex-column">
-            <system :loading="loading.system" @rescan="scanSystemData" />
+            <system :loading="systemLoading" @rescan="scanAlias('system')" />
         </v-col>
         <v-col cols="12" sm="8" md="6" lg="4" class="d-flex flex-column">
-            <device :loading="loading.hardware" @rescan="scanData(scripts.hardware, 'hardware', (data) => { setHardwareData(data) })" />
+            <device :loading="loading.hardware" @rescan="scanAlias('hardware')" />
         </v-col>
     </v-row>
 </template>
@@ -51,9 +51,11 @@ export default {
         return {
             loading: {
                 uptime: false,
-                system: false,
+                kernel: false,
+                operatingSystem: false,
                 hardware: false,
-                cpu: false,
+                cpuCores: false,
+                topScript: false,
                 disk: false,
                 memory: false,
                 temperature: false
@@ -71,16 +73,27 @@ export default {
             }
         }
     },
+    computed: {
+        cpuLoading() {
+            // Because we load multiple scripts, the child component gets this computed value for loading state
+            if (this.loading.cpuCores && this.loading.topScript) return true
+            return false
+        },
+        systemLoading() {
+            // Because we load multiple scripts, the child component gets this computed value for loading state
+            if (this.loading.kernel && this.loading.operatingSystem) return true
+            return false
+        }
+    },
     created() {
-        // Initial collecting data
-        this.scanData(this.scripts.uptime, 'uptime', (data) => { this.setUptimeData(data) })
-        this.scanData(this.scripts.hardware, 'hardware', (data) => { this.setHardwareData(data) })
-        this.scanData(this.scripts.disk, 'disk', (data) => { this.setDiskData(data) })
-        this.scanData(this.scripts.memory, 'memory', (data) => { this.setMemoryData(data) })
-        this.scanData(this.scripts.temperature, 'temperature', (data) => { this.setTemperatureData(data) })
-
-        this.scanSystemData()
-        this.scanCpuData()
+        // Initial collecting data with 'alias'
+        this.scanAlias('cpu')
+        this.scanAlias('uptime')
+        this.scanAlias('temperature')
+        this.scanAlias('disk')
+        this.scanAlias('memory')
+        this.scanAlias('hardware')
+        this.scanAlias('system')
     },
     methods: {
         ...mapActions({
@@ -108,47 +121,41 @@ export default {
             // Ending loading
             this.loading[loading] = false
         },
-        async scanSystemData() {
-            // Sets loading state
-            this.loading.system = true
+        scanAlias(method) {
+            switch (method) {
+                case 'cpu':
+                    this.scanData(this.scripts.cpuCores, 'cpuCores', (data) => { this.setCpuCores(data) })
+                    this.scanData(this.scripts.topScript, 'topScript', (data) => { this.setTopData(data) })
+                    break
 
-            try { // Collecting kernel data
-                const data = await this.$runScript(this.scripts.kernel)
-                if (data && (typeof data === 'string' || data instanceof String)) this.setKernelData(data) // Save in store
-            } catch (err) {
-                console.error(err)
+                case 'system':
+                    this.scanData(this.scripts.kernel, 'kernel', (data) => { this.setKernelData(data) })
+                    this.scanData(this.scripts.operatingSystem, 'operatingSystem', (data) => { this.setOperatingSystem(data) })
+                    break
+
+                case 'uptime':
+                    this.scanData(this.scripts.uptime, 'uptime', (data) => { this.setUptimeData(data) })
+                    break
+
+                case 'hardware':
+                    this.scanData(this.scripts.hardware, 'hardware', (data) => { this.setHardwareData(data) })
+                    break
+
+                case 'disk':
+                    this.scanData(this.scripts.disk, 'disk', (data) => { this.setDiskData(data) })
+                    break
+
+                case 'memory':
+                    this.scanData(this.scripts.memory, 'memory', (data) => { this.setMemoryData(data) })
+                    break
+
+                case 'temperature':
+                    this.scanData(this.scripts.temperature, 'temperature', (data) => { this.setTemperatureData(data) })
+                    break
+
+                default:
+                    break
             }
-
-            try { // Collecting operating system data
-                const data = await this.$runScript(this.scripts.operatingSystem)
-                if (data && (typeof data === 'string' || data instanceof String)) this.setOperatingSystem(data) // Save in store
-            } catch (err) {
-                console.error(err)
-            }
-
-            // Ending loading
-            this.loading.system = false
-        },
-        async scanCpuData() {
-            // Sets loading state
-            this.loading.cpu = true
-
-            try { // Collecting cpu cores
-                const data = await this.$runScript(this.scripts.cpuCores)
-                if (data && (typeof data === 'string' || data instanceof String)) this.setCpuCores(data) // Save in store
-            } catch (err) {
-                console.error(err)
-            }
-
-            try { // Collecting top data
-                const data = await this.$runScript(this.scripts.topScript)
-                if (data && (typeof data === 'string' || data instanceof String)) this.setTopData(data) // Save in store
-            } catch (err) {
-                console.error(err)
-            }
-
-            // Ending loading
-            this.loading.cpu = false
         }
     }
 }
