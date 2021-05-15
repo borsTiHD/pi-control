@@ -37,7 +37,7 @@
                     />
                 </v-col>
             </v-row>
-            <v-row v-else>
+            <v-row v-else-if="!loading && items.length > 0">
                 <v-col cols="12">
                     <v-simple-table dense>
                         <template #default>
@@ -64,54 +64,64 @@
                     </v-simple-table>
                 </v-col>
             </v-row>
+            <v-row v-else>
+                <v-col cols="12">
+                    <v-alert
+                        text
+                        prominent
+                        type="error"
+                        icon="mdi-cloud-alert"
+                    >
+                        {{ textNoData }}
+                    </v-alert>
+                </v-col>
+            </v-row>
         </v-card-text>
     </v-card>
 </template>
 
 <script>
-import path from 'path'
+import { mapGetters } from 'vuex'
 
 export default {
     name: 'System',
-    data() {
-        return {
-            loading: false,
-            items: [],
-            scripts: {
-                kernelScript: path.join('server', 'misc', 'kernel info.sh'),
-                operatingSystemScript: path.join('server', 'misc', 'operating system.sh')
-            }
+    props: {
+        loading: {
+            type: Boolean,
+            default: false
         }
     },
-    created() {
-        this.scanFiles()
+    data() {
+        return {
+            textNoData: 'No data could be determined. Please rescan manually.'
+        }
+    },
+    computed: {
+        ...mapGetters({
+            getKernelData: 'device/getKernelData',
+            getOperatingSystem: 'device/getOperatingSystem'
+        }),
+        items() {
+            // Result for return
+            const items = []
+
+            // Kernel Data
+            const kernelData = this.crawlKernelInfo(this.getKernelData)
+            if (kernelData) { kernelData.forEach((item) => { items.push(item) }) }
+
+            // Operating System Data
+            const operatingSystem = this.crawlOperatingSystem(this.getOperatingSystem)
+            if (operatingSystem) { items.push(operatingSystem) }
+
+            return items
+        }
     },
     methods: {
-        async scanFiles() {
-            // Sets loading state and deletes all items
-            this.loading = true
-            this.items = []
-
-            // Collecting kernel data
-            try {
-                const kernelData = await this.$runScript(this.scripts.kernelScript).then((data) => this.crawlKernelInfo(data))
-                if (Array.isArray(kernelData)) { kernelData.forEach((item) => { this.items.push(item) }) }
-            } catch (err) {
-                console.error(err)
-            }
-
-            // Collecting operating system data
-            try {
-                const operatingSystem = await this.$runScript(this.scripts.operatingSystemScript).then((data) => this.crawlOperatingSystem(data))
-                this.items.push(operatingSystem)
-            } catch (err) {
-                console.error(err)
-            }
-
-            // Ending loading
-            this.loading = false
+        scanFiles() {
+            this.$emit('rescan')
         },
         crawlKernelInfo(data) {
+            if (!data) return false
             // Crawls Kerlen infos -> exp. 'Linux hostname 5.10.17-v7l+ #1414 SMP Fri Apr 30 13:20:47 BST 2021 armv7l GNU/Linux'
             const arr = data.split(' ')
             return [
@@ -121,6 +131,7 @@ export default {
             ]
         },
         crawlOperatingSystem(data) {
+            if (!data) return false
             // Crawls OS infos -> searching for. 'Operating System: Raspbian GNU/Linux 10 (buster)'
             const pattText = 'Operating System:'
             const patt = new RegExp(`${pattText}.+$`, 'gm')
@@ -133,7 +144,7 @@ export default {
                     })[0]
                 }
             }
-            return false
+            return [{ name: pattText, state: false }]
         }
     }
 }
