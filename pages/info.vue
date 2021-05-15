@@ -7,7 +7,7 @@
             <cpu-info />
         </v-col>
         <v-col cols="12" sm="8" md="6" lg="4" class="d-flex flex-column">
-            <temperature />
+            <temperature :loading="loading.temperature" @rescan="scanTempData" />
         </v-col>
         <v-col cols="12" sm="8" md="6" lg="4" class="d-flex flex-column">
             <memory :loading="loading.memory" @rescan="scanMemoryData" />
@@ -53,14 +53,16 @@ export default {
                 system: false,
                 hardware: false,
                 disk: false,
-                memory: false
+                memory: false,
+                temperature: false
             },
             scripts: {
                 kernel: path.join('server', 'misc', 'kernel info.sh'),
                 operatingSystem: path.join('server', 'misc', 'operating system.sh'),
                 hardware: path.join('server', 'cpu', 'show cpu info.sh'),
                 disk: path.join('server', 'disk', 'df.sh'),
-                memory: path.join('server', 'memory', 'free.sh')
+                memory: path.join('server', 'memory', 'free.sh'),
+                temp: path.join('server', 'cpu', 'SoC temp in celsius.sh')
             }
         }
     },
@@ -70,6 +72,7 @@ export default {
         this.scanHardwareData()
         this.scanDiskData()
         this.scanMemoryData()
+        this.scanTempData()
     },
     methods: {
         ...mapActions({
@@ -77,7 +80,8 @@ export default {
             setOperatingSystem: 'device/setOperatingSystem',
             setHardwareData: 'device/setHardwareData',
             setDiskData: 'device/setDiskData',
-            setMemoryData: 'device/setMemoryData'
+            setMemoryData: 'device/setMemoryData',
+            setTemperatureData: 'device/setTemperatureData'
         }),
         async scanSystemData() {
             // Sets loading state
@@ -141,6 +145,20 @@ export default {
 
             // Ending loading
             this.loading.memory = false
+        },
+        async scanTempData() {
+            // Sets loading state
+            this.loading.temperature = true
+
+            try { // Collecting temperature data
+                const data = await this.$runScript(this.scripts.temp)
+                if (data && (typeof data === 'string' || data instanceof String)) this.setTemperatureData(data) // Save in store
+            } catch (err) {
+                console.error(err)
+            }
+
+            // Ending loading
+            this.loading.temperature = false
         }
     }
 }

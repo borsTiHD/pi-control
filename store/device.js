@@ -4,7 +4,8 @@ export const state = () => ({
     operatingSystem: null,
     hardwareData: null,
     diskData: null,
-    memoryData: null
+    memoryData: null,
+    temperatureData: null
 })
 
 // Sync functions for setting data
@@ -23,6 +24,9 @@ export const mutations = {
     },
     setMemoryData(state, payload) {
         state.memoryData = payload
+    },
+    setTemperatureData(state, payload) {
+        state.temperatureData = payload
     }
 }
 
@@ -42,6 +46,9 @@ export const actions = {
     },
     setMemoryData({ commit }, payload) {
         commit('setMemoryData', payload)
+    },
+    setTemperatureData({ commit }, payload) {
+        commit('setTemperatureData', payload)
     }
 }
 
@@ -61,5 +68,8 @@ export const getters = {
     },
     getMemoryData(state) {
         return state.memoryData
+    },
+    getTemperatureData(state) {
+        return state.temperatureData
     }
 }
