@@ -72,7 +72,8 @@ export default {
         ...mapActions({
             setKernelData: 'device/setKernelData',
             setOperatingSystem: 'device/setOperatingSystem',
-            setHardwareData: 'device/setHardwareData'
+            setHardwareData: 'device/setHardwareData',
+            setDiskData: 'device/setDiskData'
         }),
         async scanSystemData() {
             // Sets loading state
