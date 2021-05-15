@@ -3,6 +3,8 @@ export const state = () => ({
     kernelData: null,
     operatingSystem: null,
     hardwareData: null,
+    cpuCores: null,
+    topData: null,
     diskData: null,
     memoryData: null,
     temperatureData: null
@@ -18,6 +20,12 @@ export const mutations = {
     },
     setHardwareData(state, payload) {
         state.hardwareData = payload
+    },
+    setCpuCores(state, payload) {
+        state.cpuCores = payload
+    },
+    setTopData(state, payload) {
+        state.topData = payload
     },
     setDiskData(state, payload) {
         state.diskData = payload
@@ -41,6 +49,12 @@ export const actions = {
     setHardwareData({ commit }, payload) {
         commit('setHardwareData', payload)
     },
+    setCpuCores({ commit }, payload) {
+        commit('setCpuCores', payload)
+    },
+    setTopData({ commit }, payload) {
+        commit('setTopData', payload)
+    },
     setDiskData({ commit }, payload) {
         commit('setDiskData', payload)
     },
@@ -62,6 +76,12 @@ export const getters = {
     },
     getHardwareData(state) {
         return state.hardwareData
+    },
+    getCpuCores(state) {
+        return state.cpuCores
+    },
+    getTopData(state) {
+        return state.topData
     },
     getDiskData(state) {
         return state.diskData

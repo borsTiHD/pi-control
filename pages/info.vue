@@ -4,7 +4,7 @@
             <uptime />
         </v-col>
         <v-col cols="12" sm="8" md="6" lg="4" class="d-flex flex-column">
-            <cpu-info />
+            <cpu-info :loading="loading.cpu" @rescan="scanCpuData" />
         </v-col>
         <v-col cols="12" sm="8" md="6" lg="4" class="d-flex flex-column">
             <temperature :loading="loading.temperature" @rescan="scanTempData" />
@@ -52,6 +52,7 @@ export default {
             loading: {
                 system: false,
                 hardware: false,
+                cpu: false,
                 disk: false,
                 memory: false,
                 temperature: false
@@ -60,6 +61,8 @@ export default {
                 kernel: path.join('server', 'misc', 'kernel info.sh'),
                 operatingSystem: path.join('server', 'misc', 'operating system.sh'),
                 hardware: path.join('server', 'cpu', 'show cpu info.sh'),
+                cpuCores: path.join('server', 'cpu', 'cores.sh'),
+                topScript: path.join('server', 'misc', 'top.sh'),
                 disk: path.join('server', 'disk', 'df.sh'),
                 memory: path.join('server', 'memory', 'free.sh'),
                 temp: path.join('server', 'cpu', 'SoC temp in celsius.sh')
@@ -70,6 +73,7 @@ export default {
         // Initial collecting data
         this.scanSystemData()
         this.scanHardwareData()
+        this.scanCpuData()
         this.scanDiskData()
         this.scanMemoryData()
         this.scanTempData()
@@ -79,6 +83,7 @@ export default {
             setKernelData: 'device/setKernelData',
             setOperatingSystem: 'device/setOperatingSystem',
             setHardwareData: 'device/setHardwareData',
+            setCpuCores: 'device/setCpuCores',
             setDiskData: 'device/setDiskData',
             setMemoryData: 'device/setMemoryData',
             setTemperatureData: 'device/setTemperatureData'
@@ -117,6 +122,27 @@ export default {
 
             // Ending loading
             this.loading.hardware = false
+        },
+        async scanCpuData() {
+            // Sets loading state
+            this.loading.cpu = true
+
+            try { // Collecting cpu cores
+                const data = await this.$runScript(this.scripts.cpuCores)
+                if (data && (typeof data === 'string' || data instanceof String)) this.setCpuCores(data) // Save in store
+            } catch (err) {
+                console.error(err)
+            }
+
+            try { // Collecting top data
+                const data = await this.$runScript(this.scripts.topScript)
+                if (data && (typeof data === 'string' || data instanceof String)) this.setTopData(data) // Save in store
+            } catch (err) {
+                console.error(err)
+            }
+
+            // Ending loading
+            this.loading.cpu = false
         },
         async scanDiskData() {
             // Sets loading state

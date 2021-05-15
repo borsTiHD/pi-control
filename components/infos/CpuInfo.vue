@@ -19,7 +19,7 @@
                         :disabled="loading"
                         v-bind="attrs"
                         v-on="on"
-                        @click="scanFiles"
+                        @click="$emit('rescan')"
                     >
                         <v-icon>mdi-cached</v-icon>
                     </v-btn>
@@ -37,9 +37,24 @@
                     />
                 </v-col>
             </v-row>
-            <v-row v-else>
+            <v-row v-else-if="!loading && cpuLoad">
+                <v-col cols="12">
+                    <span>CPU Cores: {{ cpuCores }}</span><br>
+                </v-col>
                 <v-col cols="12">
                     <span v-for="(item, index) in cpuLoad" :key="index" class="mr-4">{{ item }}</span>
+                </v-col>
+            </v-row>
+            <v-row v-else>
+                <v-col cols="12">
+                    <v-alert
+                        text
+                        prominent
+                        type="error"
+                        icon="mdi-cloud-alert"
+                    >
+                        {{ textNoData }}
+                    </v-alert>
                 </v-col>
             </v-row>
         </v-card-text>
@@ -47,45 +62,36 @@
 </template>
 
 <script>
-import path from 'path'
+import { mapGetters } from 'vuex'
 
 export default {
     name: 'CpuInfo',
-    data() {
-        return {
-            loading: false,
-            cpuCores: 0,
-            cpuLoad: [],
-            scripts: {
-                cpuCores: path.join('server', 'cpu', 'cores.sh'),
-                topScript: path.join('server', 'misc', 'top.sh')
-            }
+    props: {
+        loading: {
+            type: Boolean,
+            default: false
         }
     },
-    async created() {
-        this.scanFiles()
+    data() {
+        return {
+            textNoData: 'No data could be determined. Please rescan manually.'
+        }
+    },
+    computed: {
+        ...mapGetters({
+            getCpuCores: 'device/getCpuCores',
+            getTopData: 'device/getTopData'
+        }),
+        cpuLoad() {
+            if (this.getTopData) return this.crawlCpuLoad(this.getTopData)
+            return false
+        },
+        cpuCores() {
+            if (this.getCpuCores) return this.getCpuCores
+            return false
+        }
     },
     methods: {
-        async scanFiles() {
-            // Loading
-            this.loading = true
-
-            // Collecting Data
-            this.cpuCores = await this.$runScript(this.scripts.cpuCores).catch((error) => {
-                console.error(error)
-            })
-            const topData = await this.$runScript(this.scripts.topScript).catch((error) => {
-                console.error(error)
-            })
-
-            // Crawled 'top' data
-            if (typeof topData === 'string' || topData instanceof String) {
-                this.cpuLoad = this.crawlCpuLoad(topData)
-            }
-
-            // Ending loading
-            this.loading = false
-        },
         crawlCpuLoad(data) {
             // Crawls response from 'top -b -n1'
             // Filters cpu load
@@ -99,7 +105,7 @@ export default {
                     return arr
                 })[0]
             }
-            return []
+            return false
         }
     }
 }
