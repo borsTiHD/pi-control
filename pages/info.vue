@@ -84,6 +84,7 @@ export default {
             setOperatingSystem: 'device/setOperatingSystem',
             setHardwareData: 'device/setHardwareData',
             setCpuCores: 'device/setCpuCores',
+            setTopData: 'device/setTopData',
             setDiskData: 'device/setDiskData',
             setMemoryData: 'device/setMemoryData',
             setTemperatureData: 'device/setTemperatureData'
