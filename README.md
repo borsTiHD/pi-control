@@ -32,16 +32,30 @@ $ yarn start
 ```
 
 ## Deploy with pm2 for normal use
+
 ```bash
 # make sure you build the app first as mentioned in 'Build Setup'
 # yarn pm2 install
 $ yarn global add pm2 --prefix /usr/local
 
+# or npm pm2 install
+$ npm install pm2 -g
+
 # start app (localhost:8800)
 $ pm2 start
+```
 
+## Additional pm2 commands
+
+```bash
 # check status by
 $ pm2 ls
+
+# make pm2 auto-boot at server restart:
+$ pm2 startup
+
+# stopping service
+$ pm2 stop pi-control
 ```
 
 For detailed explanation on how things work, check out [Nuxt.js docs](https://nuxtjs.org).
