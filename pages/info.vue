@@ -13,7 +13,7 @@
             <memory />
         </v-col>
         <v-col cols="12" sm="8" md="6" lg="4" class="d-flex flex-column">
-            <diskspace />
+            <diskspace :loading="loading.disk" @rescan="scanDiskData" />
         </v-col>
         <v-col cols="12" sm="8" md="6" lg="4" class="d-flex flex-column">
             <system :loading="loading.system" @rescan="scanSystemData" />
@@ -51,18 +51,22 @@ export default {
         return {
             loading: {
                 system: false,
-                hardware: false
+                hardware: false,
+                disk: false
             },
             scripts: {
                 kernel: path.join('server', 'misc', 'kernel info.sh'),
                 operatingSystem: path.join('server', 'misc', 'operating system.sh'),
-                hardwareScript: path.join('server', 'cpu', 'show cpu info.sh')
+                hardwareScript: path.join('server', 'cpu', 'show cpu info.sh'),
+                disk: path.join('server', 'disk', 'df.sh')
             }
         }
     },
     created() {
-        this.scanSystemData() // Initial scan
-        this.scanHardwareData() // Initial scan
+        // Initial collecting data
+        this.scanSystemData()
+        this.scanHardwareData()
+        this.scanDiskData()
     },
     methods: {
         ...mapActions({
@@ -107,6 +111,21 @@ export default {
 
             // Ending loading
             this.loading.hardware = false
+        },
+        async scanDiskData() {
+            // Sets loading state
+            this.loading.disk = true
+
+            // Collecting disk data
+            try {
+                const disk = await this.$runScript(this.scripts.disk)
+                if (disk && (typeof disk === 'string' || disk instanceof String)) this.setDiskData(disk) // Save in store
+            } catch (err) {
+                console.error(err)
+            }
+
+            // Ending loading
+            this.loading.disk = false
         }
     }
 }
