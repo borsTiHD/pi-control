@@ -56,10 +56,10 @@
                     </v-progress-circular>
                 </v-col>
                 <v-col v-if="cpuCores" cols="12" dense>
-                    <span class="text-h6 mr-2">CPU Cores:</span><span class="font-weight-bold">{{ cpuCores }}</span>
+                    <span class="text-h6 mr-2">Cores:</span><span class="font-weight-bold">{{ cpuCores }}</span>
                 </v-col>
                 <v-col v-if="cpuUsage" cols="12" dense>
-                    <span class="text-h6 mr-2">CPU usage:</span>
+                    <span class="text-h6 mr-2">Usage:</span>
                     <span v-for="(item, index) in cpuUsage" :key="index" class="mr-2">
                         {{ cpuUsageMapping(item.type) }}: <span class="font-weight-bold">{{ item.value }}%</span>
                     </span>
