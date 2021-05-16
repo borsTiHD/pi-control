@@ -1,9 +1,9 @@
 <template>
     <v-row justify="center">
-        <v-col cols="12" sm="8" md="6" lg="5" class="d-flex flex-column">
+        <v-col cols="12" sm="8" md="6" lg="4" class="d-flex flex-column">
             <cpu-info :loading="cpuLoading" @rescan="scanAlias('cpu')" />
         </v-col>
-        <v-col cols="12" sm="8" md="6" lg="4" class="d-flex flex-column">
+        <v-col cols="12" sm="8" md="6" lg="5" class="d-flex flex-column">
             <memory :loading="loading.memory" @rescan="scanAlias('memory')" />
             <swap :loading="loading.memory" @rescan="scanAlias('memory')" />
         </v-col>
