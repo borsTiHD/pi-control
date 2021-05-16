@@ -39,7 +39,7 @@
             </v-row>
             <v-row v-else-if="data">
                 <v-col cols="12">
-                    {{ data }}
+                    {{ memory }}
                 </v-col>
             </v-row>
             <v-row v-else>
@@ -80,6 +80,41 @@ export default {
         }),
         data() {
             if (this.getMemoryData) return this.getMemoryData
+            return false
+        },
+        memory() {
+            if (this.data) {
+                const memoryTypes = this.crawlMemoryTypes(this.data)
+                const memoryData = this.crawlMemoryData(this.data)
+                const arrWithObj = memoryData.map((item, index) => {
+                    return {
+                        value: item,
+                        type: memoryTypes[index]
+                    }
+                })
+                console.log('memory:', arrWithObj)
+                return arrWithObj
+            }
+            return false
+        }
+    },
+    methods: {
+        crawlMemoryTypes(data) {
+            // Crawls response from 'free'
+            // Filters memory types -> total / used / free / shared / buff/cache / available
+            const arr = data.split('\n')
+            if (Array.isArray(arr) && arr.length > 0) {
+                return arr[0].replace(/^\s+/gm, '').split(/\s+/)
+            }
+            return false
+        },
+        crawlMemoryData(data) {
+            // Crawls response from 'free'
+            // Filters memory data
+            const arr = data.split('\n')
+            if (Array.isArray(arr) && arr.length > 0) {
+                return arr[1].replace(/Mem:\s+/gm, '').split(/\s+/)
+            }
             return false
         }
     }
