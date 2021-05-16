@@ -1,2 +1,2 @@
 #!/bin/sh
-echo "$(df -h)"
+echo "$(df -m)"
