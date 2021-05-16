@@ -101,7 +101,6 @@ export default {
         cpuLoad() {
             if (this.getTopData) {
                 const cpuLoad = this.crawlCpuLoad(this.getTopData)
-                console.log('cpuLoad:', cpuLoad)
                 const obj = cpuLoad.map((item, index) => {
                     // Index determines which string is taken
                     const time = index === 0 ? 1 : index === 1 ? 5 : 15 // '1 min', '5 min', '15 min'
@@ -110,6 +109,8 @@ export default {
                         time
                     }
                 })
+                console.log('cpuLoad:', cpuLoad)
+                console.log('obj:', obj)
                 return obj
             }
             return false
