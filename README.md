@@ -3,6 +3,8 @@
 ## Preperations (one time)
 
 ```bash
+# maybe you need to add 'sudo' for every command, even to start 'pm2' service so it can edit files for example
+
 # install nodejs
 $ curl -sL https://deb.nodesource.com/setup_16.x | sudo bash -
 $ sudo apt install nodejs
@@ -36,12 +38,12 @@ $ yarn start
 ```bash
 # make sure you build the app first as mentioned in 'Build Setup'
 # yarn pm2 install
-$ yarn global add pm2 --prefix /usr/local
+$ yarn global add pm2
 
 # or npm pm2 install
 $ npm install pm2 -g
 
-# start app (localhost:8800)
+# start app (localhost:8800) - without 'sudo' the process has not enough rights for writing files
 $ pm2 start
 ```
 
