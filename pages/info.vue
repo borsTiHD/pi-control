@@ -111,26 +111,15 @@ export default {
         this.scanAlias('memory')
         this.scanAlias('temperature')
 
-        // Clearing existing intervals
-        if (this.interval.uptime) { clearInterval(this.interval.uptime) }
-        if (this.interval.cpuLoad) { clearInterval(this.interval.cpuLoad) }
-        if (this.interval.memory) { clearInterval(this.interval.memory) }
-        if (this.interval.temperature) { clearInterval(this.interval.temperature) }
-
         // Interval for collecting data if 'AutoRefresh' is activated in settings
+        this.clearPolling() // Clearing if intervals already existing
         if (this.getAutoRefresh) {
-            this.interval.uptime = setInterval(() => { this.scanAlias('uptime') }, this.intervalTimer) // Uptime
-            this.interval.cpuLoad = setInterval(() => { this.scanAlias('cpu') }, this.intervalTimer) // CPU Load
-            this.interval.memory = setInterval(() => { this.scanAlias('memory') }, this.intervalTimer) // Memory Data
-            this.interval.temperature = setInterval(() => { this.scanAlias('temperature') }, this.intervalTimer) // Temperature
+            this.startPolling()
         }
     },
     deactivated() {
         // Clearing intervals on leaving
-        if (this.interval.uptime) { clearInterval(this.interval.uptime) }
-        if (this.interval.cpuLoad) { clearInterval(this.interval.cpuLoad) }
-        if (this.interval.memory) { clearInterval(this.interval.memory) }
-        if (this.interval.temperature) { clearInterval(this.interval.temperature) }
+        this.clearPolling()
     },
     methods: {
         ...mapActions({
@@ -157,6 +146,19 @@ export default {
 
             // Ending loading
             if (loading !== false) { this.loading[loading] = false }
+        },
+        clearPolling() {
+            // Clearing intervals on leaving
+            for (const prop in this.interval) {
+                if (this.interval[prop]) { clearInterval(this.interval[prop]) }
+            }
+        },
+        startPolling() {
+            // Interval for collecting data
+            this.interval.uptime = setInterval(() => { this.scanAlias('uptime') }, this.intervalTimer) // Uptime
+            this.interval.cpuLoad = setInterval(() => { this.scanAlias('cpu') }, this.intervalTimer) // CPU Load
+            this.interval.memory = setInterval(() => { this.scanAlias('memory') }, this.intervalTimer) // Memory Data
+            this.interval.temperature = setInterval(() => { this.scanAlias('temperature') }, this.intervalTimer) // Temperature
         },
         scanAlias(method) {
             switch (method) {
