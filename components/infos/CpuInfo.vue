@@ -127,7 +127,7 @@ export default {
                 const cpuUsage = this.crawlCpuUsage(this.getTopData)
                 const arrWithObj = cpuUsage.map((item) => {
                     console.log(item)
-                    const arr = item.split(' ') // Splitting value and text -> Idle: '92,7 id'
+                    const arr = item.split(/\s+/) // Splitting value and text -> Idle: '92,7 id'
                     return {
                         value: parseFloat(arr[0].replace(',', '.')), // Input something like '7,3' -> parseFloat needs a '.' instead ','
                         type: arr[1]
@@ -164,10 +164,9 @@ export default {
             // Filters cpu usage
             const arr = data.split('\n')
             if (Array.isArray(arr) && arr.length > 2) {
-                const string = '%Cpu(s):'
                 const regexp = /%Cpu\(s\):.+$/gm
                 return arr[2].match(regexp).map((item) => {
-                    const arr = item.replace(string, '').split(/\W\s/gm).map((val) => {
+                    const arr = item.replace(/%Cpu\(s\):\s+/gm, '').split(/\W\s/gm).map((val) => {
                         return val.replace(/^\s+/, '')
                     })
                     return arr
