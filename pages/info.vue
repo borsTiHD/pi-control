@@ -1,17 +1,17 @@
 <template>
     <v-row justify="center">
-        <v-col cols="12" sm="8" md="6" lg="4" class="d-flex flex-column">
+        <v-col cols="12" sm="8" md="6" lg="5" class="d-flex flex-column">
             <cpu-info :loading="cpuLoading" @rescan="scanAlias('cpu')" />
         </v-col>
         <v-col cols="12" sm="8" md="6" lg="4" class="d-flex flex-column">
             <memory :loading="loading.memory" @rescan="scanAlias('memory')" />
             <swap :loading="loading.memory" @rescan="scanAlias('memory')" />
         </v-col>
-        <v-col cols="12" sm="8" md="6" lg="4" class="d-flex flex-column">
+        <v-col cols="12" sm="8" md="3" lg="3" class="d-flex flex-column">
             <temperature :loading="loading.temperature" @rescan="scanAlias('temperature')" />
             <uptime :loading="loading.uptime" @rescan="scanAlias('uptime')" />
         </v-col>
-        <v-col cols="12" sm="8" md="6" lg="4" class="d-flex flex-column">
+        <v-col cols="12" sm="8" md="9" lg="4" class="d-flex flex-column">
             <diskspace :loading="loading.disk" @rescan="scanAlias('disk')" />
         </v-col>
         <v-col cols="12" sm="8" md="6" lg="4" class="d-flex flex-column">
