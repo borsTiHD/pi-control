@@ -123,7 +123,9 @@ export default {
         }
     },
     created() {
-        this.scanFiles()
+        if (process.client) {
+            this.scanFiles()
+        }
     },
     methods: {
         isCustomScript(path) {
