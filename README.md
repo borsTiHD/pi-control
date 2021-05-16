@@ -59,6 +59,10 @@ $ pm2 unstartup systemd
 
 # stopping service
 $ pm2 stop pi-control
+
+# adding instances in ecosystem.config.js by setting the number to 'max' for instances on every cpu core
+# after a change in the setting file, you need to 'delete' saved apps in pm2
+$ pm2 delete all
 ```
 
 For detailed explanation on how things work, check out [Nuxt.js docs](https://nuxtjs.org).
