@@ -39,7 +39,7 @@
             </v-row>
             <v-row v-else-if="!loading && data">
                 <v-col cols="12">
-                    <span>Mounted: <span class="font-weight-bold">{{ space.disk.mounted }}</span></span>
+                    <span class="font-weight-bold">{{ space.disk.mounted }}</span>
                     <span>Used: <span class="font-weight-bold">{{ space.disk.used }}MB ({{ space.disk.usedPercentage }}%)</span></span>
                     <span>Free: <span class="font-weight-bold">{{ space.disk.available }}MB</span></span>
                     <span>Total: <span class="font-weight-bold">{{ space.disk.total }}MB</span></span>
@@ -56,7 +56,7 @@
                 <v-divider class="mx-4" />
 
                 <v-col cols="12">
-                    <span>Mounted: <span class="font-weight-bold">{{ space.boot.mounted }}</span></span>
+                    <span class="font-weight-bold">{{ space.boot.mounted }}</span>
                     <span>Used: <span class="font-weight-bold">{{ space.boot.used }}MB ({{ space.boot.usedPercentage }}%)</span></span>
                     <span>Free: <span class="font-weight-bold">{{ space.boot.available }}MB</span></span>
                     <span>Total: <span class="font-weight-bold">{{ space.boot.total }}MB</span></span>
