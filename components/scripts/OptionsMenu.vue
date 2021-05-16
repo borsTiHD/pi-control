@@ -22,6 +22,7 @@
         <v-sheet class="d-flex">
             <download-script :item="item" />
             <edit-script v-if="item.type === 'file'" :item="item" @edited="$emit('edited')" />
+            <edit-folder v-else-if="item.type === 'folder'" :item="item" @edited="$emit('edited')" />
             <delete-script :item="item" @deleted="$emit('deleted')" />
         </v-sheet>
     </v-menu>
@@ -30,6 +31,7 @@
 <script>
 import DownloadScript from '~/components/scripts/DownloadScript.vue'
 import EditScript from '~/components/scripts/EditScript.vue'
+import EditFolder from '~/components/scripts/EditFolder.vue'
 import DeleteScript from '~/components/scripts/DeleteScript.vue'
 
 export default {
@@ -37,6 +39,7 @@ export default {
     components: {
         DownloadScript,
         EditScript,
+        EditFolder,
         DeleteScript
     },
     props: {
@@ -46,14 +49,6 @@ export default {
             default: () => {
                 return {}
             }
-        }
-    },
-    data() {
-        return {}
-    },
-    methods: {
-        info() {
-            console.log(this.item)
         }
     }
 }

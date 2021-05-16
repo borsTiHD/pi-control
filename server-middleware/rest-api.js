@@ -181,17 +181,13 @@ app.get('/scripts/read', asyncHandler(async(req, res, next) => {
             info: 'File scannt',
             script: { id, name, type, path, stats, content }
         })
-        return
+    } else {
+        res.json({
+            _status: 'ok',
+            info: 'Folder scannt',
+            folder: { id, name, type, path, stats }
+        })
     }
-
-    // REST return
-    res.json({
-        _status: 'info',
-        info: 'File was a folder',
-        folder: {
-            stats
-        }
-    })
 }))
 
 app.get('/scripts/download', asyncHandler(async(req, res, next) => {
@@ -226,31 +222,75 @@ app.get('/scripts/download', asyncHandler(async(req, res, next) => {
     }
 }))
 
-app.post('/scripts/add', asyncHandler(async(req, res, next) => {
+app.post('/scripts/add/file', asyncHandler(async(req, res, next) => {
     const data = req.body
-    const file = `${data.name}.${data.ext}`
-    const filePath = path.join(scriptPath, 'custom', file)
-    const content = data.text
-    await fs.outputFile(filePath, content).then(async() => {
-        console.log('[Add Script] -> Changed executable permissions.')
-        fs.chmod(filePath, '755')
-    }).catch((error) => {
-        console.error(error)
+    const script = data.script
+    const file = `${script.name}.${script.ext}`
+    const filePath = path.join(data.path, file)
+    if (isCustomScript(filePath)) {
+        await fs.outputFile(filePath, script.text).then(async() => {
+            console.log('[Add Script] -> Changed executable permissions.')
+            fs.chmod(filePath, '755')
+        }).catch((error) => {
+            console.error(error)
+            // Return results
+            res.status(500).json({
+                _status: 'error',
+                info: 'Couldn\'t write data, please try again',
+                error
+            })
+            return next()
+        })
+
+        // Return results
+        res.json({
+            _status: 'ok',
+            info: 'File added',
+            request: req.body
+        })
+    } else {
+        console.error('[Add Script] -> Only in custom folder allowed.')
         // Return results
         res.status(500).json({
             _status: 'error',
             info: 'Couldn\'t write data, please try again',
-            error
+            error: 'Only in custom folder allowed'
         })
-        return next()
-    })
+    }
+}))
 
-    // Return results
-    res.json({
-        _status: 'ok',
-        info: 'File added',
-        request: req.body
-    })
+app.post('/scripts/add/folder', asyncHandler(async(req, res, next) => {
+    const data = req.body
+    const folderName = data.name
+    const folderPath = data.path
+    const completePath = path.join(folderPath, folderName)
+    if (isCustomScript(completePath)) {
+        await fs.mkdir(completePath, { recursive: true }).catch((error) => {
+            console.error(error)
+            // Return results
+            res.status(500).json({
+                _status: 'error',
+                info: 'Couldn\'t write folder, please try again',
+                error
+            })
+            return next()
+        })
+
+        // Return results
+        res.json({
+            _status: 'ok',
+            info: 'Folder added',
+            request: req.body
+        })
+    } else {
+        console.error('[Add Folder] -> Only in custom folder allowed.')
+        // Return results
+        res.status(500).json({
+            _status: 'error',
+            info: 'Couldn\'t write folder, please try again',
+            error: 'Only in custom folder allowed'
+        })
+    }
 }))
 
 app.post('/scripts/delete', asyncHandler(async(req, res, next) => {
@@ -308,20 +348,17 @@ app.post('/scripts/delete', asyncHandler(async(req, res, next) => {
     }
 }))
 
-app.post('/scripts/edit', asyncHandler(async(req, res, next) => {
+app.post('/scripts/edit/file', asyncHandler(async(req, res, next) => {
     // Query Data
     const query = req.query
     const oldFile = JSON.parse(query.oldFile)
     const newFile = JSON.parse(query.newFile)
 
-    // Scans stats and delete only if it is a file
+    // Scans stats and edits only if it is a file
     const stats = await fs.stat(oldFile.path)
     if (stats.isFile() && isCustomScript(oldFile.path)) {
         const oldFileNameRegexp = new RegExp(`${oldFile.name}$`, 'gm') // Matches old filename (only the end of the path)
         const newPath = oldFile.path.replace(oldFileNameRegexp, newFile.name)
-
-        console.log('oldFile.path:', oldFile.path)
-        console.log('newPath:', newPath)
 
         // Renames file, if old and new names are different
         if (oldFile.name !== newFile.name) {
@@ -367,6 +404,49 @@ app.post('/scripts/edit', asyncHandler(async(req, res, next) => {
             error: error.message
         })
         return next()
+    }
+}))
+
+app.post('/scripts/edit/folder', asyncHandler(async(req, res, next) => {
+    // Query Data
+    const query = req.query
+    const oldFolder = JSON.parse(query.oldFolder)
+    const newFolder = JSON.parse(query.newFolder)
+
+    // Scans stats and edits only if it is a folder
+    const stats = await fs.stat(oldFolder.path)
+    if (stats.isDirectory() && isCustomScript(oldFolder.path)) {
+        const oldFolderNameRegexp = new RegExp(`${oldFolder.name}$`, 'gm') // Matches old filename (only the end of the path)
+        const newPath = oldFolder.path.replace(oldFolderNameRegexp, newFolder.name)
+
+        // Renames folder, if old and new names are different
+        if (oldFolder.name !== newFolder.name) {
+            await fs.rename(oldFolder.path, newPath).catch((error) => {
+                console.error(error)
+                // Return results
+                res.status(500).json({
+                    _status: 'error',
+                    info: 'Couldn\'t rename folder, please try again',
+                    error
+                })
+                return next()
+            })
+        }
+
+        // Return results
+        res.json({
+            _status: 'ok',
+            info: 'Folder edited successfully',
+            request: query
+        })
+    } else {
+        // Return results
+        const error = new Error('Couldn\'t edit folder. Request wasn\'t a folder, or wasn\t in custom script path.')
+        res.status(500).json({
+            _status: 'error',
+            info: 'Something went wrong',
+            error: error.message
+        })
     }
 }))
 

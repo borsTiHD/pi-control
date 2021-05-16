@@ -17,17 +17,18 @@
                     <v-container>
                         <v-row v-if="input">
                             <v-col
-                                cols="10"
+                                :cols="mode === 'file' ? 10 : 12"
                             >
                                 <v-text-field
                                     v-model="input.name"
-                                    label="File name:"
+                                    :label="mode === 'file' ? 'File name:' : 'Folder name:'"
                                     :rules="[ validateTextfield ]"
                                     :required="true"
                                     :autofocus="true"
                                 />
                             </v-col>
                             <v-col
+                                v-if="mode === 'file'"
                                 cols="2"
                             >
                                 <v-text-field
@@ -38,6 +39,7 @@
                                 />
                             </v-col>
                             <v-col
+                                v-if="mode === 'file'"
                                 cols="12"
                             >
                                 <v-textarea
@@ -93,7 +95,7 @@ export default {
     data: () => ({
         isValid: false,
         showModal: false,
-        mode: undefined, // 'script', or 'folder'
+        mode: undefined, // 'file', or 'folder'
         persistent: false,
         title: undefined,
         okButton: undefined,
@@ -111,7 +113,7 @@ export default {
             this.okButton = 'Submit'
             this.cancelButton = 'Cancel'
             this.resetButton = 'Reset'
-            this.mode = 'script' // 'script', or 'folder'
+            this.mode = 'file' // 'file', or 'folder'
             this.input = {
                 name: '',
                 ext: 'sh',
@@ -136,7 +138,7 @@ export default {
             this.$refs.form.resetValidation()
             this.$refs.form.validate()
             if (!this.isValid) {
-                console.warn('[New Script] -> Couldn\'t validate data, please try again.')
+                console.warn('[User Prompt] -> Couldn\'t validate data, please try again.')
                 return false
             }
 

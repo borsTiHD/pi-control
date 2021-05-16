@@ -8,15 +8,15 @@
                 :disabled="loading"
                 v-bind="attrs"
                 v-on="on"
-                @click="editScript"
+                @click="editFolder"
             >
-                <v-icon>mdi-file-edit-outline</v-icon>
+                <v-icon>mdi-folder-edit-outline</v-icon>
             </v-btn>
 
-            <!-- User prompt for new script -->
-            <script-prompt ref="editScript" />
+            <!-- User prompt for user data -->
+            <script-prompt ref="editFolder" />
         </template>
-        <span>Edit script</span>
+        <span>Edit folder</span>
     </v-tooltip>
 </template>
 
@@ -24,7 +24,7 @@
 import ScriptPrompt from '@/components/prompts/ScriptPrompt.vue'
 
 export default {
-    name: 'EditScript',
+    name: 'EditFolder',
     components: {
         ScriptPrompt
     },
@@ -43,21 +43,21 @@ export default {
         }
     },
     methods: {
-        async editScript() {
+        async editFolder() {
             // Error flag
             let error = false
 
             // Request file content over api call
             const urlRead = '/scripts/read'
             this.loading = true
-            const script = await this.$axios.get(urlRead, { params: this.item })
+            const folder = await this.$axios.get(urlRead, { params: this.item })
                 .then((res) => {
                     const data = res.data
-                    console.log('[Edit Script] -> Read Script Data:', data)
+                    console.log('[Edit Folder] -> Read Folder Data:', data)
                     if (data.error || data._status === 'error') {
                         throw new Error(data.info)
                     } else {
-                        return data.script
+                        return data.folder
                     }
                 }).catch((error) => {
                     this.$toast.error(error.message)
@@ -68,19 +68,15 @@ export default {
                 })
             if (error) return false
 
-            // Split filename
-            const file = script.name.split('.')
-
-            // User prompt for script data
-            const scriptData = await this.$refs.editScript.show({
-                title: 'Edit Script',
+            // User prompt for folder data
+            const userData = await this.$refs.editFolder.show({
+                title: 'Edit folder',
+                mode: 'folder',
                 input: {
-                    name: file[0],
-                    ext: file[1],
-                    text: script.content
+                    name: folder.name
                 }
             }).then((res) => res).catch((err) => {
-                console.error('[Edit Script] -> User canceled.')
+                console.error('[Edit Folder] -> User canceled.')
                 console.error(err)
                 error = true
                 return err
@@ -89,21 +85,22 @@ export default {
 
             // Creates params for request
             const params = {
-                oldFile: this.item,
-                newFile: {
-                    name: `${scriptData.name}.${scriptData.ext}`,
-                    content: scriptData.text
+                oldFolder: this.item,
+                newFolder: {
+                    name: userData.name
                 }
             }
 
+            console.log('params:', params)
+
             // Request file content over api call
-            const urlEdit = '/scripts/edit/file'
+            const urlEdit = '/scripts/edit/folder'
             this.loading = true
             this.$axios.post(urlEdit, null, { params })
                 .then((res) => {
                     this.$emit('edited')
                     const data = res.data
-                    console.log('[Edit Script] -> Script Edited Response:', data)
+                    console.log('[Edit Folder] -> Folder Edited Response:', data)
                     if (data.error || data._status === 'error') {
                         throw new Error(data.info)
                     } else {

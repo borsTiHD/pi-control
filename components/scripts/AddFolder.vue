@@ -2,47 +2,39 @@
     <v-tooltip left>
         <template #activator="{ on, attrs }">
             <v-btn
-                :icon="type !== 'big'"
-                color="primary"
+                icon
+                color="info"
                 :loading="loading"
                 :disabled="loading"
                 v-bind="attrs"
                 v-on="on"
-                @click="addScript"
+                @click="addFolder"
             >
-                {{ type === 'big' ? 'Add Script' : '' }}
-                <v-icon>mdi-file-plus-outline</v-icon>
+                <v-icon>mdi-folder-plus-outline</v-icon>
             </v-btn>
 
-            <!-- User prompt for new script -->
+            <!-- User prompt for new folder -->
             <script-prompt ref="userInput" />
         </template>
-        <span>Add new script</span>
+        <span>Add new folder</span>
     </v-tooltip>
 </template>
 
 <script>
-import path from 'path'
-
 import ScriptPrompt from '@/components/prompts/ScriptPrompt.vue'
 
 export default {
-    name: 'AddScript',
+    name: 'AddFolder',
     components: {
         ScriptPrompt
     },
     props: {
         item: {
             type: Object,
-            required: false,
+            required: true,
             default: () => {
                 return {}
             }
-        },
-        type: {
-            type: String,
-            required: false,
-            default: 'big'
         }
     },
     data() {
@@ -51,31 +43,31 @@ export default {
         }
     },
     methods: {
-        async addScript() {
+        async addFolder() {
             // User prompt for script data
             let error = false
-            const scriptData = await this.$refs.userInput.show().then((res) => res).catch((err) => {
-                console.error('[New Script] -> User canceled.')
+            const userData = await this.$refs.userInput.show({
+                title: 'New Folder',
+                mode: 'folder'
+            }).then((res) => res).catch((err) => {
+                console.error('[New Folder] -> User canceled.')
                 console.error(err)
                 error = true
                 return err
             })
             if (error) return false
 
-            // Path if given, or default
-            const fullPath = this.item?.path || path.join('scripts', 'custom')
-
             // Post request
-            const url = '/scripts/add/file'
+            const url = '/scripts/add/folder'
             this.loading = true
-            this.$axios.post(url, { path: fullPath, script: scriptData })
+            this.$axios.post(url, { path: this.item.path, name: userData.name })
                 .then((res) => {
                     this.$emit('added')
                     const data = res.data
                     if (data.error || data._status === 'error') {
                         throw new Error(data.info)
                     } else {
-                        console.log('[New Script] -> Added new script:', data)
+                        console.log('[New Folder] -> Added new folder:', data)
                         this.$toast.info(`${data.info}`)
                     }
                 }).catch((error) => {

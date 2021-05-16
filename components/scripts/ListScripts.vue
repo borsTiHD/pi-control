@@ -72,7 +72,9 @@
                         </template>
                         <template #append="{ item }">
                             <run-script v-if="item.type === 'file'" :item="item" />
-                            <options-menu v-if="(item.type === 'file' && isCustomScript(item.path)) || item.name === 'custom'" :item="item" @edited="editedScript" @deleted="deletedScript" />
+                            <add-folder v-if="item.type === 'folder' && isCustomScript(item.path) || item.name === 'custom'" :item="item" @added="addedFolder" />
+                            <add-script v-if="item.type === 'folder' && isCustomScript(item.path) || item.name === 'custom'" :item="item" type="small" @added="addedFolder" />
+                            <options-menu v-if="(isCustomScript(item.path)) || item.name === 'custom'" :item="item" @edited="editedScript" @deleted="deletedScript" />
                             <!-- Info: File is locked for editing/deleting -->
                             <v-btn
                                 v-if="!isCustomScript(item.path) && item.name !== 'custom'"
@@ -93,6 +95,7 @@
 <script>
 import RunScript from '~/components/scripts/RunScript.vue'
 import AddScript from '~/components/scripts/AddScript.vue'
+import AddFolder from '~/components/scripts/AddFolder.vue'
 import OptionsMenu from '~/components/scripts/OptionsMenu.vue'
 
 export default {
@@ -100,6 +103,7 @@ export default {
     components: {
         RunScript,
         AddScript,
+        AddFolder,
         OptionsMenu
     },
     data() {
@@ -139,6 +143,10 @@ export default {
                 }).finally(() => {
                     this.loadingScanFiles = false
                 })
+        },
+        addedFolder() {
+            // Scanning all files again after a new folder added
+            this.scanFiles()
         },
         addedScript() {
             // Scanning all files again after a new script added

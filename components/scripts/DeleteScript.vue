@@ -13,7 +13,7 @@
                 <v-icon>mdi-trash-can-outline</v-icon>
             </v-btn>
         </template>
-        <span>Delete script</span>
+        <span>Delete {{ item.type === 'file' ? 'script' : 'folder' }}</span>
     </v-tooltip>
 </template>
 
