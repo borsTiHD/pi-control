@@ -320,7 +320,7 @@ app.post('/scripts/delete', asyncHandler(async(req, res, next) => {
             request: query
         })
     } else if (stats.isDirectory() && (isCustomScript(filePath) || filePath === path.join(scriptPath, 'custom'))) {
-        await fs.rmdir(filePath, { recursive: true }).catch((error) => {
+        await fs.rm(filePath, { recursive: true }).catch((error) => {
             console.error(error)
             // Return results
             res.status(500).json({
