@@ -141,7 +141,6 @@ export default {
         cpuLoadPercentage(cpuLoad) {
             const maxLoad = parseInt(this.cpuCores) // equals 100%
             const percentage = ((cpuLoad * 100) / (maxLoad * 100)) * 100
-            console.log('percentage:', percentage)
             return percentage // returns current load percentage
         },
         color(cpuLoad) {
