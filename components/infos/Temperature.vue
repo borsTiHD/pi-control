@@ -39,7 +39,15 @@
             </v-row>
             <v-row v-else-if="data">
                 <v-col cols="12">
-                    {{ data }}
+                    <v-progress-circular
+                        :rotate="90"
+                        :size="100"
+                        :width="15"
+                        :value="tempValue"
+                        color="red"
+                    >
+                        {{ tempValue }} °C
+                    </v-progress-circular>
                 </v-col>
             </v-row>
             <v-row v-else>
@@ -80,6 +88,15 @@ export default {
         }),
         data() {
             if (this.getTemperatureData) return this.getTemperatureData
+            return false
+        },
+        tempValue() {
+            if (this.data) {
+                const arr = this.data.split('=').map((item) => {
+                    return item.replace('\'C', '') // Removes "'C" from value
+                })
+                return arr[1]
+            }
             return false
         }
     }
