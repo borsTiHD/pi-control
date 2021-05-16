@@ -1,7 +1,7 @@
 <template>
-    <v-row justify="center" align="center">
+    <v-row v-if="getAlerts.length > 0" justify="center" align="center">
         <v-col cols="12" sm="8" md="6">
-            <div v-if="getAlerts.length > 0" id="alerts" class="mb-n3">
+            <div id="alerts" class="mb-n3">
                 <app-alert v-for="(alert, key, index) in indexedAlerts" :key="index" :data="alert" />
             </div>
         </v-col>
