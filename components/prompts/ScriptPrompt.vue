@@ -93,11 +93,12 @@ export default {
     data: () => ({
         isValid: false,
         showModal: false,
+        mode: undefined, // 'script', or 'folder'
         persistent: false,
-        title: 'New Script',
-        okButton: 'Submit',
-        cancelButton: 'Cancel',
-        resetButton: 'Reset',
+        title: undefined,
+        okButton: undefined,
+        cancelButton: undefined,
+        resetButton: undefined,
         input: undefined,
         // Private - Promises
         resolvePromise: undefined,
@@ -110,14 +111,17 @@ export default {
             this.okButton = 'Submit'
             this.cancelButton = 'Cancel'
             this.resetButton = 'Reset'
+            this.mode = 'script' // 'script', or 'folder'
             this.input = {
                 name: '',
                 ext: 'sh',
                 text: ''
             }
 
-            // Set form data if options delivered
-            if (opts && Object.keys(opts).length > 0) { this.input = opts }
+            // Set data if options delivered
+            if (opts?.mode) { this.mode = opts.mode }
+            if (opts?.title) { this.title = opts.title }
+            if (opts?.input && Object.keys(opts?.input).length > 0) { this.input = opts.input }
 
             // Opens Modal
             this.showModal = true
@@ -169,6 +173,7 @@ export default {
             this.isValid = false
             this.showModal = false
             this.persistent = false
+            this.mode = undefined
             this.title = undefined
             this.okButton = undefined
             this.cancelButton = undefined

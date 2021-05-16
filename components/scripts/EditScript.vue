@@ -1,25 +1,23 @@
 <template>
-    <div>
-        <v-tooltip top>
-            <template #activator="{ on, attrs }">
-                <v-btn
-                    icon
-                    color="info"
-                    :loading="loading"
-                    :disabled="loading"
-                    v-bind="attrs"
-                    v-on="on"
-                    @click="editScript"
-                >
-                    <v-icon>mdi-file-edit-outline</v-icon>
-                </v-btn>
-            </template>
-            <span>Edit script</span>
-        </v-tooltip>
+    <v-tooltip top>
+        <template #activator="{ on, attrs }">
+            <v-btn
+                icon
+                color="info"
+                :loading="loading"
+                :disabled="loading"
+                v-bind="attrs"
+                v-on="on"
+                @click="editScript"
+            >
+                <v-icon>mdi-file-edit-outline</v-icon>
+            </v-btn>
 
-        <!-- User prompt for new script -->
-        <script-prompt ref="editScript" />
-    </div>
+            <!-- User prompt for new script -->
+            <script-prompt ref="editScript" />
+        </template>
+        <span>Edit script</span>
+    </v-tooltip>
 </template>
 
 <script>
@@ -75,9 +73,12 @@ export default {
 
             // User prompt for script data
             const scriptData = await this.$refs.editScript.show({
-                name: file[0],
-                ext: file[1],
-                text: script.content
+                title: 'Edit Script',
+                input: {
+                    name: file[0],
+                    ext: file[1],
+                    text: script.content
+                }
             }).then((res) => res).catch((err) => {
                 console.error('[Edit Script] -> User canceled.')
                 console.error(err)
