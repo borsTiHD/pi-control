@@ -28,7 +28,7 @@
             </v-tooltip>
         </v-card-title>
         <v-card-text>
-            <v-row v-if="loading && !cpuLoad">
+            <v-row v-if="loading && !cpuLoad && !cpuCores">
                 <v-col cols="12">
                     <span>Collecting data...</span>
                     <v-progress-linear
@@ -37,11 +37,11 @@
                     />
                 </v-col>
             </v-row>
-            <v-row v-else-if="cpuLoad">
-                <v-col cols="12">
+            <v-row v-else-if="cpuLoad || cpuCores">
+                <v-col v-if="cpuCores" cols="12">
                     <span>CPU Cores: {{ cpuCores }}</span><br>
                 </v-col>
-                <v-col cols="12">
+                <v-col v-if="cpuLoad" cols="12">
                     <span v-for="(item, index) in cpuLoad" :key="index" class="mr-4">{{ item }}</span>
                 </v-col>
             </v-row>
