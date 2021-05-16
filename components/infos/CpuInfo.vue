@@ -164,7 +164,7 @@ export default {
             const arr = data.split('\n')
             if (Array.isArray(arr) && arr.length > 2) {
                 const string = '%Cpu(s):'
-                const regexp = new RegExp(`${string}.+$`, 'g')
+                const regexp = /%Cpu\(s\):.+$/gm
                 return arr[2].match(regexp).map((item) => {
                     const arr = item.replace(string, '').split(/\W\s/gm).map((val) => {
                         return val.replace(/^\s+/, '')
