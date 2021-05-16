@@ -125,8 +125,9 @@ export default {
         cpuUsage() {
             if (this.getTopData) {
                 const cpuUsage = this.crawlCpuUsage(this.getTopData)
+                console.log('cpuUsage2', cpuUsage)
                 const arrWithObj = cpuUsage.map((item) => {
-                    console.log(item)
+                    console.log('item', item)
                     const arr = item.split(/\s+/) // Splitting value and text -> Idle: '92,7 id'
                     return {
                         value: parseFloat(arr[0].replace(',', '.')), // Input something like '7,3' -> parseFloat needs a '.' instead ','
@@ -165,12 +166,14 @@ export default {
             const arr = data.split('\n')
             if (Array.isArray(arr) && arr.length > 2) {
                 const regexp = /%Cpu\(s\):.+$/gm
-                return arr[2].match(regexp).map((item) => {
-                    const arr = item.replace(/%Cpu\(s\):\s+/gm, '').split(/\W\s/gm).map((val) => {
+                const cpuUsage = arr[2].match(regexp)
+                if (Array.isArray(cpuUsage)) {
+                    console.log('cpuUsage1', cpuUsage)
+                    return cpuUsage[0].replace(/%Cpu\(s\):\s+/gm, '').split(/\W\s/gm).map((val) => {
                         return val.replace(/^\s+/, '')
                     })
-                    return arr
-                })
+                }
+                return false
             }
             return false
         },
