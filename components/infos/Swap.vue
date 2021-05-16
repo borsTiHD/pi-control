@@ -39,9 +39,9 @@
             </v-row>
             <v-row v-else-if="data">
                 <v-col cols="12">
-                    <span>Used: {{ swap.used }}MB ({{ swapUsedPercentage(swap) }}%)</span>
-                    <span>Free: {{ swap.free }}MB</span>
-                    <span>Total: {{ swap.total }}MB</span>
+                    <span>Used: <p class="font-weight-bold">{{ swap.used }}MB ({{ swapUsedPercentage(swap) }}%)</p></span>
+                    <span>Free: <p class="font-weight-bold">{{ swap.free }}MB</p></span>
+                    <span>Total: <p class="font-weight-bold">{{ swap.total }}MB</p></span>
                 </v-col>
                 <v-col cols="12">
                     <v-progress-linear

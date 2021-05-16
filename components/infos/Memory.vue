@@ -39,9 +39,9 @@
             </v-row>
             <v-row v-else-if="data">
                 <v-col cols="12">
-                    <span>Used: {{ memory.used }}MB ({{ memoryUsedPercentage(memory) }}%)</span>
-                    <span>Available: {{ memory.available }}MB</span>
-                    <span>Total: {{ memory.total }}MB</span>
+                    <span>Used: <p class="font-weight-bold">{{ memory.used }}MB ({{ memoryUsedPercentage(memory) }}%)</p></span>
+                    <span>Available: <p class="font-weight-bold">{{ memory.available }}MB</p></span>
+                    <span>Total: <p class="font-weight-bold">{{ memory.total }}MB</p></span>
                 </v-col>
                 <v-col cols="12">
                     <v-progress-linear
