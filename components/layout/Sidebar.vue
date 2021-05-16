@@ -49,11 +49,6 @@ export default {
                     icon: 'mdi-cogs',
                     title: 'Settings',
                     to: '/settings'
-                },
-                {
-                    icon: 'mdi-bottle-tonic-skull-outline',
-                    title: 'Developement',
-                    to: '/dev'
                 }
             ]
         }
@@ -69,6 +64,15 @@ export default {
             set(value) {
                 this.setDrawer(value)
             }
+        }
+    },
+    created() {
+        if (process.env.dev) {
+            this.items.push({
+                icon: 'mdi-bottle-tonic-skull-outline',
+                title: 'Developement',
+                to: '/dev'
+            })
         }
     },
     methods: {

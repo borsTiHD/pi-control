@@ -12,16 +12,26 @@ const server = {
 }
 */
 const server = {
-    host: '0.0.0.0', // dev: localhost, production: os-ip-adress
-    port: isDev ? 3000 : 8800, // dev: 3000, production: 8800
-    timing: false
+    server: {
+        host: '0.0.0.0', // dev: localhost, production: os-ip-adress
+        port: isDev ? 3000 : 8800, // dev: 3000, production: 8800
+        timing: false
+    }
+}
+
+// Enviroment variables
+const env = {
+    env: {
+        dev: process.env.NODE_ENV !== 'production'
+    }
 }
 
 export default {
     // Adding server settings
-    server: {
-        ...server
-    },
+    ...server,
+
+    // Adding env variables
+    ...env,
 
     // Nuxt target
     target: 'server',
