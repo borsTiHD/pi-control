@@ -146,7 +146,8 @@ export default {
             return false
         },
         memoryUsedPercentage(memory) {
-            return (memory.used / memory.total) * 100 // returns current load percentage
+            const percentage = (memory.used / memory.total) * 100 // returns current load percentage
+            return Math.round(percentage * 100) / 100 // Rounds last 2 digits
         }
     }
 }
