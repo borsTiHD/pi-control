@@ -40,11 +40,11 @@
             <v-row v-else-if="data">
                 <v-col cols="12">
                     <v-progress-circular
-                        :rotate="90"
+                        :rotate="180"
                         :size="100"
                         :width="15"
                         :value="tempValue"
-                        color="red"
+                        :color="color"
                     >
                         {{ tempValue }} °C
                     </v-progress-circular>
@@ -79,7 +79,13 @@ export default {
     },
     data() {
         return {
-            textNoData: 'No data could be determined. Please rescan manually.'
+            textNoData: 'No data could be determined. Please rescan manually.',
+            tempLimits: { // Coloring of equal or greater values (from max to low)
+                low: { value: 0, color: 'green' },
+                mid: { value: 50, color: 'yellow' },
+                high: { value: 60, color: 'orange' },
+                max: { value: 75, color: 'red' }
+            }
         }
     },
     computed: {
@@ -91,6 +97,7 @@ export default {
             return false
         },
         tempValue() {
+            // Returns temperature value without any text
             if (this.data) {
                 const arr = this.data.split('=').map((item) => {
                     return item.replace('\'C', '') // Removes "'C" from value
@@ -98,6 +105,21 @@ export default {
                 return arr[1]
             }
             return false
+        },
+        color() {
+            // Coloring of equal or greater values (from max to low)
+            const val = this.tempValue
+            const limit = this.tempLimits
+            if (val >= limit.max) {
+                return limit.max.color
+            } else if (val >= limit.high) {
+                return limit.high.color
+            } else if (val >= limit.mid) {
+                return limit.mid.color
+            } else if (val >= limit.low) {
+                return limit.low.color
+            }
+            return 'secondary' // not possible
         }
     }
 }
