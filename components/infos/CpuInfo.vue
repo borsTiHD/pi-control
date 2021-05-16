@@ -106,7 +106,7 @@ export default {
                     // Index determines which string is taken
                     const time = index === 0 ? 1 : index === 1 ? 5 : 15 // '1 min', '5 min', '15 min'
                     return {
-                        value: parseFloat(item),
+                        value: parseFloat(item.replace(',', '.')), // Input something like '0,33' -> parseFloat needs a '.' instead ','
                         time
                     }
                 })
