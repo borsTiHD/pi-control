@@ -1,25 +1,23 @@
 <template>
-    <div>
-        <v-tooltip left>
-            <template #activator="{ on, attrs }">
-                <v-btn
-                    color="primary"
-                    :loading="loading"
-                    :disabled="loading"
-                    v-bind="attrs"
-                    v-on="on"
-                    @click="addScript"
-                >
-                    Add Script
-                    <v-icon>mdi-file-plus-outline</v-icon>
-                </v-btn>
-            </template>
-            <span>Add custom script</span>
-        </v-tooltip>
+    <v-tooltip left>
+        <template #activator="{ on, attrs }">
+            <v-btn
+                color="primary"
+                :loading="loading"
+                :disabled="loading"
+                v-bind="attrs"
+                v-on="on"
+                @click="addScript"
+            >
+                Add Script
+                <v-icon>mdi-file-plus-outline</v-icon>
+            </v-btn>
 
-        <!-- User prompt for new script -->
-        <script-prompt ref="userInput" />
-    </div>
+            <!-- User prompt for new script -->
+            <script-prompt ref="userInput" />
+        </template>
+        <span>Add custom script</span>
+    </v-tooltip>
 </template>
 
 <script>
