@@ -1,2 +1,2 @@
 #!/bin/sh
-echo "$(free)"
+echo "$(free -m)"
