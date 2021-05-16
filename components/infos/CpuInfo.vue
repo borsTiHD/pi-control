@@ -56,7 +56,7 @@
                     </v-progress-circular>
                 </v-col>
                 <v-col v-if="cpuCores" cols="12" dense>
-                    <span class="text-h6">CPU Cores:</span><span>{{ cpuCores }}</span>
+                    <span class="text-h6 mr-2">CPU Cores:</span><span class="font-weight-bold">{{ cpuCores }}</span>
                 </v-col>
                 <v-col v-if="cpuUsage" cols="12" dense>
                     <span class="text-h6 mr-2">CPU usage:</span>
