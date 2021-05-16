@@ -59,7 +59,8 @@
                     <span>CPU Cores: {{ cpuCores }}</span>
                 </v-col>
                 <v-col v-if="cpuUsage" cols="12">
-                    <span v-for="(item, index) in cpuUsage" :key="index">
+                    <span class="mr-2">CPU usage:</span>
+                    <span v-for="(item, index) in cpuUsage" :key="index" class="mr-2">
                         {{ item.type }}: {{ item.value }}
                     </span>
                 </v-col>
@@ -125,9 +126,7 @@ export default {
         cpuUsage() {
             if (this.getTopData) {
                 const cpuUsage = this.crawlCpuUsage(this.getTopData)
-                console.log('cpuUsage2', cpuUsage)
                 const arrWithObj = cpuUsage.map((item) => {
-                    console.log('item', item)
                     const arr = item.split(/\s+/) // Splitting value and text -> Idle: '92,7 id'
                     return {
                         value: parseFloat(arr[0].replace(',', '.')), // Input something like '7,3' -> parseFloat needs a '.' instead ','
@@ -168,7 +167,6 @@ export default {
                 const regexp = /%Cpu\(s\):.+$/gm
                 const cpuUsage = arr[2].match(regexp)
                 if (Array.isArray(cpuUsage)) {
-                    console.log('cpuUsage1', cpuUsage)
                     return cpuUsage[0].replace(/%Cpu\(s\):\s+/gm, '').split(/\W\s/gm).map((val) => {
                         return val.replace(/^\s+/, '')
                     })
