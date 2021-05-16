@@ -49,7 +49,8 @@
                         :value="cpuLoadPercentage(item.value)"
                         :color="color(item.value)"
                     >
-                        {{ item.value }} | {{ item.time }} min
+                        <span>{{ item.value }}</span>
+                        <span>{{ item.time }} min</span>
                     </v-progress-circular>
                 </v-col>
                 <v-col v-if="cpuCores" cols="12">
