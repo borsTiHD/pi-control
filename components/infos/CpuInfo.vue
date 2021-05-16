@@ -49,7 +49,7 @@
                         :value="cpuLoadPercentage(item.value)"
                         :color="color(item.value)"
                     >
-                        <div class="d-flex flex-column">
+                        <div class="d-flex flex-column align-center">
                             <span>{{ item.value }}</span>
                             <span>{{ item.time }} min</span>
                         </div>
@@ -140,7 +140,9 @@ export default {
         },
         cpuLoadPercentage(cpuLoad) {
             const maxLoad = parseInt(this.cpuCores) // equals 100%
-            return (cpuLoad * 100) / (maxLoad * 100) // returns current load percentage
+            const percentage = (cpuLoad * 100) / (maxLoad * 100)
+            console.log('percentage:', percentage)
+            return percentage // returns current load percentage
         },
         color(cpuLoad) {
             // Coloring of equal or greater values (from max to low)
