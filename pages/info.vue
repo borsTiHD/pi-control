@@ -5,6 +5,7 @@
         </v-col>
         <v-col cols="12" sm="8" md="6" lg="4" class="d-flex flex-column">
             <memory :loading="loading.memory" @rescan="scanAlias('memory')" />
+            <swap :loading="loading.memory" @rescan="scanAlias('memory')" />
         </v-col>
         <v-col cols="12" sm="8" md="3" lg="4" xl="2" class="d-flex flex-column">
             <temperature :loading="loading.temperature" @rescan="scanAlias('temperature')" />
@@ -34,6 +35,7 @@ import CpuInfo from '~/components/infos/CpuInfo.vue'
 import Uptime from '~/components/infos/Uptime.vue'
 import Temperature from '~/components/infos/Temperature.vue'
 import Memory from '~/components/infos/Memory.vue'
+import Swap from '~/components/infos/Swap.vue'
 import Diskspace from '~/components/infos/Diskspace.vue'
 
 export default {
@@ -45,6 +47,7 @@ export default {
         Uptime,
         Temperature,
         Memory,
+        Swap,
         Diskspace
     },
     data() {
