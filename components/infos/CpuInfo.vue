@@ -133,7 +133,6 @@ export default {
                         type: arr[1]
                     }
                 })
-                console.log('cpu usage:', arrWithObj)
                 return arrWithObj
             }
             return false
