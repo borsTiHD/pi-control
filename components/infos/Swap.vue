@@ -128,7 +128,7 @@ export default {
             // Filters swap data
             const arr = data.split('\n')
             if (Array.isArray(arr) && arr.length > 0) {
-                return arr[1].replace(/Swap:\s+/gm, '').split(/\s+/)
+                return arr[2].replace(/Swap:\s+/gm, '').split(/\s+/)
             }
             return false
         },
