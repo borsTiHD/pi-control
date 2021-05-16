@@ -38,11 +38,21 @@
                 </v-col>
             </v-row>
             <v-row v-else-if="cpuLoad || cpuCores">
+                <v-col v-if="cpuLoad" cols="12">
+                    <v-progress-circular
+                        v-for="(item, index) in cpuLoad"
+                        :key="index"
+                        :rotate="180"
+                        :size="100"
+                        :width="15"
+                        :value="cpuLoadPercentage(item.value)"
+                        :color="color"
+                    >
+                        {{ item.value }} | {{ item.time }} min
+                    </v-progress-circular>
+                </v-col>
                 <v-col v-if="cpuCores" cols="12">
                     <span>CPU Cores: {{ cpuCores }}</span><br>
-                </v-col>
-                <v-col v-if="cpuLoad" cols="12">
-                    <span v-for="(item, index) in cpuLoad" :key="index" class="mr-4">{{ item }}</span>
                 </v-col>
             </v-row>
             <v-row v-else>
@@ -74,7 +84,13 @@ export default {
     },
     data() {
         return {
-            textNoData: 'No data could be determined. Please rescan manually.'
+            textNoData: 'No data could be determined. Please rescan manually.',
+            cpuLimits: { // Coloring of equal or greater values (from max to low)
+                low: { value: 0, color: 'green' },
+                mid: { value: 20, color: 'yellow' },
+                high: { value: 50, color: 'orange' },
+                max: { value: 75, color: 'red' }
+            }
         }
     },
     computed: {
@@ -83,7 +99,19 @@ export default {
             getTopData: 'device/getTopData'
         }),
         cpuLoad() {
-            if (this.getTopData) return this.crawlCpuLoad(this.getTopData)
+            if (this.getTopData) {
+                const cpuLoad = this.crawlCpuLoad(this.getTopData)
+                console.log('cpuLoad:', cpuLoad)
+                const obj = cpuLoad.map((item, index) => {
+                    // Index determines which string is taken
+                    const time = index === 0 ? 1 : index === 1 ? 5 : 15 // '1 min', '5 min', '15 min'
+                    return {
+                        value: parseFloat(item),
+                        time
+                    }
+                })
+                return obj
+            }
             return false
         },
         cpuCores() {
@@ -106,6 +134,25 @@ export default {
                 })[0]
             }
             return false
+        },
+        cpuLoadPercentage(cpuLoad) {
+            const maxLoad = parseInt(this.cpuCores) // equals 100%
+            return (cpuLoad * 100) / (maxLoad * 100) // returns current load percentage
+        },
+        color(cpuLoad) {
+            // Coloring of equal or greater values (from max to low)
+            const val = this.cpuLoadPercentage(cpuLoad)
+            const limit = this.cpuLimits
+            if (val >= limit.max.value) {
+                return limit.max.color
+            } else if (val >= limit.high.value) {
+                return limit.high.color
+            } else if (val >= limit.mid.value) {
+                return limit.mid.color
+            } else if (val >= limit.low.value) {
+                return limit.low.color
+            }
+            return 'secondary' // not possible
         }
     }
 }
