@@ -1,2 +1,3 @@
 #!/bin/sh
-echo "$(df -m)"
+# excludes temporary devices / mountings
+echo "$(df -x tmpfs -x devtmpfs -m)"
