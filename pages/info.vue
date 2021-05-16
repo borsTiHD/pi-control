@@ -127,6 +127,7 @@ export default {
     },
     deactivated() {
         // Clearing intervals on leaving
+        if (this.interval.uptime) { clearInterval(this.interval.uptime) }
         if (this.interval.cpuLoad) { clearInterval(this.interval.cpuLoad) }
         if (this.interval.memory) { clearInterval(this.interval.memory) }
         if (this.interval.temperature) { clearInterval(this.interval.temperature) }
