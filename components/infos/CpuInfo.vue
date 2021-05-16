@@ -56,7 +56,12 @@
                     </v-progress-circular>
                 </v-col>
                 <v-col v-if="cpuCores" cols="12">
-                    <span>CPU Cores: {{ cpuCores }}</span><br>
+                    <span>CPU Cores: {{ cpuCores }}</span>
+                </v-col>
+                <v-col v-if="cpuUsage" cols="12">
+                    <span v-for="(item, index) in cpuUsage" :key="index">
+                        {{ item.type }}: {{ item.value }}
+                    </span>
                 </v-col>
             </v-row>
             <v-row v-else>
@@ -105,7 +110,7 @@ export default {
         cpuLoad() {
             if (this.getTopData) {
                 const cpuLoad = this.crawlCpuLoad(this.getTopData)
-                const obj = cpuLoad.map((item, index) => {
+                const arrWithObj = cpuLoad.map((item, index) => {
                     // Index determines which string is taken
                     const time = index === 0 ? 1 : index === 1 ? 5 : 15 // '1 min', '5 min', '15 min'
                     return {
@@ -113,7 +118,22 @@ export default {
                         time
                     }
                 })
-                return obj
+                return arrWithObj
+            }
+            return false
+        },
+        cpuUsage() {
+            if (this.getTopData) {
+                const cpuUsage = this.crawlCpuUsage(this.getTopData)
+                const arrWithObj = cpuUsage.map((item) => {
+                    const arr = item.split(' ') // Splitting value and text -> Idle: '92,7 id'
+                    return {
+                        value: parseFloat(arr[0].replace(',', '.')), // Input something like '7,3' -> parseFloat needs a '.' instead ','
+                        type: arr[1]
+                    }
+                })
+                console.log('cpu usage:', arrWithObj)
+                return arrWithObj
             }
             return false
         },
@@ -135,6 +155,22 @@ export default {
                     const arr = item.replace(loadAvgString, '').replace(/^\s+/, '').split(', ')
                     return arr
                 })[0]
+            }
+            return false
+        },
+        crawlCpuUsage(data) {
+            // Crawls response from 'top -b -n1'
+            // Filters cpu usage
+            const arr = data.split('\n')
+            if (Array.isArray(arr) && arr.length > 2) {
+                const string = '%Cpu(s):'
+                const regexp = new RegExp(`${string}.+$`, 'g')
+                return arr[2].match(regexp).map((item) => {
+                    const arr = item.replace(string, '').split(/\W\s/gm).map((val) => {
+                        return val.replace(/^\s+/, '')
+                    })
+                    return arr
+                })
             }
             return false
         },
