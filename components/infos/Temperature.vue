@@ -110,13 +110,13 @@ export default {
             // Coloring of equal or greater values (from max to low)
             const val = this.tempValue
             const limit = this.tempLimits
-            if (val >= limit.max) {
+            if (val >= limit.max.value) {
                 return limit.max.color
-            } else if (val >= limit.high) {
+            } else if (val >= limit.high.value) {
                 return limit.high.color
-            } else if (val >= limit.mid) {
+            } else if (val >= limit.mid.value) {
                 return limit.mid.color
-            } else if (val >= limit.low) {
+            } else if (val >= limit.low.value) {
                 return limit.low.color
             }
             return 'secondary' // not possible
