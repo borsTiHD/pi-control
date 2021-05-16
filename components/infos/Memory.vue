@@ -103,24 +103,11 @@ export default {
                     }
                 })
 
-                /*
-                const result = {
-                    total: arrWithObj.find((obj) => { return obj.type === 'total' }).value,
-                    used: arrWithObj.find((obj) => { return obj.type === 'used' }).value,
-                    free: arrWithObj.find((obj) => { return obj.type === 'free' }).value,
-                    shared: arrWithObj.find((obj) => { return obj.type === 'shared' }).value,
-                    cache: arrWithObj.find((obj) => { return obj.type === 'buff/cache' }).value,
-                    available: arrWithObj.find((obj) => { return obj.type === 'available' }).value
-                }
-                */
-
                 // Building Object for better use
                 const result = {}
                 arrWithObj.forEach((obj) => {
                     result[obj.type] = obj.value
                 })
-
-                console.log('memory:', result)
                 return result
             }
             return false
