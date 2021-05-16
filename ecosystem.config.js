@@ -1,9 +1,10 @@
+import pkg from './package.json'
 module.exports = {
     apps: [
         {
-            name: 'pi-control',
+            name: pkg.name,
             exec_mode: 'cluster',
-            instances: 'max', // Or a number of instances
+            instances: 1, // 'max' Or a number of instances
             script: './node_modules/nuxt/bin/nuxt.js',
             args: 'start'
         }
