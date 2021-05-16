@@ -54,6 +54,9 @@ $ pm2 ls
 # make pm2 auto-boot at server restart:
 $ pm2 startup
 
+# remove auto-boot service
+$ pm2 unstartup systemd
+
 # stopping service
 $ pm2 stop pi-control
 ```
