@@ -1,5 +1,5 @@
 <template>
-    <v-card class="flex d-flex flex-column mb-1">
+    <v-card class="flex d-flex flex-column mb-2">
         <v-card-title class="headline">
             <v-icon
                 large

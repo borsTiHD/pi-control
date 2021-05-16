@@ -1,14 +1,14 @@
 <template>
-    <v-card class="flex d-flex flex-column mt-1">
+    <v-card class="flex d-flex flex-column mt-2">
         <v-card-title class="headline">
             <v-icon
                 large
                 color="primary"
                 class="mr-2"
             >
-                mdi-memory
+                mdi-swap-horizontal-bold
             </v-icon>
-            Memory
+            Swap
             <v-tooltip right>
                 <template #activator="{ on, attrs }">
                     <v-btn
@@ -39,16 +39,16 @@
             </v-row>
             <v-row v-else-if="data">
                 <v-col cols="12">
-                    <span>Used: {{ memory.used }}MB ({{ memoryUsedPercentage(memory) }}%)</span>
-                    <span>Available: {{ memory.available }}MB</span>
-                    <span>Total: {{ memory.total }}MB</span>
+                    <span>Used: {{ swap.used }}MB ({{ swapUsedPercentage(swap) }}%)</span>
+                    <span>Free: {{ swap.free }}MB</span>
+                    <span>Total: {{ swap.total }}MB</span>
                 </v-col>
                 <v-col cols="12">
                     <v-progress-linear
-                        :value="memoryUsedPercentage(memory)"
+                        :value="swapUsedPercentage(swap)"
                         height="25"
                     >
-                        <strong>{{ memoryUsedPercentage(memory) }}%</strong>
+                        <strong>{{ swapUsedPercentage(swap) }}%</strong>
                     </v-progress-linear>
                 </v-col>
             </v-row>
@@ -72,7 +72,7 @@
 import { mapGetters } from 'vuex'
 
 export default {
-    name: 'Memory',
+    name: 'Swap',
     props: {
         loading: {
             type: Boolean,
@@ -92,14 +92,14 @@ export default {
             if (this.getMemoryData) return this.getMemoryData
             return false
         },
-        memory() {
+        swap() {
             if (this.data) {
-                const memoryTypes = this.crawlMemoryTypes(this.data)
-                const memoryData = this.crawlMemoryData(this.data)
-                const arrWithObj = memoryData.map((item, index) => {
+                const swapTypes = this.crawlSwapTypes(this.data)
+                const swapData = this.crawlSwapData(this.data)
+                const arrWithObj = swapData.map((item, index) => {
                     return {
                         value: item,
-                        type: memoryTypes[index]
+                        type: swapTypes[index]
                     }
                 })
 
@@ -114,26 +114,26 @@ export default {
         }
     },
     methods: {
-        crawlMemoryTypes(data) {
+        crawlSwapTypes(data) {
             // Crawls response from 'free'
-            // Filters memory types -> total, used, free, shared, buff/cache, available
+            // Filters swap types -> total, used, free, shared, buff/cache, available
             const arr = data.split('\n')
             if (Array.isArray(arr) && arr.length > 0) {
                 return arr[0].replace(/^\s+/gm, '').split(/\s+/)
             }
             return false
         },
-        crawlMemoryData(data) {
+        crawlSwapData(data) {
             // Crawls response from 'free'
-            // Filters memory data
+            // Filters swap data
             const arr = data.split('\n')
             if (Array.isArray(arr) && arr.length > 0) {
-                return arr[1].replace(/Mem:\s+/gm, '').split(/\s+/)
+                return arr[1].replace(/Swap:\s+/gm, '').split(/\s+/)
             }
             return false
         },
-        memoryUsedPercentage(memory) {
-            const percentage = (memory.used / memory.total) * 100 // returns current load percentage
+        swapUsedPercentage(swap) {
+            const percentage = (swap.used / swap.total) * 100 // returns current load percentage
             return Math.round(percentage * 100) / 100 // Rounds last 2 digits
         }
     }
