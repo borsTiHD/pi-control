@@ -1,6 +1,6 @@
 <template>
     <div>
-        <v-tooltip bottom>
+        <v-tooltip left>
             <template #activator="{ on, attrs }">
                 <v-btn
                     color="primary"

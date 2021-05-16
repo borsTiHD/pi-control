@@ -1,26 +1,29 @@
 <template>
     <v-card>
-        <v-card-title class="headline">
-            Scripts
-            <v-tooltip right>
-                <template #activator="{ on, attrs }">
-                    <v-btn
-                        icon
-                        color="primary"
-                        class="ml-2"
-                        :loading="loadingScanFiles"
-                        :disabled="loadingScanFiles"
-                        v-bind="attrs"
-                        v-on="on"
-                        @click="scanFiles"
-                    >
-                        <v-icon>mdi-cached</v-icon>
-                    </v-btn>
-                </template>
-                <span>Rescan scripts</span>
-            </v-tooltip>
+        <v-card-title class="headline d-flex">
+            <span class="mr-auto">
+                Scripts
+                <v-tooltip right>
+                    <template #activator="{ on, attrs }">
+                        <v-btn
+                            icon
+                            color="primary"
+                            class="ml-2"
+                            :loading="loadingScanFiles"
+                            :disabled="loadingScanFiles"
+                            v-bind="attrs"
+                            v-on="on"
+                            @click="scanFiles"
+                        >
+                            <v-icon>mdi-cached</v-icon>
+                        </v-btn>
+                    </template>
+                    <span>Rescan scripts</span>
+                </v-tooltip>
+            </span>
+            <add-script v-if="!loadingScanFiles" @added="addedScript" />
         </v-card-title>
-        <v-sheet v-if="!loadingScanFiles" class="pa-4 primary">
+        <v-card-text v-if="!loadingScanFiles">
             <v-text-field
                 v-model="search"
                 label="Search Files"
@@ -38,7 +41,8 @@
                 hide-details
                 label="Case sensitive search"
             />
-        </v-sheet>
+        </v-card-text>
+        <v-divider class="mx-4" />
         <v-card-text>
             <v-row v-if="loadingScanFiles">
                 <v-col cols="12">
@@ -83,14 +87,6 @@
                 </v-col>
             </v-row>
         </v-card-text>
-        <v-divider class="py-1" />
-        <v-card-actions v-if="!loadingScanFiles">
-            <v-row>
-                <v-col class="d-flex mx-3">
-                    <add-script @added="addedScript" />
-                </v-col>
-            </v-row>
-        </v-card-actions>
     </v-card>
 </template>
 
