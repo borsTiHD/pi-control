@@ -55,13 +55,13 @@
                         </div>
                     </v-progress-circular>
                 </v-col>
-                <v-col v-if="cpuCores" cols="12">
+                <v-col v-if="cpuCores" cols="12" dense>
                     <span>CPU Cores: {{ cpuCores }}</span>
                 </v-col>
-                <v-col v-if="cpuUsage" cols="12">
+                <v-col v-if="cpuUsage" cols="12" dense>
                     <span class="mr-2">CPU usage:</span>
                     <span v-for="(item, index) in cpuUsage" :key="index" class="mr-2">
-                        {{ item.type }}: {{ item.value }}
+                        {{ cpuUsageMapping(item.type) }}: {{ item.value }}%
                     </span>
                 </v-col>
             </v-row>
@@ -194,6 +194,28 @@ export default {
                 return limit.low.color
             }
             return 'secondary' // not possible
+        },
+        cpuUsageMapping(item) {
+            switch (item) {
+                case 'us':
+                    return 'User'
+                case 'sy':
+                    return 'Sys'
+                case 'ni':
+                    return 'Nice'
+                case 'id':
+                    return 'Idle'
+                case 'wa':
+                    return 'Wait'
+                case 'hi':
+                    return 'Hard Inter.'
+                case 'si':
+                    return 'Soft Inter.'
+                case 'st':
+                    return 'Steal'
+                default:
+                    return item
+            }
         }
     }
 }
