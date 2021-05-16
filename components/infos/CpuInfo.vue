@@ -42,6 +42,7 @@
                     <v-progress-circular
                         v-for="(item, index) in cpuLoad"
                         :key="index"
+                        class="mr-2"
                         :rotate="180"
                         :size="100"
                         :width="15"
