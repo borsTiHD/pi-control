@@ -49,8 +49,10 @@
                         :value="cpuLoadPercentage(item.value)"
                         :color="color(item.value)"
                     >
-                        <span>{{ item.value }}</span>
-                        <span>{{ item.time }} min</span>
+                        <div class="d-flex flex-column">
+                            <span>{{ item.value }}</span>
+                            <span>{{ item.time }} min</span>
+                        </div>
                     </v-progress-circular>
                 </v-col>
                 <v-col v-if="cpuCores" cols="12">
@@ -111,8 +113,6 @@ export default {
                         time
                     }
                 })
-                console.log('cpuLoad:', cpuLoad)
-                console.log('obj:', obj)
                 return obj
             }
             return false
