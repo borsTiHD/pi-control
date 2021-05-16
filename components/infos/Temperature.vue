@@ -108,7 +108,7 @@ export default {
         },
         color() {
             // Coloring of equal or greater values (from max to low)
-            const val = this.tempValue
+            const val = parseFloat(this.tempValue)
             const limit = this.tempLimits
             if (val >= limit.max) {
                 return limit.max.color
