@@ -39,7 +39,17 @@
             </v-row>
             <v-row v-else-if="data">
                 <v-col cols="12">
-                    {{ memory }}
+                    <span>Used: {{ memory.used }}MB ({{ memoryUsedPercentage(memory) }}%)</span>
+                    <span>Available: {{ memory.available }}MB</span>
+                    <span>Total: {{ memory.total }}MB</span>
+                </v-col>
+                <v-col cols="12">
+                    <v-progress-linear
+                        :value="memoryUsedPercentage(memory)"
+                        height="25"
+                    >
+                        <strong>{{ memoryUsedPercentage(memory) }}%</strong>
+                    </v-progress-linear>
                 </v-col>
             </v-row>
             <v-row v-else>
@@ -92,8 +102,26 @@ export default {
                         type: memoryTypes[index]
                     }
                 })
-                console.log('memory:', arrWithObj)
-                return arrWithObj
+
+                /*
+                const result = {
+                    total: arrWithObj.find((obj) => { return obj.type === 'total' }).value,
+                    used: arrWithObj.find((obj) => { return obj.type === 'used' }).value,
+                    free: arrWithObj.find((obj) => { return obj.type === 'free' }).value,
+                    shared: arrWithObj.find((obj) => { return obj.type === 'shared' }).value,
+                    cache: arrWithObj.find((obj) => { return obj.type === 'buff/cache' }).value,
+                    available: arrWithObj.find((obj) => { return obj.type === 'available' }).value
+                }
+                */
+
+                // Building Object for better use
+                const result = {}
+                arrWithObj.forEach((obj) => {
+                    result[obj.type] = obj.value
+                })
+
+                console.log('memory:', result)
+                return result
             }
             return false
         }
@@ -101,7 +129,7 @@ export default {
     methods: {
         crawlMemoryTypes(data) {
             // Crawls response from 'free'
-            // Filters memory types -> total / used / free / shared / buff/cache / available
+            // Filters memory types -> total, used, free, shared, buff/cache, available
             const arr = data.split('\n')
             if (Array.isArray(arr) && arr.length > 0) {
                 return arr[0].replace(/^\s+/gm, '').split(/\s+/)
@@ -116,6 +144,9 @@ export default {
                 return arr[1].replace(/Mem:\s+/gm, '').split(/\s+/)
             }
             return false
+        },
+        memoryUsedPercentage(memory) {
+            return (memory.used / memory.total) * 100 // returns current load percentage
         }
     }
 }
