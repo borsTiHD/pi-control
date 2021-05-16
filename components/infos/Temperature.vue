@@ -44,7 +44,7 @@
                         :size="100"
                         :width="15"
                         :value="tempValue"
-                        :color="color"
+                        :color="color(tempValue)"
                     >
                         {{ tempValue }} °C
                     </v-progress-circular>
@@ -105,10 +105,11 @@ export default {
                 return parseFloat(arr[1])
             }
             return false
-        },
-        color() {
+        }
+    },
+    methods: {
+        color(val) {
             // Coloring of equal or greater values (from max to low)
-            const val = this.tempValue
             const limit = this.tempLimits
             if (val >= limit.max.value) {
                 return limit.max.color

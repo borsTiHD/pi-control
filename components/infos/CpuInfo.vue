@@ -46,7 +46,7 @@
                         :size="100"
                         :width="15"
                         :value="cpuLoadPercentage(item.value)"
-                        :color="color"
+                        :color="color(item.value)"
                     >
                         {{ item.value }} | {{ item.time }} min
                     </v-progress-circular>
