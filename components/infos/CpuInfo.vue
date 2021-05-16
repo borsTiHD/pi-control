@@ -126,6 +126,7 @@ export default {
             if (this.getTopData) {
                 const cpuUsage = this.crawlCpuUsage(this.getTopData)
                 const arrWithObj = cpuUsage.map((item) => {
+                    console.log(item)
                     const arr = item.split(' ') // Splitting value and text -> Idle: '92,7 id'
                     return {
                         value: parseFloat(arr[0].replace(',', '.')), // Input something like '7,3' -> parseFloat needs a '.' instead ','
