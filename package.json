@@ -27,7 +27,6 @@
     "@nuxtjs/vuetify": "^1.11.3",
     "archiver": "^5.3.0",
     "babel-eslint": "^10.1.0",
-    "chart.js": "^3.2.1",
     "cors": "^2.8.5",
     "eslint": "^7.22.0",
     "eslint-plugin-nuxt": "^2.0.0",
@@ -36,7 +35,6 @@
     "fs-extra": "^10.0.0",
     "idb": "^6.0.0",
     "moment": "^2.29.1",
-    "vue-chartjs": "^3.5.1",
     "vue-toastification": "^1.7.11"
   }
 }
