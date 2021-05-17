@@ -27,14 +27,14 @@
 import path from 'path'
 import { mapGetters, mapActions } from 'vuex'
 
-import System from '~/components/infos/System.vue'
-import Device from '~/components/infos/Device.vue'
-import CpuInfo from '~/components/infos/CpuInfo.vue'
-import Uptime from '~/components/infos/Uptime.vue'
-import Temperature from '~/components/infos/Temperature.vue'
-import Memory from '~/components/infos/Memory.vue'
-import Swap from '~/components/infos/Swap.vue'
-import Diskspace from '~/components/infos/Diskspace.vue'
+import System from '~/components/dashboard/System.vue'
+import Device from '~/components/dashboard/Device.vue'
+import CpuInfo from '~/components/dashboard/CpuInfo.vue'
+import Uptime from '~/components/dashboard/Uptime.vue'
+import Temperature from '~/components/dashboard/Temperature.vue'
+import Memory from '~/components/dashboard/Memory.vue'
+import Swap from '~/components/dashboard/Swap.vue'
+import Diskspace from '~/components/dashboard/Diskspace.vue'
 
 export default {
     name: 'Dashboard',
