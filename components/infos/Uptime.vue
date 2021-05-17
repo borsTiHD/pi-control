@@ -16,7 +16,7 @@
                         color="primary"
                         class="ml-2"
                         :loading="loading"
-                        :disabled="loading"
+                        :disabled="loading || getAutoRefresh"
                         v-bind="attrs"
                         v-on="on"
                         @click="$emit('rescan')"
@@ -24,7 +24,7 @@
                         <v-icon>mdi-cached</v-icon>
                     </v-btn>
                 </template>
-                <span>Rescan</span>
+                <span>{{ getAutoRefresh ? 'Autorefresh is activated' : 'Rescan' }}</span>
             </v-tooltip>
         </v-card-title>
         <v-card-text>
@@ -76,6 +76,7 @@ export default {
     },
     computed: {
         ...mapGetters({
+            getAutoRefresh: 'settings/getAutoRefresh',
             getUptimeData: 'device/getUptimeData'
         }),
         data() {
