@@ -104,7 +104,7 @@ export default {
             textNoData: 'No data could be determined. Please rescan manually.',
             limits: { // Coloring of equal or greater values (from max to low)
                 low: { value: 0, color: 'primary' },
-                mid: { value: 11, color: 'yellow' },
+                mid: { value: 50, color: 'yellow' },
                 high: { value: 60, color: 'orange' },
                 max: { value: 80, color: 'red' }
             }
