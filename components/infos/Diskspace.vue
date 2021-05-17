@@ -47,6 +47,7 @@
                 <v-col cols="12">
                     <v-progress-linear
                         :value="space.disk.usedPercentage"
+                        :color="color(space.disk.usedPercentage)"
                         height="25"
                     >
                         <strong>{{ space.disk.usedPercentage }}%</strong>
@@ -64,6 +65,7 @@
                 <v-col cols="12">
                     <v-progress-linear
                         :value="space.boot.usedPercentage"
+                        :color="color(space.boot.usedPercentage)"
                         height="25"
                     >
                         <strong>{{ space.boot.usedPercentage }}%</strong>
@@ -99,7 +101,13 @@ export default {
     },
     data() {
         return {
-            textNoData: 'No data could be determined. Please rescan manually.'
+            textNoData: 'No data could be determined. Please rescan manually.',
+            limits: { // Coloring of equal or greater values (from max to low)
+                low: { value: 0, color: 'primary' },
+                mid: { value: 11, color: 'yellow' },
+                high: { value: 60, color: 'orange' },
+                max: { value: 80, color: 'red' }
+            }
         }
     },
     computed: {
@@ -156,6 +164,20 @@ export default {
         },
         returnPercentageNumber(string) {
             return parseInt(string.replace('%', ''))
+        },
+        color(val) {
+            // Coloring of equal or greater values (from max to low)
+            const limit = this.limits
+            if (val >= limit.max.value) {
+                return limit.max.color
+            } else if (val >= limit.high.value) {
+                return limit.high.color
+            } else if (val >= limit.mid.value) {
+                return limit.mid.color
+            } else if (val >= limit.low.value) {
+                return limit.low.color
+            }
+            return 'secondary' // not possible
         }
     }
 }

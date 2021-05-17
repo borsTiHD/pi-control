@@ -46,6 +46,7 @@
                 <v-col cols="12">
                     <v-progress-linear
                         :value="swapUsedPercentage(swap)"
+                        :color="color(swapUsedPercentage(memory))"
                         height="25"
                     >
                         <strong>{{ swapUsedPercentage(swap) }}%</strong>
@@ -81,7 +82,13 @@ export default {
     },
     data() {
         return {
-            textNoData: 'No data could be determined. Please rescan manually.'
+            textNoData: 'No data could be determined. Please rescan manually.',
+            limits: { // Coloring of equal or greater values (from max to low)
+                low: { value: 0, color: 'primary' },
+                mid: { value: 50, color: 'yellow' },
+                high: { value: 60, color: 'orange' },
+                max: { value: 80, color: 'red' }
+            }
         }
     },
     computed: {
@@ -135,6 +142,20 @@ export default {
         swapUsedPercentage(swap) {
             const percentage = (swap.used / swap.total) * 100 // returns current load percentage
             return Math.round(percentage * 100) / 100 // Rounds last 2 digits
+        },
+        color(val) {
+            // Coloring of equal or greater values (from max to low)
+            const limit = this.limits
+            if (val >= limit.max.value) {
+                return limit.max.color
+            } else if (val >= limit.high.value) {
+                return limit.high.color
+            } else if (val >= limit.mid.value) {
+                return limit.mid.color
+            } else if (val >= limit.low.value) {
+                return limit.low.color
+            }
+            return 'secondary' // not possible
         }
     }
 }
