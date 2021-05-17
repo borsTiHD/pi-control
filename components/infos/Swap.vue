@@ -46,7 +46,7 @@
                 <v-col cols="12">
                     <v-progress-linear
                         :value="swapUsedPercentage(swap)"
-                        :color="color(swapUsedPercentage(memory))"
+                        :color="color(swapUsedPercentage(swap))"
                         height="25"
                     >
                         <strong>{{ swapUsedPercentage(swap) }}%</strong>
