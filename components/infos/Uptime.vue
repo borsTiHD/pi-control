@@ -11,18 +11,18 @@
             Uptime
             <v-tooltip right>
                 <template #activator="{ on, attrs }">
-                    <v-btn
-                        icon
-                        color="primary"
-                        class="ml-2"
-                        :loading="loading"
-                        :disabled="loading || getAutoRefresh"
-                        v-bind="attrs"
-                        v-on="on"
-                        @click="$emit('rescan')"
-                    >
-                        <v-icon>mdi-cached</v-icon>
-                    </v-btn>
+                    <div class="d-inline-block" v-bind="attrs" v-on="on">
+                        <v-btn
+                            icon
+                            color="primary"
+                            class="ml-2"
+                            :loading="loading"
+                            :disabled="loading || getAutoRefresh"
+                            @click="$emit('rescan')"
+                        >
+                            <v-icon>mdi-cached</v-icon>
+                        </v-btn>
+                    </div>
                 </template>
                 <span>{{ getAutoRefresh ? 'Autorefresh is activated' : 'Rescan' }}</span>
             </v-tooltip>
