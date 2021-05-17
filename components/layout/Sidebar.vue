@@ -31,19 +31,19 @@ export default {
             clipped: true,
             items: [
                 {
-                    icon: 'mdi-apps',
-                    title: 'Welcome',
-                    to: '/'
-                },
-                {
-                    icon: 'mdi-information-outline',
-                    title: 'Info',
-                    to: '/info'
+                    icon: 'mdi-monitor-dashboard ',
+                    title: 'Dashboard',
+                    to: '/dashboard'
                 },
                 {
                     icon: 'mdi-script-text-outline',
                     title: 'Scripts',
                     to: '/scripts'
+                },
+                {
+                    icon: 'mdi-information-outline',
+                    title: 'About',
+                    to: '/about'
                 },
                 {
                     icon: 'mdi-cogs',

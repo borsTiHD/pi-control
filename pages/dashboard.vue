@@ -37,7 +37,7 @@ import Swap from '~/components/infos/Swap.vue'
 import Diskspace from '~/components/infos/Diskspace.vue'
 
 export default {
-    name: 'Info',
+    name: 'Dashboard',
     components: {
         System,
         Device,

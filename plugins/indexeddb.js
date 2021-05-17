@@ -60,13 +60,10 @@ class IndexedDb {
                         // falls through
                     case 1:
                         upgradeV1toV2()
-                        break // break entfernen wenn weitere Upgrades hinzukommen
                         // falls through
-                    /*
                     case 2:
-                        await upgradeDB3fromV2toV3()
-                        break
-                    */
+                        upgradeV2toV3()
+                        break // break entfernen wenn weitere Upgrades hinzukommen
                     default:
                         console.error(this.err.DB_VERSION_UNKNOWN)
                 }
@@ -83,6 +80,12 @@ class IndexedDb {
                     // User Einstellungen
                     db.createObjectStore('system')
                     transaction.objectStore('system').put(true, 'autoRefresh')
+                }
+
+                // Update for 'visited' value
+                function upgradeV2toV3() {
+                    // Visited Setting for displaying 'about' page on first visit
+                    transaction.objectStore('preference').put(false, 'visited')
                 }
 
                 /*

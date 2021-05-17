@@ -30,6 +30,7 @@
 import { mapGetters, mapActions } from 'vuex'
 
 export default {
+    name: 'Settingsbar',
     computed: {
         ...mapGetters({
             getRightDrawer: 'layout/getRightDrawer'
