@@ -24,7 +24,7 @@
                         icon="mdi-school"
                         class="mb-0"
                     >
-                        Influences the data on the info page. If activated CPU, memory and temperature data are polled on a regular basis.
+                        Influences data collecting on the dashboard. If activated, several data (CPU, memory, temperature and uptime) are polled on a regular basis.
                     </v-alert>
                 </v-col>
             </v-row>
