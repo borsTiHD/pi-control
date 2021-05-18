@@ -26,12 +26,14 @@
                     <span>{{ currentVersion }}</span>
                 </v-chip>
             </template>
-            <span>{{ isUpToDate ? 'Up to date' : 'Newer version available' }}</span>
+            <span>{{ isUpToDate ? 'App is up to date' : 'Newer version available' }}</span>
         </v-tooltip>
     </div>
 </template>
 
 <script>
+import { mapActions } from 'vuex'
+
 import pkg from '~~/package.json'
 
 export default {
@@ -55,9 +57,11 @@ export default {
         isUpToDate() {
             // If latest version was succesfully fetched and it is not equal installed version it returns false
             if (this.latestVersion && this.currentVersion !== this.latestVersion) {
-                return false
+                this.setNewRelease(true) // Set 'newRelease' flag in store
+                return false // Not up to date
             }
-            return true
+            this.setNewRelease(false) // Set 'newRelease' flag in store
+            return true // App is up to date
         }
     },
     created() {
@@ -65,6 +69,9 @@ export default {
         this.getLatestRelease()
     },
     methods: {
+        ...mapActions({
+            setNewRelease: 'setNewRelease'
+        }),
         getLatestRelease() {
             const url = 'https://api.github.com/repos/borsTiHD/pi-control/releases/latest'
             this.loading = true

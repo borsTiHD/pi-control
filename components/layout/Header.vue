@@ -5,9 +5,19 @@
         </v-btn>
         <v-toolbar-title style="cursor: pointer" @click="$router.push('/')" v-text="title" />
         <v-spacer />
-        <v-btn icon @click.stop="rightDrawer = !rightDrawer">
-            <v-icon>mdi-cogs</v-icon>
-        </v-btn>
+
+        <v-badge
+            :value="getNewRelease"
+            content="update"
+            color="error"
+            bordered
+            inline
+            left
+        >
+            <v-btn icon @click.stop="rightDrawer = !rightDrawer">
+                <v-icon>mdi-cogs</v-icon>
+            </v-btn>
+        </v-badge>
     </v-app-bar>
 </template>
 
@@ -23,6 +33,7 @@ export default {
     },
     computed: {
         ...mapGetters({
+            getNewRelease: 'getNewRelease',
             getDrawer: 'layout/getDrawer',
             getRightDrawer: 'layout/getRightDrawer'
         }),
