@@ -84,7 +84,7 @@ class ChildProcessClass {
         } else if (isLinux) {
             file = `sh "${path}"` // Quotes: So you can spawn paths with spaces
         } else {
-            throw "Operating system is not supported" // Exception bei non  Win+Linux Systemen 
+            throw new Error('Operating system is not supported') // Exception bei non  Win+Linux Systemen
         }
 
         try {
