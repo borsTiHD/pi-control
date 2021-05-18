@@ -1,7 +1,33 @@
 <template>
-    <div>
-        <span @click="getLatestRelease()">Version: {{ currentVersion }}</span>
-        <span>Latest: {{ latestVersion }}</span>
+    <div class="d-flex flex-column">
+        <v-tooltip top>
+            <template #activator="{ on, attrs }">
+                <v-chip
+                    class="ma-2 d-flex justify-center"
+                    :color="isUpToDate ? 'primary' : 'yellow'"
+                    outlined
+                    v-bind="attrs"
+                    v-on="on"
+                    @click="goToNewRelease"
+                >
+                    <v-btn
+                        v-if="loading"
+                        icon
+                        color="primary"
+                        class="ml-2"
+                        loading
+                        disabled
+                    >
+                        <v-icon>mdi-cached</v-icon>
+                    </v-btn>
+                    <v-icon v-else left>
+                        mdi-server-plus
+                    </v-icon>
+                    <span>{{ currentVersion }}</span>
+                </v-chip>
+            </template>
+            <span>{{ isUpToDate ? 'Up to date' : 'Newer version available' }}</span>
+        </v-tooltip>
     </div>
 </template>
 
@@ -18,14 +44,25 @@ export default {
     },
     computed: {
         currentVersion() {
-            return pkg.version
+            return `v.${pkg.version}`
         },
         latestVersion() {
             if (this.latestRelease) {
                 return this.latestRelease.name
             }
             return false
+        },
+        isUpToDate() {
+            // If latest version was succesfully fetched and it is not equal installed version it returns false
+            if (this.latestVersion && this.currentVersion !== this.latestVersion) {
+                return false
+            }
+            return true
         }
+    },
+    created() {
+        // Fetching latest version from github repo
+        this.getLatestRelease()
     },
     methods: {
         getLatestRelease() {
@@ -40,6 +77,11 @@ export default {
                 }).finally(() => {
                     this.loading = false
                 })
+        },
+        goToNewRelease() {
+            if (!this.isUpToDate) {
+                window.open(this.latestRelease.html_url, '_blank')
+            }
         }
     }
 }
