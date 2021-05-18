@@ -14,10 +14,6 @@ const childProcessSpawn = new ChildProcessClass()
 // Script Directory
 const scriptPath = path.join('.', 'scripts')
 
-// Windows/Linux checks
-const isWin = process.platform === 'win32'
-const isLinux = process.platform === 'linux'
-
 // Tests if file is in 'custom' directory
 // Only 'custom' scripts can be deleted
 function isCustomScript(path) {
@@ -33,12 +29,7 @@ function isCustomScript(path) {
  * @url https://stackoverflow.com/a/51518100/7625095
  */
 function zipDirectory(source, out) {
-    // Checks OS for type
-    let type = null
-    if (isLinux || isWin) {
-        type = 'zip'
-    }
-
+    const type = 'zip' // Type for packaged file
     const archive = archiver(type, { zlib: { level: 9 } })
     const stream = fs.createWriteStream(out)
 
