@@ -17,6 +17,10 @@ $ npm install --global yarn
 
 # verify the installation
 $ yarn -v
+
+# clone repo
+$ git clone ...
+$ cd pi-control
 ```
 
 ## Build Setup
