@@ -78,6 +78,8 @@ export default {
     modules: [
         // https://go.nuxtjs.dev/axios
         '@nuxtjs/axios',
+        // https://auth.nuxtjs.org/
+        '@nuxtjs/auth',
         // https://github.com/Maronato/vue-toastification
         ['vue-toastification/nuxt', {
             position: 'bottom-right',
