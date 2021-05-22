@@ -2,9 +2,9 @@
     <v-row align="center" justify="center" class="mt-12">
         <v-col cols="12" md="6" lg="3">
             <v-card>
-                <v-card-title class="headline">Login</v-card-title>
+                <v-card-title class="headline">Registration</v-card-title>
                 <v-card-text>
-                    <authentication-form button-title="Submit" :loading="loading" @submit="login" />
+                    <authentication-form button-title="Register" :loading="loading" @submit="register" />
                 </v-card-text>
             </v-card>
         </v-col>
@@ -15,7 +15,7 @@
 import AuthenticationForm from '@/components/forms/AuthentiactionForm'
 
 export default {
-    name: 'Login',
+    name: 'Register',
     components: {
         AuthenticationForm
     },
@@ -23,19 +23,30 @@ export default {
         loading: false
     }),
     methods: {
-        async login(form) {
+        async register(form) {
             this.loading = true
             try {
-                console.log('[Login] -> Try to login user:', form)
-                const response = await this.$auth.loginWith('local', {
+                // Register User
+                console.log('[Register] -> Try to register user:', form)
+                await this.$axios.post('/auth/register', {
+                    email: form.email,
+                    password: form.password
+                })
+
+                // Login User
+                const user = await this.$auth.loginWith('local', {
                     data: {
                         email: form.email,
                         password: form.password
                     }
                 })
-                this.$toast.info(response.data.message)
+                this.$toast.info(user.data.message)
+
+                if (user) {
+                    await this.$router.push('/admin')
+                }
             } catch (error) {
-                console.error('[Login] -> Failed to login:', error)
+                console.error('[Register] -> Failed to login:', error)
                 this.$toast.error(error.response.data.message)
             }
             this.loading = false
