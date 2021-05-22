@@ -2,7 +2,7 @@
 const express = require('express')
 const router = express.Router()
 
-/* GET users listing. */
+// Route: '/' -> REST Api index endpoint
 router.all('/', (req, res, next) => {
     res.json({
         _status: 'ok',

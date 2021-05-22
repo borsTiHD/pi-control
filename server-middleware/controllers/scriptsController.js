@@ -10,6 +10,9 @@ const asyncHandler = require('../middleware/asyncMiddleware')
 const ChildProcessClass = require('../../classes/ChildProcessClass')
 const childProcessSpawn = new ChildProcessClass()
 
+// Script Directory
+const scriptPath = path.join('.', 'scripts')
+
 // Tests if file is in 'custom' directory
 // Only 'custom' scripts can be deleted
 function isCustomScript(path) {
@@ -40,10 +43,12 @@ function zipDirectory(source, out) {
     })
 }
 
-// Script Directory
-const scriptPath = path.join('.', 'scripts')
-
-/* GET users listing. */
+/**
+ * Route serving index
+ * @name index
+ * @function
+ * @memberof module:routers/scripts
+ */
 exports.index = (req, res) => {
     res.json({
         _status: 'ok',
@@ -51,7 +56,12 @@ exports.index = (req, res) => {
     })
 }
 
-/* GET users listing. */
+/**
+ * Route serving list of files from host
+ * @name list
+ * @function
+ * @memberof module:routers/scripts
+ */
 exports.list = asyncHandler(async(req, res, next) => {
     // Generates unique random IDs for every folder/file
     const uniqueIds = []
@@ -104,7 +114,14 @@ exports.list = asyncHandler(async(req, res, next) => {
     })
 })
 
-/* GET users listing. */
+/**
+ * Route executes scripts from host
+ * @name execute
+ * @function
+ * @memberof module:routers/scripts
+ * @param {string} script - Query for script path. Exp.: ?script=scripts%5Ccustom%5Ctest.bat
+ * @param {array} args - Query for arguments. Exp.: ?args=['a', 'b', 'c']
+ */
 exports.execute = asyncHandler(async(req, res, next) => {
     const { query } = req
     const scriptRaw = query.script
@@ -144,7 +161,16 @@ exports.execute = asyncHandler(async(req, res, next) => {
     })
 })
 
-/* GET users listing. */
+/**
+ * Route read a file from host
+ * @name read
+ * @function
+ * @memberof module:routers/scripts
+ * @param {string} path - Query for file path. Exp.: ?path=scripts%5Ccustom%5Ctest.bat
+ * @param {string} id - Query for file id (just required for response). Exp.: ?id=77
+ * @param {string} name - Query for file name (just required for response). Exp.: ?name=test.bat
+ * @param {string} type - Query for file type (just required for response). Exp.: ?type=file
+ */
 exports.read = asyncHandler(async(req, res, next) => {
     // Query Data
     const query = req.query
@@ -171,7 +197,14 @@ exports.read = asyncHandler(async(req, res, next) => {
     }
 })
 
-/* GET users listing. */
+/**
+ * Route downloading a file from host
+ * @name download
+ * @function
+ * @memberof module:routers/scripts
+ * @param {string} path - Query for file path. Exp.: ?path=scripts%5Ccustom%5Ctest.bat
+ * @param {string} name - Query for file name. Exp.: ?name=test.bat
+ */
 exports.download = asyncHandler(async(req, res, next) => {
     // Query Data
     const query = req.query
@@ -204,7 +237,13 @@ exports.download = asyncHandler(async(req, res, next) => {
     }
 })
 
-/* GET users listing. */
+/**
+ * Route adding a file on host
+ * @name addFile
+ * @function
+ * @memberof module:routers/scripts
+ * @param {object} data - Object -> form data. Delivers script data: '{ path: "scripts/custom/...", script: { name: "test", ext: "bat", text: "echo test" }}'
+ */
 exports.addFile = asyncHandler(async(req, res, next) => {
     const data = req.body
     const script = data.script
@@ -242,7 +281,13 @@ exports.addFile = asyncHandler(async(req, res, next) => {
     }
 })
 
-/* GET users listing. */
+/**
+ * Route adding a folder on host
+ * @name addFolder
+ * @function
+ * @memberof module:routers/scripts
+ * @param {object} data - Object -> form data. Delivers folder data: '{ path: "scripts\custom", name: "test" }'
+ */
 exports.addFolder = asyncHandler(async(req, res, next) => {
     const data = req.body
     const folderName = data.name
@@ -277,7 +322,13 @@ exports.addFolder = asyncHandler(async(req, res, next) => {
     }
 })
 
-/* GET users listing. */
+/**
+ * Route deleting a file/folder from host
+ * @name delete
+ * @function
+ * @memberof module:routers/scripts
+ * @param {string} path - Query for file/folder path. Exp.: ?path=scripts\custom\test
+ */
 exports.delete = asyncHandler(async(req, res, next) => {
     // Query Data
     const query = req.query
@@ -333,7 +384,14 @@ exports.delete = asyncHandler(async(req, res, next) => {
     }
 })
 
-/* GET users listing. */
+/**
+ * Route edits or renames a file from host
+ * @name editFile
+ * @function
+ * @memberof module:routers/scripts
+ * @param {string} oldFile - Query for old file data. Exp.: ?oldFile: {"path":"scripts\\custom\\test.bat","name":"test.bat","id":71,"type":"file"}
+ * @param {string} newFile - Query for new file data. Exp.: ?newFile: {"name":"new.bat","content":"echo test"}
+ */
 exports.editFile = asyncHandler(async(req, res, next) => {
     // Query Data
     const query = req.query
@@ -393,7 +451,14 @@ exports.editFile = asyncHandler(async(req, res, next) => {
     }
 })
 
-/* GET users listing. */
+/**
+ * Route edits or renames a folder from host
+ * @name editFolder
+ * @function
+ * @memberof module:routers/scripts
+ * @param {string} oldFolder - Query for old file data. Exp.: ?oldFolder: {"path":"scripts\\custom\\test","name":"test"}
+ * @param {string} newFolder - Query for new file data. Exp.: ?newFolder: {"name":"new"}
+ */
 exports.editFolder = asyncHandler(async(req, res, next) => {
     // Query Data
     const query = req.query

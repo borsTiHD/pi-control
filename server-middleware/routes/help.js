@@ -2,7 +2,7 @@
 const express = require('express')
 const router = express.Router()
 
-/* GET users listing. */
+// Route: '/help' -> just for testing purpose right now
 router.all('/', (req, res, next) => {
     console.log('[API] -> PLEASE HELP ME!')
     res.json({

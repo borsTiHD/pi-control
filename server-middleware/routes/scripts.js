@@ -2,10 +2,10 @@
 const express = require('express')
 const router = express.Router()
 
-// Require controller modules
+// Controller
 const controller = require('../controllers/scriptsController')
 
-// Router
+// Router: '/scripts/..'
 router.all('/', controller.index) /* GET users listing. */
 router.get('/list', controller.list) /* GET users listing. */
 router.post('/execute', controller.execute) /* GET users listing. */

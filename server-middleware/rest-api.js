@@ -12,10 +12,10 @@ const app = express()
 app.use(express.json())
 app.use(express.urlencoded({ extended: true })) // for form data
 
-// Setting Routes
-app.use('/', indexRouter)
-app.use('/help', helpRouter)
-app.use('/scripts', scriptsRouter)
+// Routes/Endpoints:
+app.use('/', indexRouter) // Index
+app.use('/help', helpRouter) // Help
+app.use('/scripts', scriptsRouter) // Scripts
 
 // Catch 404 and forward to error handler
 app.use((req, res, next) => {
