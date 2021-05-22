@@ -1,10 +1,11 @@
 // Imports
 const path = require('path')
 const fs = require('fs-extra')
-const archiver = require('archiver')
 
-// Middleware for handling errors on promise calls
-const asyncHandler = require('../middleware/asyncMiddleware')
+// Middleware
+const asyncHandler = require('../middleware/asyncHandler') // Middleware for handling errors on promise calls
+const isCustomScript = require('../middleware/isCustomScript') // Testing if given 'path' is a 'custom path'
+const zipDirectory = require('../middleware/zipDirectory') // Zipping file/folder middleware
 
 // ChildProcess Spawn Import
 const ChildProcessClass = require('../../classes/ChildProcessClass')
@@ -12,36 +13,6 @@ const childProcessSpawn = new ChildProcessClass()
 
 // Script Directory
 const scriptPath = path.join('.', 'scripts')
-
-// Tests if file is in 'custom' directory
-// Only 'custom' scripts can be deleted
-function isCustomScript(path) {
-    // Validates folder structure
-    // Returns true, if the custom path is in there
-    return /^scripts\\custom\\/gm.test(path) /* win path */ || /^scripts\/custom\//gm.test(path) /* linux path */
-}
-
-/**
- * @param {String} source
- * @param {String} out
- * @returns {Promise}
- * @url https://stackoverflow.com/a/51518100/7625095
- */
-function zipDirectory(source, out) {
-    const type = 'zip' // Type for packaged file
-    const archive = archiver(type, { zlib: { level: 9 } })
-    const stream = fs.createWriteStream(out)
-
-    return new Promise((resolve, reject) => {
-        archive
-            .directory(source, false)
-            .on('error', (err) => reject(err))
-            .pipe(stream)
-
-        stream.on('close', () => resolve())
-        archive.finalize()
-    })
-}
 
 /**
  * Route serving index
