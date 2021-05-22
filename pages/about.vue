@@ -47,6 +47,7 @@ import pkg from '~~/package.json'
 
 export default {
     name: 'About',
+    auth: false,
     data() {
         return {
             continueRoute: '/dashboard'
