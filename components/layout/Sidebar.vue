@@ -26,37 +26,45 @@
 import { mapGetters, mapActions } from 'vuex'
 
 export default {
-    data() {
-        return {
-            clipped: true,
-            items: [
-                {
-                    icon: 'mdi-monitor-dashboard ',
-                    title: 'Dashboard',
-                    to: '/dashboard'
-                },
-                {
-                    icon: 'mdi-script-text-outline',
-                    title: 'Scripts',
-                    to: '/scripts'
-                },
-                {
-                    icon: 'mdi-information-outline',
-                    title: 'About',
-                    to: '/about'
-                },
-                {
-                    icon: 'mdi-cogs',
-                    title: 'Settings',
-                    to: '/settings'
-                }
-            ]
-        }
-    },
     computed: {
         ...mapGetters({
             getDrawer: 'layout/getDrawer'
         }),
+        items() {
+            // Checks if User is logged in
+            if (this.$auth.loggedIn) {
+                return [
+                    {
+                        icon: 'mdi-monitor-dashboard ',
+                        title: 'Dashboard',
+                        to: '/dashboard'
+                    },
+                    {
+                        icon: 'mdi-script-text-outline',
+                        title: 'Scripts',
+                        to: '/scripts'
+                    },
+                    {
+                        icon: 'mdi-information-outline',
+                        title: 'About',
+                        to: '/about'
+                    },
+                    {
+                        icon: 'mdi-cogs',
+                        title: 'Settings',
+                        to: '/settings'
+                    }
+                ]
+            }
+
+            return [
+                {
+                    icon: 'mdi-information-outline',
+                    title: 'About',
+                    to: '/about'
+                }
+            ]
+        },
         drawer: {
             get() {
                 return this.getDrawer
