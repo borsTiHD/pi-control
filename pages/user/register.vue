@@ -16,6 +16,7 @@ import AuthenticationForm from '@/components/forms/AuthentiactionForm'
 
 export default {
     name: 'Register',
+    auth: false,
     components: {
         AuthenticationForm
     },

@@ -16,6 +16,7 @@ import AuthenticationForm from '@/components/forms/AuthentiactionForm'
 
 export default {
     name: 'Login',
+    auth: false,
     components: {
         AuthenticationForm
     },
@@ -33,6 +34,7 @@ export default {
                         password: form.password
                     }
                 })
+                console.log('RESULT:', response)
                 this.$toast.info(response.data.message)
             } catch (error) {
                 console.error('[Login] -> Failed to login:', error)

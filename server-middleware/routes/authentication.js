@@ -2,12 +2,73 @@
 const express = require('express')
 const router = express.Router()
 
+// Auth Imports
+const passport = require('passport')
+
 // Controller
 const controller = require('../controllers/authentication.controller')
 
-// Router: Base -> '/auth/..'
-// router.post('/login', controller.login) /* xxx */
-// router.get('/user', controller.user) /* xxx */
+/*
+ *  Router: Baseurl -> '/auth/..'
+*/
+
+// User Login Route
+router.post('/login', (req, res) => {
+    passport.authenticate('local', { session: false }, (err, user, message) => {
+        if (err) {
+            // you should log it
+            return res.status(500).json({
+                _status: 'error',
+                info: 'An error has occurred',
+                err
+            })
+        } else if (!user) {
+            // you should log it
+            return res.status(403).json({
+                _status: 'failed',
+                info: 'Login failed',
+                message: message.message
+            })
+        } else {
+            const token = controller.signUserToken(user)
+            return res.json({
+                _status: 'ok',
+                info: 'User login successful',
+                message: 'Login successful',
+                token
+            })
+        }
+    })(req, res)
+})
+
+// Validates correctness of the token when a user visits restricted pages on the frontend
+router.get('/user', async(req, res) => {
+    // console.log(req.cookies['auth._token.local'])
+    passport.authenticate('jwt', { session: false }, (err, user, message) => {
+        if (err) {
+            // you should log it
+            return res.status(400).json({
+                _status: 'error',
+                info: 'An error has occurred',
+                err
+            })
+        } else if (!user) {
+            // you should log it
+            return res.status(403).json({
+                _status: 'failed',
+                info: 'Login failed',
+                message: message.message
+            })
+        } else {
+            return res.json({
+                _status: 'ok',
+                info: 'User validation successful',
+                message: 'Validation successful',
+                user
+            })
+        }
+    })(res, req)
+})
 
 // Register a User and write user data into database
 router.post('/register', async(req, res) => {
