@@ -37,7 +37,6 @@
     "fs-extra": "^10.0.0",
     "idb": "^6.0.0",
     "moment": "^2.29.1",
-    "mongoose": "^5.12.10",
     "vue-toastification": "^1.7.11"
   }
 }
