@@ -79,7 +79,8 @@ export default {
         // https://go.nuxtjs.dev/axios
         '@nuxtjs/axios',
         // https://auth.nuxtjs.org/
-        '@nuxtjs/auth',
+        // '@nuxtjs/auth',
+        '@nuxtjs/auth-next',
         // https://github.com/Maronato/vue-toastification
         ['vue-toastification/nuxt', {
             position: 'bottom-right',
