@@ -5,6 +5,7 @@ const express = require('express')
 // Importing Routes
 const indexRouter = require('./routes/index')
 const helpRouter = require('./routes/help')
+const authRouter = require('./routes/authentication')
 const scriptsRouter = require('./routes/scripts')
 
 // Express Init
@@ -15,6 +16,7 @@ app.use(express.urlencoded({ extended: true })) // for form data
 // Routes/Endpoints:
 app.use('/', indexRouter) // Index
 app.use('/help', helpRouter) // Help
+app.use('/auth', authRouter) // Authentication
 app.use('/scripts', scriptsRouter) // Scripts
 
 // Catch 404 and forward to error handler
