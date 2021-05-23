@@ -3,7 +3,7 @@ const express = require('express')
 const router = express.Router()
 
 // Controller
-const controller = require('../controllers/scriptsController')
+const controller = require('../controllers/scripts.controller')
 
 // Router: '/scripts/..'
 router.all('/', controller.index) /* ALL index. */
