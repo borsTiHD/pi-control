@@ -5619,6 +5619,13 @@ lodash@^4.15.0, lodash@^4.17.15, lodash@^4.17.19, lodash@^4.17.20, lodash@^4.17.
   resolved "https://registry.yarnpkg.com/lodash/-/lodash-4.17.21.tgz#679591c564c3bffaae8454cf0b3df370c3d6911c"
   integrity sha512-v2kDEe57lecTulaDIuNTPy3Ry4gLGJ6Z1O3vE1krgXZNrsQ+LFTGHVxVjcXPs17LhbZVGedAJv8XZ1tvj5FvSg==
 
+lowdb@^2.0.3:
+  version "2.0.3"
+  resolved "https://registry.yarnpkg.com/lowdb/-/lowdb-2.0.3.tgz#5b823830a4c1757271200280474396f94fe4b10b"
+  integrity sha512-XEBcYcArKhJAlRDnZbQX6wsTklfP645nZHppRehdqhFM7FYqnTAknfOulhYdgJuWQpMgfeZhtZhNXWdTEU8dEA==
+  dependencies:
+    steno "^1.0.0"
+
 lower-case@^1.1.1:
   version "1.1.4"
   resolved "https://registry.yarnpkg.com/lower-case/-/lower-case-1.1.4.tgz#9a2cabd1b9e8e0ae993a4bf7d5875c39c42e8eac"
@@ -8304,6 +8311,11 @@ std-env@^2.2.1, std-env@^2.3.0:
   integrity sha512-4qT5B45+Kjef2Z6pE0BkskzsH0GO7GrND0wGlTM1ioUe3v0dGYx9ZJH0Aro/YyA8fqQ5EyIKDRjZojJYMFTflw==
   dependencies:
     ci-info "^3.0.0"
+
+steno@^1.0.0:
+  version "1.0.0"
+  resolved "https://registry.yarnpkg.com/steno/-/steno-1.0.0.tgz#475e32c6066ec9760229eaaf1550601764fbecba"
+  integrity sha512-C/KgCvEa1yWnpHmaPjAXrz1yWxh6hs+HvhqqPa71euaQmNi1wr4+WFo57VQxjKKuFl2KqS7gtlrN0oxj2noQLw==
 
 stream-browserify@^2.0.1:
   version "2.0.2"
