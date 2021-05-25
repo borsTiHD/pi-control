@@ -4761,10 +4761,10 @@ icss-utils@^4.0.0, icss-utils@^4.1.1:
   dependencies:
     postcss "^7.0.14"
 
-idb@^6.0.0:
-  version "6.1.0"
-  resolved "https://registry.yarnpkg.com/idb/-/idb-6.1.0.tgz#a7f41c61e8054ccd8f2b0f584f2eb345be08e6bd"
-  integrity sha512-Pd/Jv+iFtWGSWAJyRXhNarwto+D/MTuGgLH2KKet0PJLVtqayIOY+cKT1boQO85RWbMh2FMNwym0hg81Tu86lQ==
+idb@^6.1.1:
+  version "6.1.1"
+  resolved "https://registry.yarnpkg.com/idb/-/idb-6.1.1.tgz#1766e8ce6ff04eae5d78508a9733f51c57d016ef"
+  integrity sha512-5AnQiuTwELdLlriQ+UTVEzT3J7cC/4NSF0S0H5WC35FcOME4dbPHnfsbzkdfJWaFadiXvATHIV06bK/yilmjqQ==
 
 ieee754@^1.1.13, ieee754@^1.1.4:
   version "1.2.1"
