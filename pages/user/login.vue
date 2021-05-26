@@ -35,7 +35,7 @@ export default {
                     }
                 })
                 console.log('RESULT:', response)
-                this.$toast.info(response.data.message)
+                // this.$toast.info(response.data.message)
             } catch (error) {
                 console.error('[Login] -> Failed to login:', error)
                 this.$toast.error(error.response.data.message)

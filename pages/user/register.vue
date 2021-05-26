@@ -43,8 +43,9 @@ export default {
                 })
                 this.$toast.info(user.data.message)
 
+                // Pushes user to dashboard route
                 if (user) {
-                    await this.$router.push('/admin')
+                    await this.$router.push('/dashboard')
                 }
             } catch (error) {
                 console.error('[Register] -> Failed to login:', error)

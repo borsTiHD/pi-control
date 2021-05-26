@@ -31,12 +31,7 @@ router.post('/login', (req, res) => {
             })
         } else {
             const token = controller.signUserToken(user)
-            return res.json({
-                _status: 'ok',
-                info: 'User login successful',
-                message: 'Login successful',
-                token
-            })
+            return res.json({ token })
         }
     })(req, res)
 })
@@ -56,16 +51,11 @@ router.get('/user', async(req, res) => {
             // you should log it
             return res.status(403).json({
                 _status: 'failed',
-                info: 'Login failed',
+                info: 'Validation failed',
                 message: message.message
             })
         } else {
-            return res.json({
-                _status: 'ok',
-                info: 'User validation successful',
-                message: 'Validation successful',
-                user
-            })
+            return res.json({ user })
         }
     })(res, req)
 })
