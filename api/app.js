@@ -6,6 +6,9 @@ const cookieParser = require('cookie-parser')
 // Authentication Import
 const passport = require('passport')
 
+// Config
+const PORT = process.env.PORT || 4000
+
 // Importing Routes
 const indexRouter = require('./routes/index')
 const helpRouter = require('./routes/help')
@@ -18,6 +21,8 @@ app.use(express.json())
 app.use(express.urlencoded({ extended: true })) // for form data
 app.use(cookieParser()) // Cookies
 app.use(passport.initialize()) // Authentication
+
+// /api/v1
 
 // Routes/Endpoints:
 app.use('/', indexRouter) // Index
@@ -41,4 +46,7 @@ app.use((err, req, res, next) => {
     res.render('error')
 })
 
-module.exports = app
+// Listening on port
+app.listen(PORT, () => {
+    console.log(`App is running on ${PORT}`)
+})

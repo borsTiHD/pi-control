@@ -168,11 +168,6 @@ export default {
         }
     },
 
-    // Serverside Middleware -> REST Api
-    serverMiddleware: [
-        { path: '/api/v1', handler: '~/server-middleware/rest-api.js' }
-    ],
-
     // Build Configuration: https://go.nuxtjs.dev/config-build
     build: {}
 }
