@@ -1,34 +1,29 @@
 // Imports
 const createError = require('http-errors')
 const express = require('express')
+const cors = require('cors')
 const cookieParser = require('cookie-parser')
 
 // Authentication Import
 const passport = require('passport')
 
 // Config
-const PORT = process.env.PORT || 4000
+const PORT = process.env.PORT || 8801
 
 // Importing Routes
-const indexRouter = require('./routes/index')
-const helpRouter = require('./routes/help')
-const authRouter = require('./routes/authentication')
-const scriptsRouter = require('./routes/scripts')
+const baseRoutes = require('./router')
 
 // Express Init
 const app = express()
+app.use(cors())
 app.use(express.json())
 app.use(express.urlencoded({ extended: true })) // for form data
 app.use(cookieParser()) // Cookies
 app.use(passport.initialize()) // Authentication
 
-// /api/v1
-
-// Routes/Endpoints:
-app.use('/', indexRouter) // Index
-app.use('/help', helpRouter) // Help
-app.use('/auth', authRouter) // Authentication
-app.use('/scripts', passport.authenticate('jwt', { session: false }), scriptsRouter) // Scripts
+// Router/Endpoints
+const baseUrl = '/api/v1'
+baseRoutes(app, baseUrl)
 
 // Catch 404 and forward to error handler
 app.use((req, res, next) => {
@@ -37,6 +32,8 @@ app.use((req, res, next) => {
 
 // Error handler
 app.use((err, req, res, next) => {
+    console.error('Request Url:', req.originalUrl)
+
     // Set locals, only providing error in development
     res.locals.message = err.message
     res.locals.error = req.app.get('env') === 'development' ? err : {}
