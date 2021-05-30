@@ -9,6 +9,7 @@
     "type": "git",
     "url": "https://github.com/borsTiHD/pi-control"
   },
+  "type": "module",
   "scripts": {
     "dev:nuxt": "nuxt",
     "dev:api": "node ./api/app.js",

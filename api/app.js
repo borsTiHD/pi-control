@@ -1,17 +1,17 @@
 // Imports
-const createError = require('http-errors')
-const express = require('express')
-const cors = require('cors')
-const cookieParser = require('cookie-parser')
+import createError from 'http-errors'
+import express from 'express'
+import cors from 'cors'
+import cookieParser from 'cookie-parser'
 
 // Authentication Import
-const passport = require('passport')
+import passport from 'passport'
+
+// Importing Routes
+import baseRoutes from './router.js'
 
 // Config
 const PORT = process.env.PORT || 8801
-
-// Importing Routes
-const baseRoutes = require('./router')
 
 // Express Init
 const app = express()

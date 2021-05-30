@@ -1,14 +1,14 @@
 // Authentication Import
-// const passport = require('passport')
+// import passport from 'passport'
 
 // Importing Routes
-const indexRouter = require('./routes/index')
-const helpRouter = require('./routes/help')
-// const authRouter = require('./routes/authentication')
-const scriptsRouter = require('./routes/scripts')
+import indexRouter from './routes/index.js'
+import helpRouter from './routes/help.js'
+// import authRouter from './routes/authentication.js'
+import scriptsRouter from './routes/scripts.js'
 
 // Exporting Base Routes
-module.exports = function(app, baseUrl) {
+export default function(app, baseUrl) {
     app.use(baseUrl + '/', indexRouter) // Index
     app.use(baseUrl + '/help', helpRouter) // Help
     // app.use(baseUrl + '/auth', authRouter) // Authentication

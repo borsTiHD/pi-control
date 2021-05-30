@@ -1,9 +1,10 @@
+import User from '../models/user.js'
+
 const bcrypt = require('bcrypt')
 const passport = require('passport')
 const LocalStrategy = require('passport-local').Strategy
 const JwtStrategy = require('passport-jwt').Strategy
 const jwt = require('jsonwebtoken')
-const User = require('../models/user')
 
 const authUserSecret = process.env.AUTH_USER_SECRET // an arbitrary long string, you can ommit env of course
 
@@ -13,7 +14,7 @@ passport.use(new LocalStrategy(
         usernameField: 'email',
         passwordField: 'password'
     }, async function(email, password, done) {
-        await User.getUser(email)
+        await User.GetUser(email)
             .then((user) => {
                 return user
             }).then(async(user) => {
@@ -48,7 +49,7 @@ passport.use(new JwtStrategy(
         jwtFromRequest: tokenExtractor,
         secretOrKey: authUserSecret
     }, function(jwtPayload, done) {
-        return User.getUser(jwtPayload.email)
+        return User.GetUser(jwtPayload.email) // Or 'GetUser' - without 'User.'
             .then((user) => {
                 if (user) {
                     return done(null, {
@@ -65,43 +66,18 @@ passport.use(new JwtStrategy(
 ))
 
 /**
- * Creating User and save data in db
- * @name createUser
- * @function
- * @memberof module:routers/auth
- */
-exports.createUser = async(email, password) => {
-    return await User.createUser({ email, password })
-        .then((data) => {
-            return data
-        }).catch((error) => {
-            throw error
-        })
-}
-
-/**
- * Getting User from db with email
- * @name getUser
- * @function
- * @memberof module:routers/auth
- */
-exports.getUser = async(email) => {
-    return await User.findOne({ email })
-        .then((data) => {
-            return data
-        }).catch((error) => {
-            throw error
-        })
-}
-
-/**
  * Take a string and return a generated hash
  * @name generatePasswordHash
  * @function
  * @memberof module:routers/auth
  */
-exports.generatePasswordHash = async(plainPassword) => {
+async function generatePasswordHash(plainPassword) {
     return await bcrypt.hash(plainPassword, 12)
+}
+
+// Compares password from plaintext and hashed one
+async function comparePasswords(plainPassword, hashedPassword) {
+    return await bcrypt.compare(plainPassword, hashedPassword)
 }
 
 /**
@@ -110,14 +86,16 @@ exports.generatePasswordHash = async(plainPassword) => {
  * @function
  * @memberof module:routers/auth
  */
-exports.signUserToken = (user) => {
+function signUserToken(user) {
     return jwt.sign({
         id: user.id,
         email: user.email
     }, authUserSecret)
 }
 
-// Compares password from plaintext and hashed one
-async function comparePasswords(plainPassword, hashedPassword) {
-    return await bcrypt.compare(plainPassword, hashedPassword)
+export default {
+    CreateUser: User.CreateUser,
+    GetUser: User.GetUser,
+    generatePasswordHash,
+    signUserToken
 }

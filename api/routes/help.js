@@ -1,5 +1,5 @@
 // Express
-const express = require('express')
+import express from 'express'
 const router = express.Router()
 
 // Route: '/help' -> just for testing purpose right now
@@ -11,4 +11,4 @@ router.all('/', (req, res, next) => {
     })
 })
 
-module.exports = router
+export default router

@@ -1,12 +1,12 @@
-// Express
-const express = require('express')
-const router = express.Router()
-
-// Auth Imports
-const passport = require('passport')
+// Imports
+import express from 'express'
+import passport from 'passport'
 
 // Controller
-const controller = require('../controllers/authentication.controller')
+import Controller from '../controllers/authentication.controller'
+
+// Routes
+const router = express.Router()
 
 /*
  *  Router: Baseurl -> '/auth/..'
@@ -15,6 +15,7 @@ const controller = require('../controllers/authentication.controller')
 // User Login Route
 router.post('/login', (req, res) => {
     passport.authenticate('local', { session: false }, (err, user, message) => {
+        console.log('DELETE ME!!! "/login" User:', user)
         if (err) {
             // you should log it
             return res.status(500).json({
@@ -30,7 +31,7 @@ router.post('/login', (req, res) => {
                 message: message.message
             })
         } else {
-            const token = controller.signUserToken(user)
+            const token = Controller.signUserToken(user)
             return res.json({ token })
         }
     })(req, res)
@@ -40,6 +41,7 @@ router.post('/login', (req, res) => {
 router.get('/user', async(req, res) => {
     // console.log(req.cookies['auth._token.local'])
     passport.authenticate('jwt', { session: false }, (err, user, message) => {
+        console.log('DELETE ME!!! "/user" User:', user)
         if (err) {
             // you should log it
             return res.status(400).json({
@@ -68,9 +70,9 @@ router.post('/register', async(req, res) => {
     /* TODO: NEED A CHECK IF THE USER IS ALREADY TAKEN */
     /* TODO: IF AT LEAST ONE USER IS ALREADY REGISTERED, ONLY A LOGGED IN USER (ADMIN) SHOULD REGISTER ADDITIONAL USER!!! */
 
-    const hashedPassword = await controller.generatePasswordHash(password)
+    const hashedPassword = await Controller.generatePasswordHash(password)
 
-    await controller.createUser(email, hashedPassword)
+    await Controller.CreateUser(email, hashedPassword)
         .then(() => {
             res.json({
                 _status: 'ok',
