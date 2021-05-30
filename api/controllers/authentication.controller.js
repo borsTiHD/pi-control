@@ -36,34 +36,61 @@ passport.use(new LocalStrategy.Strategy(
 // Extracting JWT Token out of cookies
 const tokenExtractor = function(req) {
     let token = null
-    if (req.req && req.req.cookies && req.req.cookies['auth._token.local']) {
-        const rawToken = req.req.cookies['auth._token.local'].toString()
+    let reqCookie = null
+    let reqHeader = null
+
+    // Extracting 'jwt' token from two different places
+    try {
+        if (req && req.cookies && req.cookies['auth._token.local']) {
+            reqCookie = req.cookies['auth._token.local']
+        } else if (req.req && req.req.cookies && req.req.cookies['auth._token.local']) {
+            reqCookie = req.req.cookies['auth._token.local']
+        } else if (req.headers && req.headers && req.headers.authorization) {
+            reqHeader = req.headers.authorization
+        } else if (req.req.headers && req.req.headers && req.req.headers.authorization) {
+            reqHeader = req.req.headers.authorization
+        }
+    } catch (error) {
+        // console.error(error)
+        return null
+    }
+
+    // console.log('reqCookie', reqCookie)
+    // console.log('reqHeader', reqHeader)
+
+    if (reqCookie) {
+        const rawToken = reqCookie.toString()
         token = rawToken.slice(rawToken.indexOf(' ') + 1, rawToken.length)
+    } else if (reqHeader) {
+        token = reqHeader.slice(reqHeader.indexOf(' ') + 1, reqHeader.length)
     }
     return token
 }
 
 // Setting up passport for JWT Token authentication
-passport.use(new JwtStrategy.Strategy(
-    {
-        jwtFromRequest: tokenExtractor,
-        secretOrKey: authUserSecret
-    }, function(jwtPayload, done) {
-        return User.GetUser(jwtPayload.email) // Or 'GetUser' - without 'User.'
-            .then((user) => {
-                if (user) {
-                    return done(null, {
-                        email: user.email
-                    })
-                } else {
-                    return done(null, false, 'Failed')
-                }
-            })
-            .catch((err) => {
-                return done(err)
-            })
-    }
-))
+const options = {
+    // tokenExtractor
+    // JwtStrategy.ExtractJwt.fromAuthHeaderAsBearerToken()
+    // JwtStrategy.ExtractJwt.fromExtractors([tokenExtractor, JwtStrategy.ExtractJwt.fromHeader('authorization'), JwtStrategy.ExtractJwt.fromAuthHeaderAsBearerToken()])
+    jwtFromRequest: tokenExtractor,
+    secretOrKey: authUserSecret
+}
+passport.use(new JwtStrategy.Strategy(options, async function(jwtPayload, done) {
+    await User.GetUser(jwtPayload.email) // Or 'GetUser' - without 'User.'
+        .then((user) => {
+            if (user) {
+                return done(null, {
+                    email: user.email
+                })
+            } else {
+                return done(null, false, 'Failed')
+            }
+        })
+        .catch((err) => {
+            console.error(err)
+            return done(err)
+        })
+}))
 
 /**
  * Take a string and return a generated hash
@@ -93,9 +120,18 @@ function signUserToken(user) {
     }, authUserSecret)
 }
 
+/**
+ * xxx
+ * @name CreateUser
+ * @function
+ * @memberof module:routers/auth
+ */
+async function CreateUser(user) {
+    return await User.CreateUser(user)
+}
+
 export default {
-    CreateUser: User.CreateUser,
-    GetUser: User.GetUser,
+    CreateUser,
     generatePasswordHash,
     signUserToken
 }

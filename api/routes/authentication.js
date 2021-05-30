@@ -15,7 +15,6 @@ const router = express.Router()
 // User Login Route
 router.post('/login', (req, res) => {
     passport.authenticate('local', { session: false }, (err, user, message) => {
-        console.log('DELETE ME!!! "/login" User:', user)
         if (err) {
             // you should log it
             return res.status(500).json({
@@ -41,7 +40,6 @@ router.post('/login', (req, res) => {
 router.get('/user', async(req, res) => {
     // console.log(req.cookies['auth._token.local'])
     passport.authenticate('jwt', { session: false }, (err, user, message) => {
-        console.log('DELETE ME!!! "/user" User:', user)
         if (err) {
             // you should log it
             return res.status(400).json({
@@ -72,7 +70,7 @@ router.post('/register', async(req, res) => {
 
     const hashedPassword = await Controller.generatePasswordHash(password)
 
-    await Controller.CreateUser(email, hashedPassword)
+    await Controller.CreateUser({ email, password: hashedPassword })
         .then(() => {
             res.json({
                 _status: 'ok',

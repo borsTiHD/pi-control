@@ -40,7 +40,10 @@ app.use((err, req, res, next) => {
 
     // Render the error page
     res.status(err.status || 500)
-    res.render('error')
+    res.json({
+        _status: 'error',
+        err
+    })
 })
 
 // Listening on port

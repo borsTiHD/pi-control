@@ -28,14 +28,12 @@ export default {
             this.loading = true
             try {
                 console.log('[Login] -> Try to login user:', form)
-                const response = await this.$auth.loginWith('local', {
+                await this.$auth.loginWith('local', {
                     data: {
                         email: form.email,
                         password: form.password
                     }
                 })
-                console.log('RESULT:', response)
-                // this.$toast.info(response.data.message)
             } catch (error) {
                 console.error('[Login] -> Failed to login:', error)
                 this.$toast.error(error.response.data.message)
