@@ -3,7 +3,7 @@ import express from 'express'
 import passport from 'passport'
 
 // Controller
-import Controller from '../controllers/authentication.controller'
+import Controller from '../controllers/authentication.controller.js'
 
 // Routes
 const router = express.Router()
@@ -84,4 +84,4 @@ router.post('/register', async(req, res) => {
         })
 })
 
-module.exports = router
+export default router

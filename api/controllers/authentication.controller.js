@@ -1,15 +1,15 @@
+import bcrypt from 'bcrypt'
+import passport from 'passport'
+import LocalStrategy from 'passport-local'
+import JwtStrategy from 'passport-jwt'
+import jwt from 'jsonwebtoken'
 import User from '../models/user.js'
 
-const bcrypt = require('bcrypt')
-const passport = require('passport')
-const LocalStrategy = require('passport-local').Strategy
-const JwtStrategy = require('passport-jwt').Strategy
-const jwt = require('jsonwebtoken')
-
+// Getting Env
 const authUserSecret = process.env.AUTH_USER_SECRET // an arbitrary long string, you can ommit env of course
 
 // Setting up passport for email/password authentication
-passport.use(new LocalStrategy(
+passport.use(new LocalStrategy.Strategy(
     {
         usernameField: 'email',
         passwordField: 'password'
@@ -44,7 +44,7 @@ const tokenExtractor = function(req) {
 }
 
 // Setting up passport for JWT Token authentication
-passport.use(new JwtStrategy(
+passport.use(new JwtStrategy.Strategy(
     {
         jwtFromRequest: tokenExtractor,
         secretOrKey: authUserSecret
