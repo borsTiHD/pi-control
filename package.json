@@ -41,7 +41,7 @@
     "fs-extra": "^10.0.0",
     "idb": "^6.0.0",
     "jsonwebtoken": "^8.5.1",
-    "lowdb": "^2.0.3",
+    "lowdb": "^2.1.0",
     "moment": "^2.29.1",
     "passport": "^0.4.1",
     "passport-jwt": "^4.0.0",

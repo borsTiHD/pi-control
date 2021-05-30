@@ -5740,10 +5740,10 @@ lodash@^4.15.0, lodash@^4.17.15, lodash@^4.17.19, lodash@^4.17.20, lodash@^4.17.
   resolved "https://registry.yarnpkg.com/lodash/-/lodash-4.17.21.tgz#679591c564c3bffaae8454cf0b3df370c3d6911c"
   integrity sha512-v2kDEe57lecTulaDIuNTPy3Ry4gLGJ6Z1O3vE1krgXZNrsQ+LFTGHVxVjcXPs17LhbZVGedAJv8XZ1tvj5FvSg==
 
-lowdb@^2.0.3:
-  version "2.0.3"
-  resolved "https://registry.yarnpkg.com/lowdb/-/lowdb-2.0.3.tgz#5b823830a4c1757271200280474396f94fe4b10b"
-  integrity sha512-XEBcYcArKhJAlRDnZbQX6wsTklfP645nZHppRehdqhFM7FYqnTAknfOulhYdgJuWQpMgfeZhtZhNXWdTEU8dEA==
+lowdb@^2.1.0:
+  version "2.1.0"
+  resolved "https://registry.yarnpkg.com/lowdb/-/lowdb-2.1.0.tgz#c8063e228b5ab3e082ece90e0512537ecb6e1e2a"
+  integrity sha512-F4Go8/V37gAidTR3c5poyjprOpZSDNSLJVOmI0ny4D4q9rC37OkBhlzX0bqj7LZlT3UIj4FchmZrrSw7qY+eGQ==
   dependencies:
     steno "^1.0.0"
 
