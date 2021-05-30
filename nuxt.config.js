@@ -96,11 +96,9 @@ export default {
     ],
 
     // Global Middleware
-    /*
     router: {
         middleware: ['auth'] // Pages accessible after login. If one page should be accessible without login, set 'auth: false' in page
     },
-    */
 
     // Axios module configuration: https://go.nuxtjs.dev/config-axios
     axios: {
@@ -123,7 +121,6 @@ export default {
     */
 
     // Nuxt authentication modul: https://auth.nuxtjs.org/
-    /*
     auth: {
         localStorage: true,
         strategies: {
@@ -150,7 +147,6 @@ export default {
             home: '/'
         }
     },
-    */
 
     // Vuetify module configuration: https://go.nuxtjs.dev/config-vuetify
     vuetify: {

@@ -31,30 +31,6 @@ export default {
             getDrawer: 'layout/getDrawer'
         }),
         items() {
-            return [
-                {
-                    icon: 'mdi-monitor-dashboard ',
-                    title: 'Dashboard',
-                    to: '/dashboard'
-                },
-                {
-                    icon: 'mdi-script-text-outline',
-                    title: 'Scripts',
-                    to: '/scripts'
-                },
-                {
-                    icon: 'mdi-information-outline',
-                    title: 'About',
-                    to: '/about'
-                },
-                {
-                    icon: 'mdi-cogs',
-                    title: 'Settings',
-                    to: '/settings'
-                }
-            ]
-
-            /*
             // Checks if User is logged in
             if (this.$auth.loggedIn) {
                 return [
@@ -83,12 +59,16 @@ export default {
 
             return [
                 {
+                    icon: 'mdi-account-plus',
+                    title: 'Register',
+                    to: '/user/register'
+                },
+                {
                     icon: 'mdi-information-outline',
                     title: 'About',
                     to: '/about'
                 }
             ]
-            */
         },
         drawer: {
             get() {
