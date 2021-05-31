@@ -1,3 +1,5 @@
+import { join } from 'path'
+import fs from 'fs-extra'
 import bcrypt from 'bcrypt'
 import passport from 'passport'
 import LocalStrategy from 'passport-local'
@@ -5,8 +7,34 @@ import JwtStrategy from 'passport-jwt'
 import jwt from 'jsonwebtoken'
 import User from '../models/user.js'
 
-// Getting Env
-const authUserSecret = process.env.AUTH_USER_SECRET // an arbitrary long string, you can ommit env of course
+const authUserSecret = process.env.AUTH_USER_SECRET // getAuthUserSecret()
+
+// Generates a salt for encrypting
+async function generateSalt() {
+    return await bcrypt.genSalt(10)
+}
+
+// Returning or if it not exists generating a authentication secret
+async function getAuthUserSecret() {
+    // Getting Env if available
+    const authUserSecret = process.env.AUTH_USER_SECRET || false // an arbitrary long string, you can ommit env of course
+
+    // If env variable is not existing, we will generate one
+    if (!authUserSecret) {
+        const generatedSalt = await generateSalt()
+        process.env.AUTH_USER_SECRET = generatedSalt
+
+        // Saving salt in '.env' file
+        const filePath = join('.', '.env')
+        const content = `AUTH_USER_SECRET=${generatedSalt}`
+        await fs.outputFile(filePath, content).catch((error) => {
+            console.error(error)
+            throw error
+        })
+        return generatedSalt
+    }
+    return authUserSecret
+}
 
 // Setting up passport for email/password authentication
 passport.use(new LocalStrategy.Strategy(
