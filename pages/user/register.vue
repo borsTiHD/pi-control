@@ -1,10 +1,40 @@
 <template>
     <v-row align="center" justify="center" class="mt-12">
-        <v-col cols="12" md="6" lg="3">
+        <v-col v-if="regAllowed" cols="12" md="6" lg="3">
             <v-card>
                 <v-card-title class="headline">Registration</v-card-title>
                 <v-card-text>
                     <authentication-form button-title="Register" :loading="loading" @submit="register" />
+                </v-card-text>
+            </v-card>
+        </v-col>
+        <v-col v-else-if="$auth.loggedIn" cols="12" md="6" lg="6">
+            <v-card>
+                <v-card-title class="headline">Logged in</v-card-title>
+                <v-card-text>
+                    <v-alert
+                        icon="mdi-shield-lock-outline"
+                        prominent
+                        text
+                        type="info"
+                    >
+                        Registration not available, already logged in: {{ $auth.user.email }}
+                    </v-alert>
+                </v-card-text>
+            </v-card>
+        </v-col>
+        <v-col v-else cols="12" md="6" lg="6">
+            <v-card>
+                <v-card-title class="headline">Registration not available</v-card-title>
+                <v-card-text>
+                    <v-alert
+                        icon="mdi-shield-lock-outline"
+                        prominent
+                        text
+                        type="error"
+                    >
+                        Already a user account registered. No more registrations allowed right now.
+                    </v-alert>
                 </v-card-text>
             </v-card>
         </v-col>
@@ -21,8 +51,17 @@ export default {
         AuthenticationForm
     },
     data: () => ({
-        loading: false
+        loading: false,
+        regAllowed: false
     }),
+    created() {
+        if (process.client) {
+            this.isRegistrationAllowed()
+        }
+    },
+    activated() {
+        this.isRegistrationAllowed()
+    },
     methods: {
         async register(form) {
             this.loading = true
@@ -52,6 +91,12 @@ export default {
                 this.$toast.error(error.response.data.message)
             }
             this.loading = false
+        },
+        isRegistrationAllowed() {
+            this.$axios.get('/auth/registered-users')
+                .then((res) => {
+                    this.regAllowed = res.data.registration
+                })
         }
     }
 }

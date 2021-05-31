@@ -38,6 +38,14 @@ export default {
     data: () => ({
         loading: false
     }),
+    created() {
+        if (process.client) {
+            this.isRegistrationAllowed()
+        }
+    },
+    activated() {
+        this.isRegistrationAllowed()
+    },
     methods: {
         async login(form) {
             this.loading = true
@@ -55,6 +63,18 @@ export default {
                 this.$toast.error(error.response.data.message)
             }
             this.loading = false
+        },
+        isRegistrationAllowed() {
+            // Checks if users are existing
+            this.$axios.get('/auth/registered-users')
+                .then((res) => {
+                    // No user is registered if 'registration' is set to true
+                    // therefore no login can be made and we redirect the user to the registration page
+                    const regAllowed = res.data.registration
+                    if (regAllowed) {
+                        this.$router.push('/user/register')
+                    }
+                })
         }
     }
 }

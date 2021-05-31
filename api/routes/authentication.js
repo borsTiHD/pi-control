@@ -65,11 +65,20 @@ router.post('/register', async(req, res) => {
     const password = req.body.password
     const email = req.body.email
 
-    /* TODO: NEED A CHECK IF THE USER IS ALREADY TAKEN */
     /* TODO: IF AT LEAST ONE USER IS ALREADY REGISTERED, ONLY A LOGGED IN USER (ADMIN) SHOULD REGISTER ADDITIONAL USER!!! */
 
-    const hashedPassword = await Controller.generatePasswordHash(password)
+    // Checks if a user is already registered
+    const users = await Controller.CountUsers()
+    if (users && users > 0) {
+        return res.status(403).json({
+            _status: 'forbidden',
+            info: 'There is already one user registered!',
+            message: 'Only one user is allowed right now!'
+        })
+    }
 
+    // Hashing password and creating user data
+    const hashedPassword = await Controller.generatePasswordHash(password)
     await Controller.CreateUser({ email, password: hashedPassword })
         .then(() => {
             res.json({
@@ -80,6 +89,26 @@ router.post('/register', async(req, res) => {
         }).catch((err) => {
             throw err
         })
+})
+
+// Looks if at least one user is already registered
+router.get('/registered-users', async(req, res) => {
+    // Checks if a user is already registered
+    const users = await Controller.CountUsers()
+    if (users && users > 0) {
+        return res.json({
+            _status: 'ok',
+            info: 'There is at least one user registered!',
+            message: 'Registration not available',
+            registration: false
+        })
+    }
+    return res.json({
+        _status: 'ok',
+        info: 'No user is registered right now',
+        message: 'Registration available',
+        registration: true
+    })
 })
 
 export default router

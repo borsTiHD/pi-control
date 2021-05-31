@@ -26,14 +26,20 @@
 import { mapGetters, mapActions } from 'vuex'
 
 export default {
+    name: 'Sidebar',
+    data: () => ({
+        regAllowed: false
+    }),
     computed: {
         ...mapGetters({
             getDrawer: 'layout/getDrawer'
         }),
         items() {
-            // Checks if User is logged in
+            let items = []
+
+            // Checks if User is logged in, or if login/register is possible
             if (this.$auth.loggedIn) {
-                return [
+                items = items.concat([
                     {
                         icon: 'mdi-monitor-dashboard ',
                         title: 'Dashboard',
@@ -54,21 +60,45 @@ export default {
                         title: 'Settings',
                         to: '/settings'
                     }
-                ]
+                ])
+            } else if (this.regAllowed) {
+                items = items.concat([
+                    {
+                        icon: 'mdi-account-plus',
+                        title: 'Register',
+                        to: '/user/register'
+                    },
+                    {
+                        icon: 'mdi-information-outline',
+                        title: 'About',
+                        to: '/about'
+                    }
+                ])
+            } else {
+                items = items.concat([
+                    {
+                        icon: 'mdi-account-check ',
+                        title: 'Login',
+                        to: '/user/login'
+                    },
+                    {
+                        icon: 'mdi-information-outline',
+                        title: 'About',
+                        to: '/about'
+                    }
+                ])
             }
 
-            return [
-                {
-                    icon: 'mdi-account-plus',
-                    title: 'Register',
-                    to: '/user/register'
-                },
-                {
-                    icon: 'mdi-information-outline',
-                    title: 'About',
-                    to: '/about'
-                }
-            ]
+            // Hidden dev page
+            if (process.env.dev) {
+                items.push({
+                    icon: 'mdi-bottle-tonic-skull-outline',
+                    title: 'Developement',
+                    to: '/dev'
+                })
+            }
+
+            return items
         },
         drawer: {
             get() {
@@ -80,18 +110,24 @@ export default {
         }
     },
     created() {
-        if (process.env.dev) {
-            this.items.push({
-                icon: 'mdi-bottle-tonic-skull-outline',
-                title: 'Developement',
-                to: '/dev'
-            })
+        if (process.client) {
+            this.isRegistrationAllowed()
         }
+    },
+    activated() {
+        this.isRegistrationAllowed()
     },
     methods: {
         ...mapActions({
             setDrawer: 'layout/setDrawer'
-        })
+        }),
+        isRegistrationAllowed() {
+            // Checks if users are existing
+            this.$axios.get('/auth/registered-users')
+                .then((res) => {
+                    this.regAllowed = res.data.registration
+                })
+        }
     }
 }
 </script>

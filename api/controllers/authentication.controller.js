@@ -108,7 +108,7 @@ async function comparePasswords(plainPassword, hashedPassword) {
 }
 
 /**
- * xxx
+ * Returns generated token for authentication
  * @name signUserToken
  * @function
  * @memberof module:routers/auth
@@ -121,7 +121,7 @@ function signUserToken(user) {
 }
 
 /**
- * xxx
+ * Proxy for CreateUser model function - creates a user in database
  * @name CreateUser
  * @function
  * @memberof module:routers/auth
@@ -130,8 +130,19 @@ async function CreateUser(user) {
     return await User.CreateUser(user)
 }
 
+/**
+ * Proxy for CountUsers model function - counts how many users registered, or returns false
+ * @name CountUsers
+ * @function
+ * @memberof module:routers/auth
+ */
+async function CountUsers() {
+    return await User.CountUsers()
+}
+
 export default {
     CreateUser,
+    CountUsers,
     generatePasswordHash,
     signUserToken
 }

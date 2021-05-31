@@ -32,7 +32,18 @@ async function GetUser(email) {
     return user
 }
 
+// LowDb: Counting existing users in database or returns false
+async function CountUsers() {
+    // Read data from JSON file
+    const users = db.data.users
+    if (users && Array.isArray(users)) {
+        return db.data.users.length
+    }
+    return false
+}
+
 export default {
     CreateUser,
-    GetUser
+    GetUser,
+    CountUsers
 }
