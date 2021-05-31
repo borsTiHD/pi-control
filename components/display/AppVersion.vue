@@ -26,13 +26,14 @@
                     <span>{{ currentVersion }}</span>
                 </v-chip>
             </template>
-            <span>{{ isUpToDate ? 'App is up to date' : 'Newer version available' }}</span>
+            <span>{{ isUpToDate ? 'App is up to date' : `New version: ${latestVersion}` }}</span>
         </v-tooltip>
     </div>
 </template>
 
 <script>
-import { mapActions } from 'vuex'
+import axios from 'axios'
+import { mapGetters, mapActions } from 'vuex'
 
 import pkg from '~~/package.json'
 
@@ -40,17 +41,19 @@ export default {
     name: 'AppVersion',
     data() {
         return {
-            loading: false,
-            latestRelease: null
+            loading: false
         }
     },
     computed: {
+        ...mapGetters({
+            getReleaseData: 'getReleaseData'
+        }),
         currentVersion() {
             return `v.${pkg.version}`
         },
         latestVersion() {
-            if (this.latestRelease) {
-                return this.latestRelease.name
+            if (this.getReleaseData) {
+                return this.getReleaseData.name
             }
             return false
         },
@@ -70,14 +73,15 @@ export default {
     },
     methods: {
         ...mapActions({
-            setNewRelease: 'setNewRelease'
+            setNewRelease: 'setNewRelease',
+            setReleaseData: 'setReleaseData'
         }),
         getLatestRelease() {
             const url = 'https://api.github.com/repos/borsTiHD/pi-control/releases/latest'
             this.loading = true
-            this.$axios.get(url)
+            axios.get(url)
                 .then((res) => {
-                    this.latestRelease = res.data
+                    this.setReleaseData(res.data)
                 }).catch((error) => {
                     this.$toast.error(error.message)
                     console.error(error)
@@ -87,7 +91,7 @@ export default {
         },
         goToNewRelease() {
             if (!this.isUpToDate) {
-                window.open(this.latestRelease.html_url, '_blank')
+                window.open(this.getReleaseData.html_url, '_blank')
             }
         }
     }
