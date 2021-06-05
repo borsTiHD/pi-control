@@ -13,7 +13,7 @@
   "scripts": {
     "dev:nuxt": "nuxt",
     "dev:api": "node -r dotenv/config ./api/app.js",
-    "dev": "set NODE_ENV=development&& concurrently \"yarn dev:api\" \"yarn dev:nuxt\"",
+    "dev": "cross-env NODE_ENV=development&& concurrently \"yarn dev:api\" \"yarn dev:nuxt\"",
     "generate": "nuxt generate",
     "start": "node -r dotenv/config ./api/app.js",
     "lint:js": "eslint --ext \".js,.vue\" --ignore-path .gitignore .",
@@ -35,6 +35,7 @@
     "concurrently": "^6.2.0",
     "cookie-parser": "^1.4.5",
     "cors": "^2.8.5",
+    "cross-env": "^7.0.3",
     "dotenv": "^10.0.0",
     "eslint": "^7.22.0",
     "eslint-plugin-nuxt": "^2.0.0",
