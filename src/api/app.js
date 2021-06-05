@@ -12,7 +12,7 @@ import baseRoutes from './router.js'
 
 // Development
 const isDev = process.env.NODE_ENV === 'development'
-console.log('[App] -> Development:', isDev)
+console.log('[Server] -> Development:', isDev)
 
 // Config
 const PORT = process.env.PORT || 8800 // Default Port: 8800
@@ -53,5 +53,5 @@ app.use((err, req, res, next) => {
 
 // Listening on port
 app.listen(PORT, () => {
-    console.log(`[App] -> App is running on ${PORT}`)
+    console.log(`[Server] -> App is running on ${PORT}`)
 })

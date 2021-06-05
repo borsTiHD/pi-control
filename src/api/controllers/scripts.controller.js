@@ -8,7 +8,7 @@ import isCustomScript from '../middleware/isCustomScript.js' // Testing if given
 import zipDirectory from '../middleware/zipDirectory.js' // Zipping file/folder middleware
 
 // ChildProcess Spawn Import
-import ChildProcessClass from '../../classes/ChildProcessClass.js'
+import ChildProcessClass from '../classes/ChildProcessClass.js'
 const childProcessSpawn = new ChildProcessClass()
 
 // Script Directory
