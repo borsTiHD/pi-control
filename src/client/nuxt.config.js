@@ -8,6 +8,7 @@ const isDev = process.env.NODE_ENV !== 'production'
 // Alias
 const PROJECT_ROOT = path.join(__dirname, '..', '..')
 const SRC_DIR = path.join(PROJECT_ROOT, 'src')
+const DIST_DIR = path.join(PROJECT_ROOT, 'dist')
 const alias = {
     alias: {
         projRoot: PROJECT_ROOT,
@@ -165,6 +166,11 @@ export default {
             }
             */
         }
+    },
+
+    // Generate Configuration: https://nuxtjs.org/docs/2.x/configuration-glossary/configuration-generate
+    generate: {
+        dir: DIST_DIR // path.join(DIST_DIR, 'client')
     },
 
     // Build Configuration: https://go.nuxtjs.dev/config-build
