@@ -1,4 +1,5 @@
 import { join } from 'path'
+import crypto from 'crypto'
 import fs from 'fs-extra'
 import bcrypt from 'bcrypt'
 import passport from 'passport'
@@ -7,59 +8,50 @@ import JwtStrategy from 'passport-jwt'
 import jwt from 'jsonwebtoken'
 import User from '../models/user.js'
 
-const authUserSecret = process.env.AUTH_USER_SECRET // getAuthUserSecret()
+// const authUserSecret = getAuthUserSecret() // process.env.AUTH_USER_SECRET
+getAuthUserSecret()
 
-// Generates a salt for encrypting
-async function generateSalt() {
-    return await bcrypt.genSalt(10)
-}
-
-// Returning or if it not exists generating a authentication secret
+// Returning or if it not exists generating a authentication secret key
 async function getAuthUserSecret() {
     // Getting Env if available
-    const authUserSecret = process.env.AUTH_USER_SECRET || false // an arbitrary long string, you can ommit env of course
+    const secret = process.env.AUTH_USER_SECRET || false
 
-    // If env variable is not existing, we will generate one
-    if (!authUserSecret) {
-        const generatedSalt = await generateSalt()
-        process.env.AUTH_USER_SECRET = generatedSalt
+    // If Env variable is not existing, we will generate one
+    if (!secret) {
+        const generatedKey = crypto.randomBytes(256).toString('hex')
+        process.env.AUTH_USER_SECRET = generatedKey
 
-        // Saving salt in '.env' file
+        // Saving key in '.env' file
         const filePath = join('.', '.env')
-        const content = `AUTH_USER_SECRET=${generatedSalt}`
+        const content = `AUTH_USER_SECRET=${generatedKey}`
         await fs.outputFile(filePath, content).catch((error) => {
             console.error(error)
             throw error
         })
-        return generatedSalt
+        return generatedKey
     }
-    return authUserSecret
+    return secret
 }
 
 // Setting up passport for email/password authentication
-passport.use(new LocalStrategy.Strategy(
-    {
-        usernameField: 'email',
-        passwordField: 'password'
-    }, async function(email, password, done) {
-        await User.GetUser(email)
-            .then((user) => {
-                return user
-            }).then(async(user) => {
-                if (!user) {
-                    return done(null, false, { message: 'Authentication failed' })
-                }
-                const validation = await comparePasswords(password, user.password)
-                if (validation) {
-                    return done(null, user)
-                } else {
-                    return done(null, false, { message: 'Authentication failed' })
-                }
-            }).catch((err) => {
-                return done(err)
-            })
-    })
-)
+passport.use(new LocalStrategy.Strategy({ usernameField: 'email', passwordField: 'password' }, async function(email, password, done) {
+    await User.GetUser(email)
+        .then((user) => {
+            return user
+        }).then(async(user) => {
+            if (!user) {
+                return done(null, false, { message: 'Authentication failed' })
+            }
+            const validation = await comparePasswords(password, user.password)
+            if (validation) {
+                return done(null, user)
+            } else {
+                return done(null, false, { message: 'Authentication failed' })
+            }
+        }).catch((err) => {
+            return done(err)
+        })
+}))
 
 // Extracting JWT Token out of cookies
 const tokenExtractor = function(req) {
@@ -83,9 +75,6 @@ const tokenExtractor = function(req) {
         return null
     }
 
-    // console.log('reqCookie', reqCookie)
-    // console.log('reqHeader', reqHeader)
-
     if (reqCookie) {
         const rawToken = reqCookie.toString()
         token = rawToken.slice(rawToken.indexOf(' ') + 1, rawToken.length)
@@ -95,15 +84,18 @@ const tokenExtractor = function(req) {
     return token
 }
 
-// Setting up passport for JWT Token authentication
+/*
 const options = {
     // tokenExtractor
     // JwtStrategy.ExtractJwt.fromAuthHeaderAsBearerToken()
     // JwtStrategy.ExtractJwt.fromExtractors([tokenExtractor, JwtStrategy.ExtractJwt.fromHeader('authorization'), JwtStrategy.ExtractJwt.fromAuthHeaderAsBearerToken()])
     jwtFromRequest: tokenExtractor,
-    secretOrKey: authUserSecret
+    secretOrKey: process.env.AUTH_USER_SECRET // authUserSecret
 }
-passport.use(new JwtStrategy.Strategy(options, async function(jwtPayload, done) {
+*/
+
+// Setting up passport for JWT Token authentication
+passport.use(new JwtStrategy.Strategy({ jwtFromRequest: tokenExtractor, secretOrKey: process.env.AUTH_USER_SECRET }, async function(jwtPayload, done) {
     await User.GetUser(jwtPayload.email) // Or 'GetUser' - without 'User.'
         .then((user) => {
             if (user) {
@@ -145,7 +137,7 @@ function signUserToken(user) {
     return jwt.sign({
         id: user.id,
         email: user.email
-    }, authUserSecret)
+    }, process.env.AUTH_USER_SECRET) // authUserSecret
 }
 
 /**
