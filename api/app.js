@@ -12,6 +12,7 @@ import baseRoutes from './router.js'
 
 // Development
 const isDev = process.env.NODE_ENV === 'development'
+console.log('DEV:', isDev)
 
 // Config
 const PORT = process.env.PORT || 8800 // Default Port: 8800

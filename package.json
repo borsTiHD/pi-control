@@ -13,7 +13,7 @@
   "scripts": {
     "dev:nuxt": "nuxt",
     "dev:api": "node -r dotenv/config ./api/app.js",
-    "dev": "cross-env NODE_ENV=development&& concurrently \"yarn dev:api\" \"yarn dev:nuxt\"",
+    "dev": "cross-env NODE_ENV=development concurrently \"yarn dev:api\" \"yarn dev:nuxt\"",
     "generate": "nuxt generate",
     "start": "node -r dotenv/config ./api/app.js",
     "lint:js": "eslint --ext \".js,.vue\" --ignore-path .gitignore .",
