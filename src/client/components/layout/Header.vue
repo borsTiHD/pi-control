@@ -15,9 +15,9 @@
 
 <script>
 import { mapGetters, mapActions } from 'vuex'
+import pkg from 'projRoot/package.json'
 import AppUpdateChip from '~/components/display/AppUpdateChip.vue'
 
-import pkg from '~~/package.json'
 export default {
     name: 'Header',
     components: {

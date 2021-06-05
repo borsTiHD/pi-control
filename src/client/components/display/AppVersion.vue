@@ -35,7 +35,7 @@
 import axios from 'axios'
 import { mapGetters, mapActions } from 'vuex'
 
-import pkg from '~~/package.json'
+import pkg from 'projRoot/package.json'
 
 export default {
     name: 'AppVersion',

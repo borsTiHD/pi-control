@@ -11,7 +11,7 @@
   },
   "type": "module",
   "scripts": {
-    "dev:nuxt": "nuxt",
+    "dev:nuxt": "nuxt src/client",
     "dev:api": "node -r dotenv/config ./api/app.js",
     "dev": "cross-env NODE_ENV=development concurrently \"yarn dev:api\" \"yarn dev:nuxt\"",
     "generate": "nuxt generate",

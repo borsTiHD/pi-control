@@ -9,7 +9,7 @@
 </template>
 
 <script>
-import pkg from '~~/package.json'
+import pkg from 'projRoot/package.json'
 
 export default {
     data() {

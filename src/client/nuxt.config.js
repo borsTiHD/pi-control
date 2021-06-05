@@ -1,8 +1,19 @@
 // import colors from 'vuetify/es5/util/colors'
-import pkg from './package.json'
+import path from 'path'
+import pkg from '../../package.json'
 
 // Development
 const isDev = process.env.NODE_ENV !== 'production'
+
+// Alias
+const PROJECT_ROOT = path.join(__dirname, '..', '..')
+const SRC_DIR = path.join(PROJECT_ROOT, 'src')
+const alias = {
+    alias: {
+        projRoot: PROJECT_ROOT,
+        srcDir: SRC_DIR
+    }
+}
 
 // Server Settings
 const server = {
@@ -27,9 +38,15 @@ export default {
     // Adding env variables
     ...env,
 
+    // Adding path alias
+    ...alias,
+
     // Nuxt target -> Client Side Rendering (SPA)
     target: 'static',
     ssr: false,
+
+    // Root folder
+    srcDir: '',
 
     // Global page headers: https://go.nuxtjs.dev/config-head
     head: {
