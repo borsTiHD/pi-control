@@ -13,9 +13,9 @@
   "scripts": {
     "dev:nuxt": "nuxt",
     "dev:api": "node -r dotenv/config ./api/app.js",
-    "dev": "concurrently \"yarn dev:api\" \"yarn dev:nuxt\"",
-    "build": "nuxt build",
-    "start": "nuxt start",
+    "dev": "set NODE_ENV=development&& concurrently \"yarn dev:api\" \"yarn dev:nuxt\"",
+    "generate": "nuxt generate",
+    "start": "node -r dotenv/config ./api/app.js",
     "lint:js": "eslint --ext \".js,.vue\" --ignore-path .gitignore .",
     "lint": "yarn lint:js"
   },

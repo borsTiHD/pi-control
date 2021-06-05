@@ -1,19 +1,13 @@
 // import colors from 'vuetify/es5/util/colors'
 import pkg from './package.json'
 
+// Development
 const isDev = process.env.NODE_ENV !== 'production'
 
 // Server Settings
-/*
-const server = {
-    host: isDev ? 'localhost' : '0.0.0.0', // dev: localhost, production: os-ip-adress
-    port: isDev ? 3000 : 8800, // dev: 3000, production: 8800
-    timing: false
-}
-*/
 const server = {
     server: {
-        host: '0.0.0.0', // dev: localhost, production: os-ip-adress
+        host: '0.0.0.0', // os-ip-adress
         port: isDev ? 3000 : 8800, // dev: 3000, production: 8800
         timing: false
     }
@@ -33,8 +27,9 @@ export default {
     // Adding env variables
     ...env,
 
-    // Nuxt target
-    target: 'server',
+    // Nuxt target -> Client Side Rendering (SPA)
+    target: 'static',
+    ssr: false,
 
     // Global page headers: https://go.nuxtjs.dev/config-head
     head: {
@@ -102,23 +97,9 @@ export default {
 
     // Axios module configuration: https://go.nuxtjs.dev/config-axios
     axios: {
-        baseURL: 'http://localhost:8801/api/v1'
+        baseURL: isDev ? 'http://localhost:8800/api/v1' : '/api/v1'
         // browserBaseURL: '/api/v1'
     },
-
-    /*
-    publicRuntimeConfig: {
-        axios: {
-            browserBaseURL: process.env.BROWSER_BASE_URL
-        }
-    },
-
-    privateRuntimeConfig: {
-        axios: {
-            baseURL: process.env.BASE_URL
-        }
-    },
-    */
 
     // Nuxt authentication modul: https://auth.nuxtjs.org/
     auth: {

@@ -10,12 +10,17 @@ import passport from 'passport'
 // Importing Routes
 import baseRoutes from './router.js'
 
+// Development
+const isDev = process.env.NODE_ENV === 'development'
+console.log('DEV:', isDev)
+
 // Config
-const PORT = process.env.PORT || 8801
+const PORT = process.env.PORT || 8800 // Default Port: 8800
 
 // Express Init
 const app = express()
-app.use(cors())
+if (isDev) app.use(cors()) // CORS policy only in dev
+app.use(express.static('dist'))
 app.use(express.json())
 app.use(express.urlencoded({ extended: true })) // for form data
 app.use(cookieParser()) // Cookies
