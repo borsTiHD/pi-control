@@ -1,5 +1,5 @@
-const pkg = require('./package.json')
-module.exports = {
+import pkg from './package.json'
+export default {
     apps: [
         {
             name: pkg.name,
