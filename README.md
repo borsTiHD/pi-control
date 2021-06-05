@@ -48,7 +48,7 @@ $ yarn global add pm2
 $ npm install pm2 -g
 
 # start app (localhost:8800) - without 'sudo' the process has not enough rights for writing files
-$ pm2 start
+$ pm2 start ecosystem.json
 ```
 
 ## Additional pm2 commands
