@@ -35,7 +35,7 @@
 import axios from 'axios'
 import { mapGetters, mapActions } from 'vuex'
 
-import pkg from '~~/package.json'
+import pkg from 'projRoot/package.json'
 
 export default {
     name: 'AppVersion',
@@ -49,7 +49,7 @@ export default {
             getReleaseData: 'getReleaseData'
         }),
         currentVersion() {
-            return `v.${pkg.version}`
+            return `v${pkg.version}`
         },
         latestVersion() {
             if (this.getReleaseData) {
