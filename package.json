@@ -15,8 +15,9 @@
     "dev:api": "node -r dotenv/config ./src/api/app.js",
     "dev": "cross-env NODE_ENV=development concurrently \"yarn dev:api\" \"yarn dev:nuxt\"",
     "generate:nuxt": "nuxt generate src/client",
-    "generate": "yarn generate:nuxt",
-    "start": "node -r dotenv/config ./src/api/app.js",
+    "build:server": "webpack",
+    "build": "yarn generate:nuxt && yarn build:server",
+    "start": "node -r dotenv/config ./dist/server/app.cjs",
     "lint:js": "eslint --ext \".js,.vue\" --ignore-path .gitignore .",
     "lint": "yarn lint:js"
   },
@@ -50,6 +51,9 @@
     "passport": "^0.4.1",
     "passport-jwt": "^4.0.0",
     "passport-local": "^1.0.0",
-    "vue-toastification": "^1.7.11"
+    "vue-toastification": "^1.7.11",
+    "webpack": "^5.38.1",
+    "webpack-cli": "^4.7.0",
+    "webpack-node-externals": "^3.0.0"
   }
 }
