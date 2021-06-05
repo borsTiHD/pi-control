@@ -1,7 +1,7 @@
 import { join } from 'path'
 import crypto from 'crypto'
 import fs from 'fs-extra'
-import bcrypt from 'bcrypt'
+import bcrypt from 'bcryptjs'
 import passport from 'passport'
 import LocalStrategy from 'passport-local'
 import JwtStrategy from 'passport-jwt'
