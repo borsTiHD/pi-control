@@ -23,6 +23,13 @@
                         {{ darkMode ? 'Switch to Light Mode' : 'Switch to Dark Mode' }}
                     </v-list-item-title>
                 </v-list-item>
+
+                <v-list-item v-if="$auth.loggedIn" @click="logoutUser">
+                    <v-list-item-action>
+                        <v-icon>mdi-account-arrow-left</v-icon>
+                    </v-list-item-action>
+                    <v-list-item-title>Logout</v-list-item-title>
+                </v-list-item>
             </div>
 
             <v-list-item>
@@ -73,6 +80,10 @@ export default {
                 this.$idb.putKeyValue('userSettings', 'preference', 'darkMode', true)
                 this.$vuetify.theme.dark = true
             }
+        },
+        async logoutUser() {
+            console.log('[Logout] -> User logout.')
+            await this.$auth.logout(/* .... */)
         }
     }
 }

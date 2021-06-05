@@ -33,7 +33,7 @@ $ yarn install
 $ yarn dev
 
 # build for production and launch server (localhost:8800)
-$ yarn build
+$ yarn generate
 $ yarn start
 ```
 

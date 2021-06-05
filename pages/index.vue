@@ -15,6 +15,7 @@
 <script>
 export default {
     name: 'Index',
+    auth: false,
     created() {
         this.changeRoute()
     },

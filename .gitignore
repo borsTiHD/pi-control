@@ -91,3 +91,6 @@ sw.*
 
 # Custom user scripts
 /scripts/custom
+
+# Database
+db.json

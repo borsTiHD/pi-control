@@ -6,26 +6,23 @@
         <v-toolbar-title style="cursor: pointer" @click="$router.push('/')" v-text="title" />
         <v-spacer />
 
-        <v-badge
-            :value="getNewRelease"
-            content="update"
-            color="error"
-            bordered
-            inline
-            left
-        >
-            <v-btn icon @click.stop="rightDrawer = !rightDrawer">
-                <v-icon>mdi-cogs</v-icon>
-            </v-btn>
-        </v-badge>
+        <app-update-chip />
+        <v-btn icon @click.stop="rightDrawer = !rightDrawer">
+            <v-icon>mdi-cogs</v-icon>
+        </v-btn>
     </v-app-bar>
 </template>
 
 <script>
 import { mapGetters, mapActions } from 'vuex'
+import AppUpdateChip from '~/components/display/AppUpdateChip.vue'
 
 import pkg from '~~/package.json'
 export default {
+    name: 'Header',
+    components: {
+        AppUpdateChip
+    },
     data() {
         return {
             title: `${pkg.productName}`
@@ -33,7 +30,7 @@ export default {
     },
     computed: {
         ...mapGetters({
-            getNewRelease: 'getNewRelease',
+            isNewRelease: 'isNewRelease',
             getDrawer: 'layout/getDrawer',
             getRightDrawer: 'layout/getRightDrawer'
         }),

@@ -1,5 +1,5 @@
 // Express
-const express = require('express')
+import express from 'express'
 const router = express.Router()
 
 // Route: '/' -> REST Api index endpoint
@@ -10,4 +10,4 @@ router.all('/', (req, res, next) => {
     })
 })
 
-module.exports = router
+export default router

@@ -1,7 +1,7 @@
 {
   "name": "pi-control",
   "productName": "Pi-Control 🐱‍👤",
-  "version": "0.0.1-alpha.1",
+  "version": "0.0.1-alpha.2",
   "description": "Pi-Control helps with gathering information, as well as to simplify controlling your raspberry pi.",
   "author": "borsTiHD",
   "license": "MIT",
@@ -9,14 +9,18 @@
     "type": "git",
     "url": "https://github.com/borsTiHD/pi-control"
   },
+  "type": "module",
   "scripts": {
-    "dev": "nuxt",
-    "build": "nuxt build",
-    "start": "nuxt start",
+    "dev:nuxt": "nuxt",
+    "dev:api": "node -r dotenv/config ./api/app.js",
+    "dev": "cross-env NODE_ENV=development concurrently \"yarn dev:api\" \"yarn dev:nuxt\"",
+    "generate": "nuxt generate",
+    "start": "node -r dotenv/config ./api/app.js",
     "lint:js": "eslint --ext \".js,.vue\" --ignore-path .gitignore .",
     "lint": "yarn lint:js"
   },
   "dependencies": {
+    "@nuxtjs/auth-next": "5.0.0-1621716493.b9b36c6",
     "@nuxtjs/axios": "^5.13.3",
     "core-js": "^3.9.1",
     "nuxt": "^2.15.6"
@@ -27,14 +31,24 @@
     "@nuxtjs/vuetify": "^1.11.3",
     "archiver": "^5.3.0",
     "babel-eslint": "^10.1.0",
+    "bcrypt": "^5.0.1",
+    "concurrently": "^6.2.0",
+    "cookie-parser": "^1.4.5",
     "cors": "^2.8.5",
+    "cross-env": "^7.0.3",
+    "dotenv": "^10.0.0",
     "eslint": "^7.22.0",
     "eslint-plugin-nuxt": "^2.0.0",
     "eslint-plugin-vue": "^7.7.0",
     "express": "^4.17.1",
     "fs-extra": "^10.0.0",
     "idb": "^6.0.0",
+    "jsonwebtoken": "^8.5.1",
+    "lowdb": "^2.1.0",
     "moment": "^2.29.1",
+    "passport": "^0.4.1",
+    "passport-jwt": "^4.0.0",
+    "passport-local": "^1.0.0",
     "vue-toastification": "^1.7.11"
   }
 }

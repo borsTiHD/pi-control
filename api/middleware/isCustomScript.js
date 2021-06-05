@@ -10,4 +10,4 @@ const isCustomScript = (path) => {
     return /^scripts\\custom\\/gm.test(path) /* win path */ || /^scripts\/custom\//gm.test(path) /* linux path */
 }
 
-module.exports = isCustomScript
+export default isCustomScript

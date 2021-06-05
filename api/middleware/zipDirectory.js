@@ -1,5 +1,5 @@
-const fs = require('fs-extra')
-const archiver = require('archiver')
+import fs from 'fs-extra'
+import archiver from 'archiver'
 
 /**
  * Middleware: Zipping a given file/folder
@@ -24,4 +24,4 @@ const zipDirectory = (source, out) => {
     })
 }
 
-module.exports = zipDirectory
+export default zipDirectory

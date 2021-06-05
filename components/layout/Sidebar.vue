@@ -26,37 +26,80 @@
 import { mapGetters, mapActions } from 'vuex'
 
 export default {
-    data() {
-        return {
-            clipped: true,
-            items: [
-                {
-                    icon: 'mdi-monitor-dashboard ',
-                    title: 'Dashboard',
-                    to: '/dashboard'
-                },
-                {
-                    icon: 'mdi-script-text-outline',
-                    title: 'Scripts',
-                    to: '/scripts'
-                },
-                {
-                    icon: 'mdi-information-outline',
-                    title: 'About',
-                    to: '/about'
-                },
-                {
-                    icon: 'mdi-cogs',
-                    title: 'Settings',
-                    to: '/settings'
-                }
-            ]
-        }
-    },
+    name: 'Sidebar',
+    data: () => ({
+        regAllowed: false
+    }),
     computed: {
         ...mapGetters({
             getDrawer: 'layout/getDrawer'
         }),
+        items() {
+            let items = []
+
+            // Checks if User is logged in, or if login/register is possible
+            if (this.$auth.loggedIn) {
+                items = items.concat([
+                    {
+                        icon: 'mdi-monitor-dashboard ',
+                        title: 'Dashboard',
+                        to: '/dashboard'
+                    },
+                    {
+                        icon: 'mdi-script-text-outline',
+                        title: 'Scripts',
+                        to: '/scripts'
+                    },
+                    {
+                        icon: 'mdi-information-outline',
+                        title: 'About',
+                        to: '/about'
+                    },
+                    {
+                        icon: 'mdi-cogs',
+                        title: 'Settings',
+                        to: '/settings'
+                    }
+                ])
+            } else if (this.regAllowed) {
+                items = items.concat([
+                    {
+                        icon: 'mdi-account-plus',
+                        title: 'Register',
+                        to: '/user/register'
+                    },
+                    {
+                        icon: 'mdi-information-outline',
+                        title: 'About',
+                        to: '/about'
+                    }
+                ])
+            } else {
+                items = items.concat([
+                    {
+                        icon: 'mdi-account-check ',
+                        title: 'Login',
+                        to: '/user/login'
+                    },
+                    {
+                        icon: 'mdi-information-outline',
+                        title: 'About',
+                        to: '/about'
+                    }
+                ])
+            }
+
+            // Hidden dev page
+            if (process.env.dev) {
+                items.push({
+                    icon: 'mdi-bottle-tonic-skull-outline',
+                    title: 'Developement',
+                    to: '/dev'
+                })
+            }
+
+            return items
+        },
         drawer: {
             get() {
                 return this.getDrawer
@@ -67,18 +110,24 @@ export default {
         }
     },
     created() {
-        if (process.env.dev) {
-            this.items.push({
-                icon: 'mdi-bottle-tonic-skull-outline',
-                title: 'Developement',
-                to: '/dev'
-            })
+        if (process.client) {
+            this.isRegistrationAllowed()
         }
+    },
+    activated() {
+        this.isRegistrationAllowed()
     },
     methods: {
         ...mapActions({
             setDrawer: 'layout/setDrawer'
-        })
+        }),
+        isRegistrationAllowed() {
+            // Checks if users are existing
+            this.$axios.get('/auth/registered-users')
+                .then((res) => {
+                    this.regAllowed = res.data.registration
+                })
+        }
     }
 }
 </script>

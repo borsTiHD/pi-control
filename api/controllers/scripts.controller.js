@@ -1,14 +1,14 @@
 // Imports
-const path = require('path')
-const fs = require('fs-extra')
+import path from 'path'
+import fs from 'fs-extra'
 
 // Middleware
-const asyncHandler = require('../middleware/asyncHandler') // Middleware for handling errors on promise calls
-const isCustomScript = require('../middleware/isCustomScript') // Testing if given 'path' is a 'custom path'
-const zipDirectory = require('../middleware/zipDirectory') // Zipping file/folder middleware
+import asyncHandler from '../middleware/asyncHandler.js' // Middleware for handling errors on promise calls
+import isCustomScript from '../middleware/isCustomScript.js' // Testing if given 'path' is a 'custom path'
+import zipDirectory from '../middleware/zipDirectory.js' // Zipping file/folder middleware
 
 // ChildProcess Spawn Import
-const ChildProcessClass = require('../../classes/ChildProcessClass')
+import ChildProcessClass from '../../classes/ChildProcessClass.js'
 const childProcessSpawn = new ChildProcessClass()
 
 // Script Directory
@@ -20,7 +20,7 @@ const scriptPath = path.join('.', 'scripts')
  * @function
  * @memberof module:routers/scripts
  */
-exports.index = (req, res) => {
+const index = (req, res) => {
     res.json({
         _status: 'ok',
         info: 'Endpoint is set up.'
@@ -33,7 +33,7 @@ exports.index = (req, res) => {
  * @function
  * @memberof module:routers/scripts
  */
-exports.list = asyncHandler(async(req, res, next) => {
+const list = asyncHandler(async(req, res, next) => {
     // Generates unique random IDs for every folder/file
     const uniqueIds = []
     let maxIds = 100
@@ -93,7 +93,7 @@ exports.list = asyncHandler(async(req, res, next) => {
  * @param {string} script - Query for script path. Exp.: ?script=scripts%5Ccustom%5Ctest.bat
  * @param {array} args - Query for arguments. Exp.: ?args=['a', 'b', 'c']
  */
-exports.execute = asyncHandler(async(req, res, next) => {
+const execute = asyncHandler(async(req, res, next) => {
     const { query } = req
     const scriptRaw = query.script
     const args = query.args || []
@@ -142,7 +142,7 @@ exports.execute = asyncHandler(async(req, res, next) => {
  * @param {string} name - Query for file name (just required for response). Exp.: ?name=test.bat
  * @param {string} type - Query for file type (just required for response). Exp.: ?type=file
  */
-exports.read = asyncHandler(async(req, res, next) => {
+const read = asyncHandler(async(req, res, next) => {
     // Query Data
     const query = req.query
     const { id, name, type, path } = query
@@ -176,7 +176,7 @@ exports.read = asyncHandler(async(req, res, next) => {
  * @param {string} path - Query for file path. Exp.: ?path=scripts%5Ccustom%5Ctest.bat
  * @param {string} name - Query for file name. Exp.: ?name=test.bat
  */
-exports.download = asyncHandler(async(req, res, next) => {
+const download = asyncHandler(async(req, res, next) => {
     // Query Data
     const query = req.query
     const name = query.name
@@ -215,7 +215,7 @@ exports.download = asyncHandler(async(req, res, next) => {
  * @memberof module:routers/scripts
  * @param {object} data - Object -> form data. Delivers script data: '{ path: "scripts/custom/...", script: { name: "test", ext: "bat", text: "echo test" }}'
  */
-exports.addFile = asyncHandler(async(req, res, next) => {
+const addFile = asyncHandler(async(req, res, next) => {
     const data = req.body
     const script = data.script
     const file = `${script.name}.${script.ext}`
@@ -259,7 +259,7 @@ exports.addFile = asyncHandler(async(req, res, next) => {
  * @memberof module:routers/scripts
  * @param {object} data - Object -> form data. Delivers folder data: '{ path: "scripts\custom", name: "test" }'
  */
-exports.addFolder = asyncHandler(async(req, res, next) => {
+const addFolder = asyncHandler(async(req, res, next) => {
     const data = req.body
     const folderName = data.name
     const folderPath = data.path
@@ -300,7 +300,7 @@ exports.addFolder = asyncHandler(async(req, res, next) => {
  * @memberof module:routers/scripts
  * @param {string} path - Query for file/folder path. Exp.: ?path=scripts\custom\test
  */
-exports.delete = asyncHandler(async(req, res, next) => {
+const deleteFileOrFolder = asyncHandler(async(req, res, next) => {
     // Query Data
     const query = req.query
     const filePath = query.path
@@ -363,7 +363,7 @@ exports.delete = asyncHandler(async(req, res, next) => {
  * @param {string} oldFile - Query for old file data. Exp.: ?oldFile: {"path":"scripts\\custom\\test.bat","name":"test.bat","id":71,"type":"file"}
  * @param {string} newFile - Query for new file data. Exp.: ?newFile: {"name":"new.bat","content":"echo test"}
  */
-exports.editFile = asyncHandler(async(req, res, next) => {
+const editFile = asyncHandler(async(req, res, next) => {
     // Query Data
     const query = req.query
     const oldFile = JSON.parse(query.oldFile)
@@ -430,7 +430,7 @@ exports.editFile = asyncHandler(async(req, res, next) => {
  * @param {string} oldFolder - Query for old file data. Exp.: ?oldFolder: {"path":"scripts\\custom\\test","name":"test"}
  * @param {string} newFolder - Query for new file data. Exp.: ?newFolder: {"name":"new"}
  */
-exports.editFolder = asyncHandler(async(req, res, next) => {
+const editFolder = asyncHandler(async(req, res, next) => {
     // Query Data
     const query = req.query
     const oldFolder = JSON.parse(query.oldFolder)
@@ -472,3 +472,16 @@ exports.editFolder = asyncHandler(async(req, res, next) => {
         })
     }
 })
+
+export default {
+    index,
+    list,
+    execute,
+    read,
+    download,
+    addFile,
+    addFolder,
+    deleteFileOrFolder,
+    editFile,
+    editFolder
+}

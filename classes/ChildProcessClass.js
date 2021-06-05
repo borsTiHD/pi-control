@@ -1,5 +1,5 @@
 // Imports
-const { execFile } = require('child_process')
+import { execFile } from 'child_process'
 const isWin = process.platform === 'win32'
 const isLinux = process.platform === 'linux'
 
@@ -158,4 +158,4 @@ class ChildProcessClass {
         }
     }
 }
-module.exports = ChildProcessClass
+export default ChildProcessClass

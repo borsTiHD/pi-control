@@ -1,19 +1,13 @@
 // import colors from 'vuetify/es5/util/colors'
 import pkg from './package.json'
 
+// Development
 const isDev = process.env.NODE_ENV !== 'production'
 
 // Server Settings
-/*
-const server = {
-    host: isDev ? 'localhost' : '0.0.0.0', // dev: localhost, production: os-ip-adress
-    port: isDev ? 3000 : 8800, // dev: 3000, production: 8800
-    timing: false
-}
-*/
 const server = {
     server: {
-        host: '0.0.0.0', // dev: localhost, production: os-ip-adress
+        host: '0.0.0.0', // os-ip-adress
         port: isDev ? 3000 : 8800, // dev: 3000, production: 8800
         timing: false
     }
@@ -33,8 +27,9 @@ export default {
     // Adding env variables
     ...env,
 
-    // Nuxt target
-    target: 'server',
+    // Nuxt target -> Client Side Rendering (SPA)
+    target: 'static',
+    ssr: false,
 
     // Global page headers: https://go.nuxtjs.dev/config-head
     head: {
@@ -78,6 +73,9 @@ export default {
     modules: [
         // https://go.nuxtjs.dev/axios
         '@nuxtjs/axios',
+        // https://auth.nuxtjs.org/
+        // '@nuxtjs/auth',
+        '@nuxtjs/auth-next',
         // https://github.com/Maronato/vue-toastification
         ['vue-toastification/nuxt', {
             position: 'bottom-right',
@@ -92,24 +90,44 @@ export default {
         }]
     ],
 
+    // Global Middleware
+    router: {
+        middleware: ['auth'] // Pages accessible after login. If one page should be accessible without login, set 'auth: false' in page
+    },
+
     // Axios module configuration: https://go.nuxtjs.dev/config-axios
     axios: {
-        browserBaseURL: '/api/v1'
+        baseURL: isDev ? 'http://localhost:8800/api/v1' : '/api/v1'
+        // browserBaseURL: '/api/v1'
     },
 
-    /*
-    publicRuntimeConfig: {
-        axios: {
-            browserBaseURL: process.env.BROWSER_BASE_URL
+    // Nuxt authentication modul: https://auth.nuxtjs.org/
+    auth: {
+        localStorage: true,
+        strategies: {
+            local: {
+                endpoints: {
+                    login: {
+                        url: '/auth/login',
+                        method: 'post',
+                        propertyName: 'token'
+                    },
+                    logout: false,
+                    user: {
+                        url: '/auth/user',
+                        method: 'get',
+                        propertyName: false
+                    }
+                }
+            }
+        },
+        redirect: {
+            login: '/user/login',
+            logout: '/',
+            callback: '/user/login',
+            home: '/'
         }
     },
-
-    privateRuntimeConfig: {
-        axios: {
-            baseURL: process.env.BASE_URL
-        }
-    },
-    */
 
     // Vuetify module configuration: https://go.nuxtjs.dev/config-vuetify
     vuetify: {
@@ -131,11 +149,6 @@ export default {
             */
         }
     },
-
-    // Serverside Middleware -> REST Api
-    serverMiddleware: [
-        { path: '/api/v1', handler: '~/server-middleware/rest-api.js' }
-    ],
 
     // Build Configuration: https://go.nuxtjs.dev/config-build
     build: {}
