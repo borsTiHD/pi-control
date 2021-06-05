@@ -49,7 +49,7 @@ export default {
             getReleaseData: 'getReleaseData'
         }),
         currentVersion() {
-            return `v.${pkg.version}`
+            return `v${pkg.version}`
         },
         latestVersion() {
             if (this.getReleaseData) {
