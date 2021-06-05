@@ -1,4 +1,5 @@
 // Imports
+import path from 'path'
 import createError from 'http-errors'
 import express from 'express'
 import cors from 'cors'
@@ -16,11 +17,12 @@ console.log('[Server] -> Development:', isDev)
 
 // Config
 const PORT = process.env.PORT || 8800 // Default Port: 8800
+const DIST_DIR = path.join('dist', 'client')
 
 // Express Init
 const app = express()
 if (isDev) app.use(cors()) // CORS policy only in dev
-app.use(express.static('dist'))
+app.use(express.static(DIST_DIR))
 app.use(express.json())
 app.use(express.urlencoded({ extended: true })) // for form data
 app.use(cookieParser()) // Cookies

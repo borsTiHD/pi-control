@@ -170,7 +170,7 @@ export default {
 
     // Generate Configuration: https://nuxtjs.org/docs/2.x/configuration-glossary/configuration-generate
     generate: {
-        dir: DIST_DIR // path.join(DIST_DIR, 'client')
+        dir: path.join(DIST_DIR, 'client')
     },
 
     // Build Configuration: https://go.nuxtjs.dev/config-build
