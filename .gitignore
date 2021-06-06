@@ -94,3 +94,6 @@ sw.*
 
 # Database
 db.json
+
+# Build Folder
+build
