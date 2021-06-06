@@ -12,7 +12,7 @@
   "type": "module",
   "scripts": {
     "dev:nuxt": "nuxt src/client",
-    "dev:api": "node ./src/api/app.js",
+    "dev:api": "nodemon ./src/api/app.js",
     "dev": "cross-env NODE_ENV=development concurrently \"yarn dev:api\" \"yarn dev:nuxt\"",
     "generate:nuxt": "nuxt generate src/client",
     "build:server": "webpack",
@@ -48,6 +48,7 @@
     "jsonwebtoken": "^8.5.1",
     "lowdb": "^2.1.0",
     "moment": "^2.29.1",
+    "nodemon": "^2.0.7",
     "passport": "^0.4.1",
     "passport-jwt": "^4.0.0",
     "passport-local": "^1.0.0",
