@@ -6,13 +6,15 @@ import passport from 'passport'
 import LocalStrategy from 'passport-local'
 import JwtStrategy from 'passport-jwt'
 import jwt from 'jsonwebtoken'
+import dotenv from 'dotenv'
 import User from '../models/user.js'
 
-// const authUserSecret = getAuthUserSecret() // process.env.AUTH_USER_SECRET
-getAuthUserSecret()
+// Loading '.env' + AUTH_USER_SECRET
+dotenv.config()
+setAuthUserSecret()
 
-// Returning or if it not exists generating a authentication secret key
-async function getAuthUserSecret() {
+// Loading secret from 'env' if its exists, or generating a new one
+async function setAuthUserSecret() {
     // Getting Env if available
     const secret = process.env.AUTH_USER_SECRET || false
 

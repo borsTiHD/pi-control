@@ -12,12 +12,12 @@
   "type": "module",
   "scripts": {
     "dev:nuxt": "nuxt src/client",
-    "dev:api": "node -r dotenv/config ./src/api/app.js",
+    "dev:api": "node ./src/api/app.js",
     "dev": "cross-env NODE_ENV=development concurrently \"yarn dev:api\" \"yarn dev:nuxt\"",
     "generate:nuxt": "nuxt generate src/client",
     "build:server": "webpack",
     "build": "yarn generate:nuxt && yarn build:server",
-    "start": "node -r dotenv/config ./dist/server/app.cjs",
+    "start": "node ./dist/server/app.cjs",
     "lint:js": "eslint --ext \".js,.vue\" --ignore-path .gitignore .",
     "lint": "yarn lint:js"
   },

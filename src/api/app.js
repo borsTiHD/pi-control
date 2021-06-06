@@ -4,11 +4,7 @@ import createError from 'http-errors'
 import express from 'express'
 import cors from 'cors'
 import cookieParser from 'cookie-parser'
-
-// Authentication Import
 import passport from 'passport'
-
-// Importing Routes
 import baseRoutes from './router.js'
 
 // Development
