@@ -24,7 +24,7 @@
   "dependencies": {
     "@nuxtjs/auth-next": "5.0.0-1621716493.b9b36c6",
     "@nuxtjs/axios": "^5.13.6",
-    "core-js": "^3.9.1",
+    "core-js": "^3.14.0",
     "nuxt": "^2.15.6"
   },
   "devDependencies": {
