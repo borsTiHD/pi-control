@@ -1,14 +1,22 @@
 // import colors from 'vuetify/es5/util/colors'
 import path from 'path'
-import pkg from '../../package.json'
+import { fileURLToPath } from 'url'
+import fs from 'fs-extra'
 
 // Development
 const isDev = process.env.NODE_ENV !== 'production'
 
-// Alias
+// Path CONST
+const __dirname = path.dirname(fileURLToPath(import.meta.url))
 const PROJECT_ROOT = path.join(__dirname, '..', '..')
 const SRC_DIR = path.join(PROJECT_ROOT, 'src')
 const DIST_DIR = path.join(PROJECT_ROOT, 'dist')
+const PKG_FILE = path.join(PROJECT_ROOT, 'package.json')
+
+// Package.json
+const pkg = JSON.parse(fs.readFileSync(PKG_FILE)) // import pkg from '../../package.json'
+
+// Alias
 const alias = {
     alias: {
         projRoot: PROJECT_ROOT,
@@ -174,5 +182,8 @@ export default {
     },
 
     // Build Configuration: https://go.nuxtjs.dev/config-build
-    build: {}
+    build: {},
+
+    // https://nuxtjs.org/docs/2.x/configuration-glossary/configuration-telemetry
+    telemetry: false
 }
