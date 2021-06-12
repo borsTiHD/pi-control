@@ -7,7 +7,7 @@ import NuxtApp from 'nuxt'
 import minimist from 'minimist'
 import webpackConfig from '../webpack.config.js'
 import nuxtConfig from './client/nuxt.config.js'
-import colors from './color.js'
+import colors from './colors.js'
 
 // we need to change up how __dirname is used for ES6 purposes
 const __dirname = path.dirname(fileURLToPath(import.meta.url))
