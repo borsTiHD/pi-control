@@ -5,7 +5,7 @@ import archiver from 'archiver'
 import webpack from 'webpack'
 import NuxtApp from 'nuxt'
 import minimist from 'minimist'
-import webpackConfig from './../webpack.config.js'
+import webpackConfig from '../webpack.config.js'
 import nuxtConfig from './client/nuxt.config.js'
 import colors from './color.js'
 
