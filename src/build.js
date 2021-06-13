@@ -155,12 +155,12 @@ async function archiveProject() {
     return new Promise((resolve, reject) => {
         // Adding files & folders
         archive
-            .directory(DIST_DIR, 'dist') // Compiled app
-            .directory(SCRIPTS_DIR, path.join('scripts', 'server')) // Server scripts
-            .append(fs.createReadStream(PKG_FILE), { name: 'package.json' }) // Package.json
-            .append(fs.createReadStream(path.join(PROJECT_ROOT, 'ecosystem.json')), { name: 'ecosystem.json' }) // pm2 script
-            .append(fs.createReadStream(path.join(PROJECT_ROOT, 'README.md')), { name: 'README.md' }) // Readme
-            .append(fs.createReadStream(path.join(PROJECT_ROOT, 'CHANGELOG.md')), { name: 'CHANGELOG.md' }) // Changelog
+            .directory(DIST_DIR, path.join(pkg.name, 'dist')) // Compiled app
+            .directory(SCRIPTS_DIR, path.join(pkg.name, 'scripts', 'server')) // Server scripts
+            .append(fs.createReadStream(PKG_FILE), { name: path.join(pkg.name, 'package.json') }) // Package.json
+            .append(fs.createReadStream(path.join(PROJECT_ROOT, 'ecosystem.json')), { name: path.join(pkg.name, 'ecosystem.json') }) // pm2 script
+            .append(fs.createReadStream(path.join(PROJECT_ROOT, 'README.md')), { name: path.join(pkg.name, 'README.md') }) // Readme
+            .append(fs.createReadStream(path.join(PROJECT_ROOT, 'CHANGELOG.md')), { name: path.join(pkg.name, 'CHANGELOG.md') }) // Changelog
 
         // Archive events
         archive.on('error', (err) => reject(err))
