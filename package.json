@@ -1,7 +1,7 @@
 {
   "name": "pi-control",
   "productName": "Pi-Control 🐱‍👤",
-  "version": "0.0.1-beta.1",
+  "version": "0.0.1",
   "description": "Pi-Control helps with gathering information, as well as to simplify controlling your raspberry pi.",
   "author": "borsTiHD",
   "license": "MIT",
@@ -16,8 +16,8 @@
     "dev": "cross-env NODE_ENV=development concurrently \"yarn dev:api\" \"yarn dev:nuxt\"",
     "build:nuxt": "nuxt generate src/client",
     "build:api": "webpack",
-    "build:upload": "cross-env NODE_ENV=production node ./src/build.js --upload=true",
-    "build": "cross-env NODE_ENV=production node ./src/build.js --upload=false",
+    "build:release": "cross-env NODE_ENV=production node ./src/build.js --release=true",
+    "build": "cross-env NODE_ENV=production node ./src/build.js",
     "start": "node ./dist/server/app.cjs",
     "lint:js": "eslint --ext \".js,.vue\" --ignore-path .gitignore .",
     "lint": "yarn lint:js"
@@ -54,6 +54,7 @@
     "passport": "^0.4.1",
     "passport-jwt": "^4.0.0",
     "passport-local": "^1.0.0",
+    "release-it": "^14.9.0",
     "vue-toastification": "^1.7.11",
     "webpack": "^5.38.1",
     "webpack-cli": "^4.7.0",
