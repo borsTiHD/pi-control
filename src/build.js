@@ -63,8 +63,8 @@ async function init() {
         logState('(ℹ) RELEASE HELPER')
         await releaseHelper()
 
-        logState('(ℹ) FINISHED BUILDING APP')
         clearInterval(loader)
+        logState('(ℹ) FINISHED BUILDING APP - READY FOR RELEASING')
         return true
     } catch (error) {
         clearInterval(loader)
@@ -185,7 +185,7 @@ async function releaseHelper() {
         })
         */
 
-        console.log(`${colors.FgYellow}%s${colors.Reset}`, '(⚠) RELEASING NOT SUPPORTED RIGHT NOW - USE "~release-it" INSTEAD')
+        console.log(`${colors.FgYellow}%s${colors.Reset}`, '(⚠) RELEASING NOT SUPPORTED RIGHT NOW - USE "yarn release" INSTEAD')
     }
 
     // If no release has been specified, don't attempt to upload
