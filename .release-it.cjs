@@ -10,5 +10,8 @@ module.exports = {
         release: true,
         releaseName: 'v${version}',
         assets: ['build/*.tar.gz']
+    },
+    npm: {
+        publish: false
     }
 }
