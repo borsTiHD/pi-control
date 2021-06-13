@@ -18,7 +18,7 @@
     "build:api": "webpack",
     "build:release": "cross-env NODE_ENV=production node ./src/build.js --release=true",
     "build": "cross-env NODE_ENV=production node ./src/build.js",
-    "release": "release-it",
+    "release": "dotenv release-it --",
     "start": "node ./dist/server/app.cjs",
     "lint:js": "eslint --ext \".js,.vue\" --ignore-path .gitignore .",
     "lint": "yarn lint:js"
@@ -41,6 +41,7 @@
     "cors": "^2.8.5",
     "cross-env": "^7.0.3",
     "dotenv": "^10.0.0",
+    "dotenv-cli": "^4.0.0",
     "eslint": "^7.28.0",
     "eslint-plugin-nuxt": "^2.0.0",
     "eslint-plugin-vue": "^7.10.0",
