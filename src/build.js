@@ -4,10 +4,16 @@ import fs from 'fs-extra'
 import archiver from 'archiver'
 import webpack from 'webpack'
 import NuxtApp from 'nuxt'
+import dotenv from 'dotenv'
+import release from 'release-it'
 import minimist from 'minimist'
 import webpackConfig from '../webpack.config.js'
+import releaseItConfig from '../.release-it.js'
 import nuxtConfig from './client/nuxt.config.js'
 import colors from './colors.js'
+
+// Loading '.env' for 'GITHUB_TOKEN'
+dotenv.config()
 
 // we need to change up how __dirname is used for ES6 purposes
 const __dirname = path.dirname(fileURLToPath(import.meta.url))
@@ -40,19 +46,49 @@ init()
 
 // Controlls building
 async function init() {
-    logState('(ℹ) BUILDING CLIENT')
-    await buildNuxt()
+    const loader = createLoader()
+    try {
+        logState('(ℹ) DELETING OLD FILES')
+        await deleteOldFiles()
 
-    logState('(ℹ) BUILDING BACKEND')
-    await buildWebpack()
+        logState('(ℹ) BUILDING CLIENT')
+        await buildNuxt()
 
-    logState('(ℹ) ARCHIVING APP')
-    await archiveProject()
+        logState('(ℹ) BUILDING BACKEND')
+        await buildWebpack()
 
-    logState('(ℹ) UPLOAD HELPER')
-    await uploadHelper()
+        logState('(ℹ) ARCHIVING APP')
+        await archiveProject()
 
-    logState('(ℹ) FINISHED BUILDING APP')
+        logState('(ℹ) RELEASE HELPER')
+        await releaseHelper()
+
+        logState('(ℹ) FINISHED BUILDING APP')
+        clearInterval(loader)
+        return true
+    } catch (error) {
+        clearInterval(loader)
+        console.error(`${colors.FgRed}%s${colors.Reset}`, '(❌) ERROR IN BUILD PROCESS')
+        console.error(`${colors.FgRed}%s${colors.Reset}`, '(❌) STOP EXECUTION OF CODE')
+        return false
+    }
+}
+
+// Deleting old files
+async function deleteOldFiles() {
+    // Deletes old dist
+    await fs.rm(DIST_DIR, { recursive: true }).catch((err) => {
+        console.error(`${colors.FgRed}%s${colors.Reset}`, '(❌) COULDNT DELETE OLD DIST FOLDER')
+        console.error(err)
+        throw new Error('Couldnt delete old dist folder')
+    })
+    // Deletes old builds
+    await fs.rm(BUILD_DIR, { recursive: true }).catch((err) => {
+        console.error(`${colors.FgRed}%s${colors.Reset}`, '(❌) COULDNT DELETE OLD BUILD FOLDER')
+        console.error(err)
+        throw new Error('Couldnt delete old build folder')
+    })
+    console.log(`${colors.FgGreen}%s${colors.Reset}`, '(✔) OLD FILES DELETED')
     return true
 }
 
@@ -73,7 +109,7 @@ async function buildNuxt() {
         else throw new Error('Error occurred while generating pages')
     }).catch((err) => {
         console.error(err)
-        return Error(err.message)
+        throw new Error(err.message)
     })
     console.log(`${colors.FgGreen}%s${colors.Reset}`, '(✔) CLIENT FINISHED')
 }
@@ -104,8 +140,12 @@ async function buildWebpack() {
 
 // Archives our files
 async function archiveProject() {
-    // Creates directory, if not exists
-    await fs.mkdir(BUILD_DIR, { recursive: true })
+    // Creates 'build' directory
+    await fs.mkdir(BUILD_DIR, { recursive: true }).catch((err) => {
+        console.error(`${colors.FgRed}%s${colors.Reset}`, '(❌) COULDNT CREATE BUILD FOLDER')
+        console.error(err)
+        throw new Error('Couldnt create build folder')
+    })
 
     const type = 'tar' // Type for packaged file
     const archive = archiver(type, { gzip: true })
@@ -120,6 +160,7 @@ async function archiveProject() {
             .append(fs.createReadStream(PKG_FILE), { name: 'package.json' }) // Package.json
             .append(fs.createReadStream(path.join(PROJECT_ROOT, 'ecosystem.json')), { name: 'ecosystem.json' }) // pm2 script
             .append(fs.createReadStream(path.join(PROJECT_ROOT, 'README.md')), { name: 'README.md' }) // Readme
+            .append(fs.createReadStream(path.join(PROJECT_ROOT, 'CHANGELOG.md')), { name: 'CHANGELOG.md' }) // Changelog
 
         // Archive events
         archive.on('error', (err) => reject(err))
@@ -132,17 +173,31 @@ async function archiveProject() {
     })
 }
 
-// Uploading to GitHub
-async function uploadHelper() {
-    if ('upload' in argv && argv.upload === 'false') {
-        // If no upload has been specified, don't attempt to upload
-        console.log(`${colors.FgRed}%s${colors.Reset}`, '(⚠) UPLOADING WAS TURNED OFF')
-        return true
-    } else if ('upload' in argv && argv.upload === 'true') {
-        // If no upload has been specified, don't attempt to upload
-        console.log(`${colors.FgGreen}%s${colors.Reset}`, '(✔) UPLOADING BUILD')
-        return true
+// Releasing to GitHub
+async function releaseHelper() {
+    if ('release' in argv && argv.release === 'true') {
+        // Releasing build
+        console.log(`${colors.FgGreen}%s${colors.Reset}`, '(✔) RELEASING NEW VERSION')
+        const options = releaseItConfig
+        return release(options).then((output) => {
+            console.log(output) // { version, latestVersion, name, changelog }
+        })
     }
+
+    // If no release has been specified, don't attempt to upload
+    console.log(`${colors.FgYellow}%s${colors.Reset}`, '(⚠) WITHOUT RELEASING')
+    return true
+}
+
+// Creating loading animation
+// https://stackoverflow.com/a/62111632/7625095
+function createLoader() {
+    const P = ['\\', '|', '/', '-']
+    let x = 0
+    return setInterval(() => {
+        process.stdout.write(`\r${P[x++]}`)
+        x %= P.length
+    }, 100)
 }
 
 // Logging current state to console
