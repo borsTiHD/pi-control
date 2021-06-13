@@ -1,7 +1,7 @@
 {
   "name": "pi-control",
   "productName": "Pi-Control 🐱‍👤",
-  "version": "0.0.1",
+  "version": "0.0.1-beta.2",
   "description": "Pi-Control helps with gathering information, as well as to simplify controlling your raspberry pi.",
   "author": "borsTiHD",
   "license": "MIT",
