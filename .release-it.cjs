@@ -1,6 +1,6 @@
 module.exports = {
     git: {
-        commitMessage: 'chore: 🚀 release v${version}',
+        commitMessage: 'chore(release): 🚀 v${version}',
         requireBranch: 'main', // Stopps if your current branch not match
         tag: true,
         tagName: 'v${version}',
