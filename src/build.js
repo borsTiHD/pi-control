@@ -80,13 +80,11 @@ async function deleteOldFiles() {
     await fs.rm(DIST_DIR, { recursive: true }).catch((err) => {
         console.error(`${colors.FgRed}%s${colors.Reset}`, '(❌) COULDNT DELETE OLD DIST FOLDER')
         console.error(err)
-        throw new Error('Couldnt delete old dist folder')
     })
     // Deletes old builds
     await fs.rm(BUILD_DIR, { recursive: true }).catch((err) => {
         console.error(`${colors.FgRed}%s${colors.Reset}`, '(❌) COULDNT DELETE OLD BUILD FOLDER')
         console.error(err)
-        throw new Error('Couldnt delete old build folder')
     })
     console.log(`${colors.FgGreen}%s${colors.Reset}`, '(✔) OLD FILES DELETED')
     return true
