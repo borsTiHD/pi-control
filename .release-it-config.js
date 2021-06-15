@@ -1,4 +1,4 @@
-module.exports = {
+export default {
     git: {
         commitMessage: 'chore(release): 🚀 v${version}',
         requireBranch: 'main', // Stopps if your current branch not match
