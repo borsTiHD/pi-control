@@ -5,10 +5,10 @@ import archiver from 'archiver'
 import webpack from 'webpack'
 import NuxtApp from 'nuxt'
 import dotenv from 'dotenv'
-// import release from 'release-it'
+import release from 'release-it'
 import minimist from 'minimist'
 import webpackConfig from '../webpack.config.js'
-// import releaseItConfig from '../.release-it.js'
+import releaseItConfig from '../.release-it-config.js'
 import nuxtConfig from './client/nuxt.config.js'
 import colors from './colors.js'
 
@@ -176,16 +176,13 @@ async function archiveProject() {
 // Releasing to GitHub
 async function releaseHelper() {
     if ('release' in argv && argv.release === 'true') {
-        /*
         // Releasing build
         console.log(`${colors.FgGreen}%s${colors.Reset}`, '(✔) RELEASING NEW VERSION')
         const options = releaseItConfig
         return release(options).then((output) => {
             console.log(output) // { version, latestVersion, name, changelog }
         })
-        */
-
-        console.log(`${colors.FgYellow}%s${colors.Reset}`, '(⚠) RELEASING NOT SUPPORTED RIGHT NOW - USE "yarn release" INSTEAD')
+        // console.log(`${colors.FgYellow}%s${colors.Reset}`, '(⚠) RELEASING NOT SUPPORTED RIGHT NOW - USE "yarn release" INSTEAD')
     }
 
     // If no release has been specified, don't attempt to upload
