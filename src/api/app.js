@@ -67,6 +67,13 @@ const socketOptions = isDev
 const httpServer = createServer(app)
 const io = new Server(httpServer, socketOptions)
 
+// Socket.io: Register passport as middleware for authentication with jwt
+// url: https://philenius.github.io/web%20development/2021/03/31/use-passportjs-for-authentication-in-socket-io.html
+// git: https://gist.github.com/philenius/641aebd1ba56769829e1fc7771326bf8
+const wrapMiddlewareForSocketIo = (middleware) => (socket, next) => middleware(socket.request, {}, next)
+io.use(wrapMiddlewareForSocketIo(passport.initialize()))
+io.use(wrapMiddlewareForSocketIo(passport.authenticate('jwt', { session: false })))
+
 // Setting up Socket.io
 io.on('connection', (socket) => {
     console.log('[Socket.io] - Client connected...')
