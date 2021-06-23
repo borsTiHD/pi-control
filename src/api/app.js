@@ -1,7 +1,9 @@
 // Imports
 import path from 'path'
+import { createServer } from 'http'
 import createError from 'http-errors'
 import express from 'express'
+import { Server } from 'socket.io'
 import cors from 'cors'
 import cookieParser from 'cookie-parser'
 import passport from 'passport'
@@ -49,7 +51,39 @@ app.use((err, req, res, next) => {
     })
 })
 
+// Socket.io Options for Dev environment
+const socketOptions = isDev
+    ? {
+        cors: {
+            origin: 'http://localhost:3000',
+            methods: ['GET', 'POST']
+        }
+    }
+    : null
+
+// HTTP Server + Socket.IO Init
+const httpServer = createServer(app)
+const io = new Server(httpServer, socketOptions)
+
+// Setting up Socket.io
+io.on('connection', (socket) => {
+    console.log('[Socket.io] - Client connected...')
+    socket.on('message', (message) => {
+        console.log(`[Socket.io] - Socket.IO event 'message' from client with payload: ${message}`)
+        socket.emit('message', message)
+    })
+
+    socket.on('interval-test', (duration) => {
+        console.log(`[Socket.io] - Socket.IO event 'interval-test' from client with payload: ${duration}`)
+
+        setInterval(() => {
+            const randomNumber = Math.floor(Math.random() * 100) + 1
+            socket.emit('interval-test', randomNumber)
+        }, duration)
+    })
+})
+
 // Listening on port
-app.listen(PORT, () => {
+httpServer.listen(PORT, () => {
     console.log(`[Server] -> App is running on ${PORT}`)
 })
