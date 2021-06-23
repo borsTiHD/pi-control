@@ -52,8 +52,16 @@ export default {
         initSocket() {
             this.dev = process.env.dev
 
+            // Socke.io: Putting token in 'Authorization' header key for 'jwt' authentication
+            const token = this.$auth.strategy.token.get()
+            const options = {
+                extraHeaders: {
+                    Authorization: token
+                }
+            }
+
             // Connecting with socket.io server
-            const socket = this.dev ? io('http://localhost:8800').connect() : io().connect()
+            const socket = this.dev ? io('http://localhost:8800', options) : io('', options)
 
             socket.on('connect', () => {
                 console.log('[Socket.io] - Connected to server')
