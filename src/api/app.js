@@ -51,7 +51,9 @@ app.use((err, req, res, next) => {
     })
 })
 
-// Socket.io Options for Dev environment
+// Socket.io Options
+// Activating cors on dev environment, so you can connect with different ports
+// Empty config on production
 const socketOptions = isDev
     ? {
         cors: {
@@ -59,7 +61,7 @@ const socketOptions = isDev
             methods: ['GET', 'POST']
         }
     }
-    : null
+    : {}
 
 // HTTP Server + Socket.IO Init
 const httpServer = createServer(app)
