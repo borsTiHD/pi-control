@@ -47,7 +47,6 @@
     "eslint-plugin-vue": "^7.11.1",
     "express": "^4.17.1",
     "fs-extra": "^10.0.0",
-    "idb": "^6.1.2",
     "jsonwebtoken": "^8.5.1",
     "lowdb": "^2.1.0",
     "minimist": "^1.2.5",
@@ -60,6 +59,7 @@
     "socket.io": "^4.1.2",
     "socket.io-client": "^4.1.2",
     "vue-toastification": "^1.7.11",
+    "vuex-persistedstate": "^4.0.0-beta.3",
     "webpack": "^5.40.0",
     "webpack-cli": "^4.7.2",
     "webpack-node-externals": "^3.0.0"

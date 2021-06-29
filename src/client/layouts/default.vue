@@ -16,7 +16,7 @@
 </template>
 
 <script>
-import { mapActions } from 'vuex'
+import { mapGetters } from 'vuex'
 
 import AppHeader from '~/components/layout/Header.vue'
 import AppSidebar from '~/components/layout/Sidebar.vue'
@@ -37,16 +37,16 @@ export default {
             containerHeight: 0
         }
     },
+    computed: {
+        ...mapGetters({
+            getDarkMode: 'settings/getDarkMode'
+        })
+    },
     async created() {
-        // Clientside Init + Loading iDB data
+        // Clientside Init
         if (process.client) {
-            // Getting 'darkmode' setting from iDB
-            const darkMode = await this.$idb.getKeyValue('userSettings', 'preference', 'darkMode')
-            this.$vuetify.theme.dark = darkMode // Set vuetify mode
-
-            // Getting 'autoRefresh' setting from iDB
-            const autoRefresh = await this.$idb.getKeyValue('userSettings', 'system', 'autoRefresh')
-            this.setAutoRefresh(autoRefresh) // Put in store
+            // Getting 'darkmode' setting from persisted vuex-store
+            this.$vuetify.theme.dark = this.getDarkMode // Set vuetify mode
 
             // Setting container height
             setImmediate(() => {
@@ -55,9 +55,6 @@ export default {
         }
     },
     methods: {
-        ...mapActions({
-            setAutoRefresh: 'settings/setAutoRefresh'
-        }),
         onResize() {
             // Setting container height for footer
             const container = document.getElementById('container')
