@@ -152,7 +152,8 @@ export default {
             logout: '/',
             callback: '/user/login',
             home: '/'
-        }
+        },
+        plugins: ['@/plugins/socket.client.js']
     },
 
     // Vuetify module configuration: https://go.nuxtjs.dev/config-vuetify
