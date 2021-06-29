@@ -6,8 +6,6 @@ export default ({ $auth }) => {
     const isDev = process.env.dev
     const connection = isDev ? 'http://localhost:8800' : ''
 
-    console.log('connection:', connection)
-
     // Socke.io: Putting token in 'Authorization' header key for 'jwt' authentication
     const token = $auth.strategy.token.get()
     const options = {
