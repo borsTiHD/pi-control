@@ -1,6 +1,7 @@
 // Imports
 import passport from 'passport'
 import { Server } from 'socket.io'
+import channel from './sockets/channel.js'
 
 // Socket.io: Register passport as middleware for authentication with jwt
 // url: https://philenius.github.io/web%20development/2021/03/31/use-passportjs-for-authentication-in-socket-io.html
@@ -28,22 +29,34 @@ export default function(httpServer, isDev) {
     io.use(wrapMiddlewareForSocketIo(passport.initialize()))
     io.use(wrapMiddlewareForSocketIo(passport.authenticate('jwt', { session: false })))
 
-    // Setting up Socket.io
+    // On client connection
     io.on('connection', (socket) => {
-        console.log('[Socket.io] - Client connected...')
+        console.log('[Socket.io] -> Client connected...')
 
-        socket.on('message', (message) => {
-            console.log(`[Socket.io] - Socket.IO event 'message' from client with payload: ${message}`)
-            socket.emit('message', message)
+        // Event: 'join-room' - Let a user join a specific room
+        socket.on('join-room', (room) => {
+            console.log('[Socket.io] -> Client joining room:', room)
+            socket.join(room) // Join channel
         })
 
-        socket.on('intervalTest', (duration) => {
-            console.log(`[Socket.io] - Socket.IO event 'intervalTest' from client with duration: ${duration}`)
+        // Event: 'leave-room' - Let a user join a specific room
+        socket.on('leave-room', (room) => {
+            console.log('[Socket.io] -> Client leaving room:', room)
+            socket.leave(room) // Leave channel
+        })
 
-            setInterval(() => {
-                const randomNumber = Math.floor(Math.random() * 100) + 1
-                socket.emit('intervalTest', randomNumber)
-            }, duration)
+        // Event: 'disconnect' - Fires when a client disconnects
+        socket.on('disconnect', function() {
+            console.log('[Socket.io] -> Client disconnected...')
+        })
+
+        // Dev: 'dev-message' - Receives a message and sends it back
+        socket.on('dev-message', (message) => {
+            console.log(`[Socket.io] -> Dev: Got a 'message' from client: ${message}`)
+            socket.emit('devMessage', message)
         })
     })
+
+    // Registering Channel
+    channel(io)
 }
