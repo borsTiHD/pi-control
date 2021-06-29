@@ -7,11 +7,6 @@
             >
                 Send Message
             </v-btn>
-            <v-btn
-                @click="requestSocketInterval"
-            >
-                Start Interval
-            </v-btn>
         </v-card-actions>
         <v-card-text>
             <v-textarea
@@ -39,28 +34,32 @@ export default {
             text: ''
         }
     },
+    activated() {
+        // Socket.IO: Joining room
+        this.$socket.emit('join-room', 'testChannel')
+    },
+    deactivated() {
+        // Socket.IO: Leaving room
+        this.$socket.emit('leave-room', 'testChannel')
+    },
     sockets: {
         connect() {
-            console.log('[Socket.io] - Connected to server')
+            console.log('[Socket.io] -> Connected to server')
         },
-        message(message) {
-            console.log('[Socket.io] - Message from server:', message)
+        devMessage(message) {
+            console.log('[Socket.io] -> Message from server:', message)
             this.text += `${message}\n`
         },
         intervalTest(message) {
-            console.log('[Socket.io] - Message from server \'intervalTest\':', message)
+            console.log('[Socket.io] -> Message from server \'intervalTest\':', message)
             this.text += `${message} `
         }
     },
     methods: {
         sendSocketMsg() {
-            console.log('[Socket.io] - Emit message to server')
+            console.log('[Socket.io] -> Emit message to server')
             const randomNumber = Math.floor(Math.random() * 100) + 1
-            this.$socket.emit('message', randomNumber)
-        },
-        requestSocketInterval() {
-            console.log('[Socket.io] - Request interval from server')
-            this.$socket.emit('intervalTest', 2 * 1000)
+            this.$socket.emit('dev-message', randomNumber)
         },
         clearText() {
             this.text = ''
