@@ -15,7 +15,7 @@ export default ({ $auth }) => {
     }
 
     Vue.use(new VueSocketIO({
-        debug: true,
+        debug: !!isDev,
         connection: SocketIO(connection, options)
     }))
 }
