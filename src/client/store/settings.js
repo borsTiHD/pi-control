@@ -1,5 +1,3 @@
-import Vue from 'vue'
-
 // Root Store
 export const state = () => ({
     darkMode: true,
@@ -23,7 +21,6 @@ export const mutations = {
 // Async functions for setting data and calling mutations
 export const actions = {
     setDarkMode({ commit }, payload) {
-        Vue.$vuetify.theme.dark = payload
         commit('setDarkMode', payload)
     },
     setAutoRefresh({ commit }, payload) {

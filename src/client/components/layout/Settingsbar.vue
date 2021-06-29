@@ -74,11 +74,9 @@ export default {
             setRightDrawer: 'layout/setRightDrawer'
         }),
         changeDarkMode() {
-            if (this.darkMode) {
-                this.setDarkMode(false)
-            } else {
-                this.setDarkMode(true)
-            }
+            const newMode = !this.darkMode
+            this.setDarkMode(newMode)
+            this.$vuetify.theme.dark = newMode
         },
         async logoutUser() {
             console.log('[Logout] -> User logout.')
