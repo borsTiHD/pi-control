@@ -13,9 +13,16 @@
 </template>
 
 <script>
+import { mapGetters, mapActions } from 'vuex'
+
 export default {
     name: 'Index',
     auth: false,
+    computed: {
+        ...mapGetters({
+            getAlreadyVisited: 'settings/getAlreadyVisited'
+        })
+    },
     created() {
         this.changeRoute()
     },
@@ -23,17 +30,19 @@ export default {
         this.changeRoute()
     },
     methods: {
+        ...mapActions({
+            setAlreadyVisited: 'settings/setAlreadyVisited'
+        }),
         async changeRoute() {
-            // Clientside Init + Loading iDB data
+            // Clientside Init
             if (process.client) {
-                // Getting 'visited' from iDB
-                const alreadyVisited = await this.$idb.getKeyValue('userSettings', 'preference', 'visited')
+                // Getting 'visited' from persisted vuex-store
                 // If its false, send to 'about' page. If its true, send to 'dashboard'
-                if (alreadyVisited) {
+                if (this.getAlreadyVisited) {
                     this.$router.push('/dashboard')
                 } else {
                     // Set value to true, so the next visit will bring the user directly to the 'dashboard'
-                    this.$idb.putKeyValue('userSettings', 'preference', 'visited', true)
+                    this.setAlreadyVisited(true)
                     this.$router.push('/about')
                 }
             }

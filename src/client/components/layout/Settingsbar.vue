@@ -70,15 +70,14 @@ export default {
     },
     methods: {
         ...mapActions({
+            setDarkMode: 'settings/setDarkMode',
             setRightDrawer: 'layout/setRightDrawer'
         }),
         changeDarkMode() {
             if (this.darkMode) {
-                this.$idb.putKeyValue('userSettings', 'preference', 'darkMode', false)
-                this.$vuetify.theme.dark = false
+                this.setDarkMode(false)
             } else {
-                this.$idb.putKeyValue('userSettings', 'preference', 'darkMode', true)
-                this.$vuetify.theme.dark = true
+                this.setDarkMode(true)
             }
         },
         async logoutUser() {
