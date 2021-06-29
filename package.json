@@ -58,6 +58,7 @@
     "release-it": "^14.10.0",
     "socket.io": "^4.1.2",
     "socket.io-client": "^4.1.2",
+    "vue-socket.io": "^3.0.10",
     "vue-toastification": "^1.7.11",
     "vuex-persistedstate": "^4.0.0-beta.3",
     "webpack": "^5.40.0",
