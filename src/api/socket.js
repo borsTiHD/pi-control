@@ -31,17 +31,18 @@ export default function(httpServer, isDev) {
     // Setting up Socket.io
     io.on('connection', (socket) => {
         console.log('[Socket.io] - Client connected...')
+
         socket.on('message', (message) => {
             console.log(`[Socket.io] - Socket.IO event 'message' from client with payload: ${message}`)
             socket.emit('message', message)
         })
 
-        socket.on('interval-test', (duration) => {
-            console.log(`[Socket.io] - Socket.IO event 'interval-test' from client with payload: ${duration}`)
+        socket.on('intervalTest', (duration) => {
+            console.log(`[Socket.io] - Socket.IO event 'intervalTest' from client with duration: ${duration}`)
 
             setInterval(() => {
                 const randomNumber = Math.floor(Math.random() * 100) + 1
-                socket.emit('interval-test', randomNumber)
+                socket.emit('intervalTest', randomNumber)
             }, duration)
         })
     })
