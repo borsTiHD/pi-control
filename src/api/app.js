@@ -1,6 +1,6 @@
 // Imports
 import { createServer } from 'http'
-import initExpress from './express.js'
+import initExpress from './express/express.js'
 import initSocketIo from './socket.js'
 
 // Config
