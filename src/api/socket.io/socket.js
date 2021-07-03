@@ -2,6 +2,10 @@
 import passport from 'passport'
 import { Server } from 'socket.io'
 
+// Listeners
+import initConnection from './listeners/connection.js'
+import initTestRoom from './rooms/testRoom.js'
+
 // Socket.io: Register passport as middleware for authentication with jwt
 // url: https://philenius.github.io/web%20development/2021/03/31/use-passportjs-for-authentication-in-socket-io.html
 // git: https://gist.github.com/philenius/641aebd1ba56769829e1fc7771326bf8
@@ -28,21 +32,9 @@ export default function(httpServer, isDev) {
     io.use(wrapMiddlewareForSocketIo(passport.initialize()))
     io.use(wrapMiddlewareForSocketIo(passport.authenticate('jwt', { session: false })))
 
-    // Setting up Socket.io
-    io.on('connection', (socket) => {
-        console.log('[Socket.io] - Client connected...')
-        socket.on('message', (message) => {
-            console.log(`[Socket.io] - Socket.IO event 'message' from client with payload: ${message}`)
-            socket.emit('message', message)
-        })
+    // Registering Listeners
+    initConnection(io) // Event: 'connection'
 
-        socket.on('interval-test', (duration) => {
-            console.log(`[Socket.io] - Socket.IO event 'interval-test' from client with payload: ${duration}`)
-
-            setInterval(() => {
-                const randomNumber = Math.floor(Math.random() * 100) + 1
-                socket.emit('interval-test', randomNumber)
-            }, duration)
-        })
-    })
+    // Registering Rooms
+    initTestRoom(io, 'testRoom', 2000) // Room: 'testRoom'
 }
