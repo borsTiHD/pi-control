@@ -1,7 +1,7 @@
 // Imports
 import { createServer } from 'http'
 import initExpress from './express/express.js'
-import initSocketIo from './socket.js'
+import initSocketIo from './socket.io/socket.js'
 
 // Config
 const PORT = process.env.PORT || 8800 // Default Port: 8800
