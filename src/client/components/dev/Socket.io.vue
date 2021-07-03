@@ -36,11 +36,11 @@ export default {
     },
     activated() {
         // Socket.IO: Joining room
-        this.$socket.emit('join-room', 'testChannel')
+        this.$socket.emit('room:join', 'testChannel')
     },
     deactivated() {
         // Socket.IO: Leaving room
-        this.$socket.emit('leave-room', 'testChannel')
+        this.$socket.emit('room:leave', 'testChannel')
     },
     sockets: {
         connect() {

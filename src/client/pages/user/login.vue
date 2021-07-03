@@ -60,7 +60,6 @@ export default {
 
                 // Connecting to Socket.IO server after login with new 'jwt' token
                 this.$socket.io.opts.extraHeaders.Authorization = this.$auth.strategy.token.get()
-                console.log('this.$socket.io', this.$socket.io)
                 this.$socket.open() // Connecting to Socket.IO Server
 
                 // Change route
