@@ -4,7 +4,7 @@ import { Server } from 'socket.io'
 
 // Listeners
 import initConnection from './listeners/connection.js'
-import initChannel from './channels/testChannel.js'
+import initTestRoom from './rooms/testRoom.js'
 
 // Socket.io: Register passport as middleware for authentication with jwt
 // url: https://philenius.github.io/web%20development/2021/03/31/use-passportjs-for-authentication-in-socket-io.html
@@ -35,6 +35,6 @@ export default function(httpServer, isDev) {
     // Registering Listeners
     initConnection(io) // Event: 'connection'
 
-    // Registering Channel
-    initChannel(io)
+    // Registering Rooms
+    initTestRoom(io, 'testRoom', 2000) // Room: 'testRoom'
 }
