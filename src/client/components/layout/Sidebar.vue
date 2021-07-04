@@ -41,9 +41,14 @@ export default {
             if (this.$auth.loggedIn) {
                 items = items.concat([
                     {
-                        icon: 'mdi-monitor-dashboard ',
+                        icon: 'mdi-monitor-dashboard',
                         title: 'Dashboard',
                         to: '/dashboard'
+                    },
+                    {
+                        icon: 'mdi-car-cruise-control',
+                        title: 'Processes',
+                        to: '/processes'
                     },
                     {
                         icon: 'mdi-script-text-outline',

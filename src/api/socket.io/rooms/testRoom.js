@@ -2,7 +2,7 @@ import clientNumInRoom from '../controllers/clientNumInRoom.js'
 
 export default (io, roomName, interval) => {
     setInterval(() => {
-        // Clients
+        // Clients - Sends events only when clients are in the room
         const clients = clientNumInRoom(io, roomName)
         if (clients > 0) {
             console.log(`[Socket.io] -> ${clients} online users in room '${roomName}'`)
