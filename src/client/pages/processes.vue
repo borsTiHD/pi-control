@@ -11,6 +11,19 @@
                         mdi-chip
                     </v-icon>
                     Processes
+
+                    <v-tooltip right>
+                        <template #activator="{ on, attrs }">
+                            <div class="d-inline-block ml-4" v-bind="attrs" v-on="on">
+                                <v-switch
+                                    v-model="autoRefresh"
+                                    @change="refreshSwitch"
+                                />
+                            </div>
+                        </template>
+                        <span>{{ autoRefresh ? 'Autorefresh is activated' : 'Switch for activating autorefresh' }}</span>
+                    </v-tooltip>
+
                     <v-spacer />
                     <v-text-field
                         v-model="table.search"
@@ -45,7 +58,8 @@ export default {
                 headers: null,
                 items: null,
                 search: ''
-            }
+            },
+            autoRefresh: true
         }
     },
     computed: {
@@ -95,12 +109,12 @@ export default {
         }
     },
     activated() {
-        // Socket.IO: Joining room
-        this.$socket.emit('room:join', 'processesRoom')
+        // Socket.IO: Joining room - only if autoRefresh is on
+        if (this.autoRefresh) { this.socketListening(true) }
     },
     deactivated() {
         // Socket.IO: Leaving room
-        this.$socket.emit('room:leave', 'processesRoom')
+        this.socketListening(false)
     },
     sockets: {
         processes(message) {
@@ -116,6 +130,24 @@ export default {
         }
     },
     methods: {
+        socketListening(state) {
+            if (state) {
+                // Socket.IO: Joining room
+                this.$socket.emit('room:join', 'processesRoom')
+            } else {
+                // Socket.IO: Leaving room
+                this.$socket.emit('room:leave', 'processesRoom')
+            }
+        },
+        refreshSwitch(event) {
+            if (this.autoRefresh) {
+                // Socket.IO: Joining room
+                this.socketListening(true)
+            } else {
+                // Socket.IO: Leaving room
+                this.socketListening(false)
+            }
+        }
     }
 }
 </script>
