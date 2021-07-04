@@ -42,8 +42,11 @@ export default (io, roomName, interval) => {
 
                 if (Array.isArray(outputArr) && outputArr.length > 6) {
                     const info = outputArr.slice(0, 5)
-                    const columns = outputArr.slice(6, 7)
-                    const processes = outputArr.slice(7)
+                    const columns = outputArr.slice(6, 7)[0].trim().split(/\s+/) // Get only columns, trims leading and trailing whitespaces, also splits at every +whitespace
+                    const processes = outputArr.slice(7).map((item) => {
+                        return item.trim().split(/\s+/) // Trim leading and trailing whitespaces, also splits at every +whitespace
+                    })
+
                     io.to(roomName).emit('processes', { _status: 'ok', data: { info, columns, processes } })
                 } else {
                     console.error('[Socket.io] -> Error on parsing script output:', raw)
