@@ -2,9 +2,22 @@
 import path from 'path'
 import { fileURLToPath } from 'url'
 import fs from 'fs-extra'
+import dotenv from 'dotenv'
+
+// Loading '.env'
+dotenv.config()
+
+// Env variables with dev default
+process.env.PORT_FRONTEND = process.env.PORT_FRONTEND || 3000 // Default Port: 3000
+process.env.PORT_BACKEND = process.env.PORT_BACKEND || 3001 // Default Port: 3001
 
 // Development
 const isDev = process.env.NODE_ENV !== 'production'
+
+// Application config
+const HOST_IP = process.env.HOST_IP || 'localhost'
+const PORT_FRONTEND = isDev ? process.env.PORT_FRONTEND : 8800 // dev: 3000, production: 8800
+const PORT_BACKEND = isDev ? process.env.PORT_BACKEND : 8800 // dev: 3001, production: 8800
 
 // Path CONST
 const __dirname = path.dirname(fileURLToPath(import.meta.url))
@@ -28,7 +41,7 @@ const alias = {
 const server = {
     server: {
         host: '0.0.0.0', // os-ip-adress
-        port: isDev ? 3000 : 8800, // dev: 3000, production: 8800
+        port: PORT_FRONTEND,
         timing: false
     }
 }
@@ -36,7 +49,10 @@ const server = {
 // Enviroment variables
 const env = {
     env: {
-        dev: process.env.NODE_ENV !== 'production'
+        dev: isDev,
+        PORT_BACKEND,
+        PORT_FRONTEND,
+        HOST_IP
     }
 }
 
@@ -123,8 +139,7 @@ export default {
 
     // Axios module configuration: https://go.nuxtjs.dev/config-axios
     axios: {
-        baseURL: isDev ? 'http://localhost:8800/api/v1' : '/api/v1'
-        // browserBaseURL: '/api/v1'
+        baseURL: isDev ? `http://${HOST_IP}:${PORT_BACKEND}/api/v1` : '/api/v1'
     },
 
     // Nuxt authentication modul: https://auth.nuxtjs.org/

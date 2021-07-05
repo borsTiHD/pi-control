@@ -4,7 +4,11 @@ import SocketIO from 'socket.io-client'
 
 export default ({ $auth }) => {
     const isDev = process.env.dev
-    const connection = isDev ? 'http://localhost:8800' : ''
+    const HOST_IP = process.env.HOST_IP || 'localhost'
+    const PORT_BACKEND = process.env.PORT_BACKEND
+    const connection = isDev ? `http://${HOST_IP}:${PORT_BACKEND}` : ''
+
+    console.log('SOCKET CONNECTION:', connection)
 
     // Socke.io: Putting token in 'Authorization' header key for 'jwt' authentication
     const token = $auth.strategy.token.get()
