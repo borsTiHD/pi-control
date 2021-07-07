@@ -7,17 +7,17 @@ import dotenv from 'dotenv'
 // Loading '.env'
 dotenv.config()
 
-// Env variables with dev default
-process.env.PORT_FRONTEND = process.env.PORT_FRONTEND || 3000 // Default Port: 3000
-process.env.PORT_BACKEND = process.env.PORT_BACKEND || 3001 // Default Port: 3001
-
 // Development
 const isDev = process.env.NODE_ENV !== 'production'
 
+// Env variables with dev default
+process.env.DEV_PORT_FRONTEND = process.env.DEV_PORT_FRONTEND || 3000 // Default Port: 3000
+process.env.DEV_PORT_BACKEND = process.env.DEV_PORT_BACKEND || 3001 // Default Port: 3001
+
 // Application config
-const HOST_IP = process.env.HOST_IP || 'localhost'
-const PORT_FRONTEND = isDev ? process.env.PORT_FRONTEND : 8800 // dev: 3000, production: 8800
-const PORT_BACKEND = isDev ? process.env.PORT_BACKEND : 8800 // dev: 3001, production: 8800
+const HOST_IP = process.env.DEV_HOST_IP || 'localhost'
+const PORT_FRONTEND = isDev ? process.env.DEV_PORT_FRONTEND : 8800 // dev: 3000, production: 8800
+const PORT_BACKEND = isDev ? process.env.DEV_PORT_BACKEND : 8800 // dev: 3001, production: 8800
 
 // Path CONST
 const __dirname = path.dirname(fileURLToPath(import.meta.url))
@@ -49,6 +49,15 @@ const server = {
 // Enviroment variables
 const env = {
     env: {
+        dev: isDev
+    },
+    publicRuntimeConfig: {
+        dev: isDev,
+        PORT_BACKEND,
+        PORT_FRONTEND,
+        HOST_IP
+    },
+    privateRuntimeConfig: {
         dev: isDev,
         PORT_BACKEND,
         PORT_FRONTEND,
