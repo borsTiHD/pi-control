@@ -28,7 +28,7 @@ export default function(httpServer, isDev) {
     const socketOptions = isDev
         ? {
             cors: {
-                origin: `http://${HOST_IP}:${PORT_FRONTEND}`,
+                origin: [`http://${HOST_IP}:${PORT_FRONTEND}`, `http://localhost:${PORT_FRONTEND}`],
                 methods: ['GET', 'POST']
             }
         }
