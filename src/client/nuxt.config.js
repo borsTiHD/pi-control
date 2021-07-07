@@ -3,6 +3,7 @@ import path from 'path'
 import { fileURLToPath } from 'url'
 import fs from 'fs-extra'
 import dotenv from 'dotenv'
+import DEFAULT from '../config.js'
 
 // Loading '.env'
 dotenv.config()
@@ -11,12 +12,12 @@ dotenv.config()
 const isDev = process.env.NODE_ENV !== 'production'
 
 // Dev config
-const DEV_PORT_FRONTEND = process.env.DEV_PORT_FRONTEND || 3000 // Default Port: 3000
-const DEV_PORT_BACKEND = process.env.DEV_PORT_BACKEND || 3001 // Default Port: 3001
+const DEV_PORT_FRONTEND = process.env.DEV_PORT_FRONTEND || DEFAULT.DEV_PORT_FRONTEND // Default Port: 3000
+const DEV_PORT_BACKEND = process.env.DEV_PORT_BACKEND || DEFAULT.DEV_PORT_BACKEND // Default Port: 3001
 
 // Application config
-const HOST_IP = process.env.DEV_HOST_IP || 'localhost'
-const PORT_PRODUCTION = process.env.PORT_PRODUCTION || 8800
+const HOST_IP = process.env.DEV_HOST_IP || DEFAULT.DEV_HOST_IP
+const PORT_PRODUCTION = process.env.PORT_PRODUCTION || DEFAULT.PORT_PRODUCTION
 const PORT_FRONTEND = isDev ? DEV_PORT_FRONTEND : PORT_PRODUCTION // dev or production
 const PORT_BACKEND = isDev ? DEV_PORT_BACKEND : PORT_PRODUCTION // dev or production
 
