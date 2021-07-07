@@ -10,14 +10,15 @@ dotenv.config()
 // Development
 const isDev = process.env.NODE_ENV !== 'production'
 
-// Env variables with dev default
-process.env.DEV_PORT_FRONTEND = process.env.DEV_PORT_FRONTEND || 3000 // Default Port: 3000
-process.env.DEV_PORT_BACKEND = process.env.DEV_PORT_BACKEND || 3001 // Default Port: 3001
+// Dev config
+const DEV_PORT_FRONTEND = process.env.DEV_PORT_FRONTEND || 3000 // Default Port: 3000
+const DEV_PORT_BACKEND = process.env.DEV_PORT_BACKEND || 3001 // Default Port: 3001
 
 // Application config
 const HOST_IP = process.env.DEV_HOST_IP || 'localhost'
-const PORT_FRONTEND = isDev ? process.env.DEV_PORT_FRONTEND : 8800 // dev: 3000, production: 8800
-const PORT_BACKEND = isDev ? process.env.DEV_PORT_BACKEND : 8800 // dev: 3001, production: 8800
+const PORT_PRODUCTION = process.env.PORT_PRODUCTION || 8800
+const PORT_FRONTEND = isDev ? DEV_PORT_FRONTEND : PORT_PRODUCTION // dev or production
+const PORT_BACKEND = isDev ? DEV_PORT_BACKEND : PORT_PRODUCTION // dev or production
 
 // Path CONST
 const __dirname = path.dirname(fileURLToPath(import.meta.url))
