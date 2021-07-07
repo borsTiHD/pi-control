@@ -13,14 +13,14 @@ import initTestRoom from './rooms/testRoom.js'
 const wrapMiddlewareForSocketIo = (middleware) => (socket, next) => middleware(socket.request, {}, next)
 
 // Exporting Socket.io
-export default function(httpServer, isDev) {
+export default function(httpServer, isDev, host, port) {
     // Socket.io Options
     // Activating cors on dev environment, so you can connect with different ports
     // Empty config on production -> clients refuse on different origin
     const socketOptions = isDev
         ? {
             cors: {
-                origin: 'http://localhost:3000',
+                origin: [`http://${host}:${port}`, `http://localhost:${port}`],
                 methods: ['GET', 'POST']
             }
         }
