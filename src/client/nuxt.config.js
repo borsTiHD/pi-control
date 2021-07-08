@@ -87,7 +87,7 @@ export default {
     // Global page headers: https://go.nuxtjs.dev/config-head
     head: {
         titleTemplate: '%s',
-        title: pkg.productName,
+        title: isDev ? `${pkg.productName} - DEV` : pkg.productName,
         htmlAttrs: {
             lang: 'en'
         },
