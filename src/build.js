@@ -176,7 +176,20 @@ async function releaseHelper() {
     if ('release' in argv && argv.release === 'true') {
         // Releasing build
         console.log(`${colors.FgGreen}%s${colors.Reset}`, '(✔) RELEASING NEW VERSION')
+
+        // Setting options
         const options = releaseItConfig
+        options.hooks = {
+            'after:bump': () => {
+                console.log('test HIER!!!')
+                console.log('BUILD_DIR:', BUILD_DIR)
+            },
+            'before:init': () => {
+                console.log('before:init - test HIER!!!')
+                console.log('BUILD_DIR:', BUILD_DIR)
+            }
+        }
+
         return release(options).then((output) => {
             console.log(output) // { version, latestVersion, name, changelog }
         })
