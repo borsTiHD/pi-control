@@ -18,6 +18,7 @@ $ sudo yarn start
 
 ## Deploy with pm2 (run as a service with start on reboot, or crash)
 
+If you want to run the app in the background, or do you want to open the app automatically on restart, you can use pm2.
 ```bash
 # maybe you need to add 'sudo' for every command, even to start 'pm2' service so it can edit files for example
 
@@ -31,7 +32,7 @@ $ npm install pm2 -g
 $ sudo pm2 start ecosystem.json
 ```
 
-## Additional pm2 commands
+### Additional pm2 commands
 
 ```bash
 # check status by
