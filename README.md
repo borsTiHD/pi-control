@@ -1,4 +1,8 @@
-# pi-control
+# Pi-Control 🐱‍👤
+Welcome to Pi-Control 🐱‍👤.  
+This is an App for controlling your raspberry pi.  
+It was designed to help with information gathering, as well as to simplify control. 
+
 
 ## Requirements
 - NodeJS: 16.x
