@@ -1,4 +1,7 @@
 export default {
+    hooks: {
+        'after:bump': 'node ./src/build.js --only-bundle=true'
+    },
     git: {
         commitMessage: 'chore(release): 🚀 v${version}',
         requireBranch: 'main', // Stopps if your current branch not match
