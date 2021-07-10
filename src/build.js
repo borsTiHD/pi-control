@@ -31,6 +31,8 @@ const pkg = JSON.parse(fs.readFileSync(PKG_FILE)) // import pkg from '../../pack
 
 // Arguments
 const argv = minimist(process.argv.slice(2))
+const RELEASE_IT = argv.release === 'true' // Argument: 'release' set 'true'
+const BUNDLE_ONLY = argv['only-bundle'] === 'true' // Argument: 'only-bundle' set 'true'
 
 // Changing Nuxt Config
 // nuxtConfig.srcDir = NUXT_DIR
@@ -42,7 +44,11 @@ const { Nuxt, Builder, Generator } = NuxtApp
 const nuxt = new Nuxt(nuxtConfig)
 
 // Starting
-init()
+if (BUNDLE_ONLY) {
+    onlyBundle()
+} else {
+    init()
+}
 
 // Controlls building
 async function init() {
@@ -57,8 +63,13 @@ async function init() {
         logState('(ℹ) BUILDING BACKEND')
         await buildWebpack()
 
-        logState('(ℹ) ARCHIVING APP')
-        await archiveProject()
+        // If we want to release our build,
+        // we dont want to archive in this step,
+        // we want to bundle our app, after we bump our version with 'release-it'!
+        if (!RELEASE_IT) {
+            logState('(ℹ) ARCHIVING APP')
+            await archiveProject()
+        }
 
         logState('(ℹ) RELEASE HELPER')
         await releaseHelper()
@@ -74,18 +85,64 @@ async function init() {
     }
 }
 
+// Only bundling 'DIST' folder
+async function onlyBundle() {
+    const loader = createLoader()
+    try {
+        logState('(ℹ) DELETING OLD FILES')
+        await deleteOldFiles('BUILD')
+
+        logState('(ℹ) ARCHIVING APP')
+        await archiveProject()
+
+        clearInterval(loader)
+        logState('(ℹ) FINISHED BUNDLING APP')
+        return true
+    } catch (error) {
+        clearInterval(loader)
+        console.error(`${colors.FgRed}%s${colors.Reset}`, '(❌) ERROR IN BUILD PROCESS')
+        console.error(`${colors.FgRed}%s${colors.Reset}`, '(❌) STOP EXECUTION OF CODE')
+        return false
+    }
+}
+
 // Deleting old files
-async function deleteOldFiles() {
+async function deleteOldFiles(mode) {
     // Deletes old dist
-    await fs.rm(DIST_DIR, { recursive: true }).catch((err) => {
-        console.error(`${colors.FgRed}%s${colors.Reset}`, '(❌) COULDNT DELETE OLD DIST FOLDER')
-        console.error(err)
-    })
+    async function deleteDist() {
+        return await fs.rm(DIST_DIR, { recursive: true }).catch((err) => {
+            console.error(`${colors.FgRed}%s${colors.Reset}`, '(❌) COULDNT DELETE OLD DIST FOLDER')
+            console.error(err)
+        })
+    }
+
     // Deletes old builds
-    await fs.rm(BUILD_DIR, { recursive: true }).catch((err) => {
-        console.error(`${colors.FgRed}%s${colors.Reset}`, '(❌) COULDNT DELETE OLD BUILD FOLDER')
-        console.error(err)
-    })
+    async function deleteBuilds() {
+        return await fs.rm(BUILD_DIR, { recursive: true }).catch((err) => {
+            console.error(`${colors.FgRed}%s${colors.Reset}`, '(❌) COULDNT DELETE OLD BUILD FOLDER')
+            console.error(err)
+        })
+    }
+
+    // Multiple delete modi
+    switch (mode) {
+        case 'DIST':
+            console.log(`${colors.FgGreen}%s${colors.Reset}`, '(✔) DELETING DIST FOLDER')
+            await deleteDist()
+            break
+
+        case 'BUILD':
+            console.log(`${colors.FgGreen}%s${colors.Reset}`, '(✔) DELETING BUILD FOLDER')
+            await deleteBuilds()
+            break
+
+        default:
+            console.log(`${colors.FgGreen}%s${colors.Reset}`, '(✔) DELETING BOTH FOLDERS')
+            await deleteDist()
+            await deleteBuilds()
+            break
+    }
+
     console.log(`${colors.FgGreen}%s${colors.Reset}`, '(✔) OLD FILES DELETED')
     return true
 }
@@ -173,23 +230,10 @@ async function archiveProject() {
 
 // Releasing to GitHub
 async function releaseHelper() {
-    if ('release' in argv && argv.release === 'true') {
+    if (RELEASE_IT) {
         // Releasing build
         console.log(`${colors.FgGreen}%s${colors.Reset}`, '(✔) RELEASING NEW VERSION')
-
-        // Setting options
         const options = releaseItConfig
-        options.hooks = {
-            'after:bump': () => {
-                console.log('test HIER!!!')
-                console.log('BUILD_DIR:', BUILD_DIR)
-            },
-            'before:init': () => {
-                console.log('before:init - test HIER!!!')
-                console.log('BUILD_DIR:', BUILD_DIR)
-            }
-        }
-
         return release(options).then((output) => {
             console.log(output) // { version, latestVersion, name, changelog }
         })
