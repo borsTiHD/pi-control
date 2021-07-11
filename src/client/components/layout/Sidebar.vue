@@ -1,23 +1,28 @@
 <template>
     <v-navigation-drawer v-model="drawer" clipped fixed app>
         <v-list nav>
-            <v-list-item two-line>
-                <v-list-item-avatar>🚀</v-list-item-avatar>
-                <v-list-item-content>
-                    <v-list-item-title>Application</v-list-item-title>
-                    <v-list-item-subtitle>to the moon</v-list-item-subtitle>
-                </v-list-item-content>
-            </v-list-item>
+            <v-list-item-group
+                v-model="selectedItem"
+                color="primary"
+            >
+                <v-list-item two-line>
+                    <v-list-item-avatar>🚀</v-list-item-avatar>
+                    <v-list-item-content>
+                        <v-list-item-title>Application</v-list-item-title>
+                        <v-list-item-subtitle>to the moon</v-list-item-subtitle>
+                    </v-list-item-content>
+                </v-list-item>
 
-            <v-divider class="pa-1" />
-            <v-list-item v-for="(item, i) in items" :key="i" :to="item.to" router exact>
-                <v-list-item-action>
-                    <v-icon>{{ item.icon }}</v-icon>
-                </v-list-item-action>
-                <v-list-item-content>
-                    <v-list-item-title v-text="item.title" />
-                </v-list-item-content>
-            </v-list-item>
+                <v-divider class="pa-1" />
+                <v-list-item v-for="(item, i) in items" :key="i" :to="item.to" router exact>
+                    <v-list-item-action>
+                        <v-icon>{{ item.icon }}</v-icon>
+                    </v-list-item-action>
+                    <v-list-item-content>
+                        <v-list-item-title v-text="item.title" />
+                    </v-list-item-content>
+                </v-list-item>
+            </v-list-item-group>
         </v-list>
     </v-navigation-drawer>
 </template>
@@ -28,7 +33,8 @@ import { mapGetters, mapActions } from 'vuex'
 export default {
     name: 'Sidebar',
     data: () => ({
-        regAllowed: false
+        regAllowed: false,
+        selectedItem: 1
     }),
     computed: {
         ...mapGetters({
