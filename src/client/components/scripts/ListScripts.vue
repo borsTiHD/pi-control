@@ -27,7 +27,6 @@
             <v-text-field
                 v-model="search"
                 label="Search Files"
-                dark
                 flat
                 solo-inverted
                 hide-details
@@ -37,7 +36,6 @@
             <v-checkbox
                 v-model="caseSensitive"
                 color="secondary"
-                dark
                 hide-details
                 label="Case sensitive search"
             />
