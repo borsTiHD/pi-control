@@ -1,5 +1,5 @@
 <template>
-    <v-card class="flex d-flex flex-column mt-2">
+    <v-card :elevation="getElevation" :outlined="getOutlined" class="flex d-flex flex-column mt-2">
         <v-card-title class="headline">
             <v-icon
                 large
@@ -93,6 +93,8 @@ export default {
     },
     computed: {
         ...mapGetters({
+            getElevation: 'settings/getElevation',
+            getOutlined: 'settings/getOutlined',
             getAutoRefresh: 'settings/getAutoRefresh',
             getMemoryData: 'device/getMemoryData'
         }),

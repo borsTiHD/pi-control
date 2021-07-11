@@ -1,5 +1,8 @@
 <template>
-    <v-app v-resize="onResize" dark>
+    <v-app
+        v-resize="onResize"
+        :style="{ background: $vuetify.theme.themes[theme].background }"
+    >
         <app-header />
         <app-sidebar />
         <app-settingsbar />
@@ -39,8 +42,12 @@ export default {
     },
     computed: {
         ...mapGetters({
+            getActiveSkin: 'settings/getActiveSkin',
             getDarkMode: 'settings/getDarkMode'
-        })
+        }),
+        theme() {
+            return (this.$vuetify.theme.dark) ? 'dark' : 'light'
+        }
     },
     async created() {
         // Clientside Init
@@ -50,6 +57,7 @@ export default {
 
             // Setting container height
             setImmediate(() => {
+                this.$design.changeTheme(this.getActiveSkin) // Changing theme with plugin
                 this.onResize()
             })
         }
@@ -82,7 +90,7 @@ export default {
 
 <style>
 /*****************************************************\
-    No Scollbar on Page
+No Scollbar on Page
 \*****************************************************/
 html {
     overflow-y: hidden !important;
@@ -93,7 +101,7 @@ html {
 }
 
 /*****************************************************\
-    Scrollbar
+Scrollbar
 \*****************************************************/
 ::-webkit-scrollbar {
     width: 12px;
@@ -107,7 +115,7 @@ html {
 }
 
 /*****************************************************\
-    Unselectable Elements
+Unselectable Elements
 \*****************************************************/
 .unselectable {
     -webkit-touch-callout: none;
@@ -124,5 +132,24 @@ html {
     -moz-user-select: text !important;
     -ms-user-select: text !important;
     user-select: text !important;
+}
+
+/*****************************************************\
+Backgrounds: Settings Colors from theme
+\*****************************************************/
+.v-app-bar {
+    background-color: var(--v-systemBarBackground-base) !important;
+}
+.v-footer {
+    background-color: var(--v-footerBackground-base) !important;
+}
+.v-navigation-drawer__content, .v-navigation-drawer__content .v-list {
+    background-color: var(--v-sidebarBackground-base) !important;
+}
+.v-card, .v-list, .v-tabs-bar {
+    background-color: var(--v-cardBackground-base) !important;
+}
+.v-data-table, .v-data-table .v-row-group__header {
+    background-color: var(--v-cardBackground-base) !important;
 }
 </style>

@@ -10,7 +10,7 @@
             v-model="isValid"
             @submit.prevent="onSubmit"
         >
-            <v-card>
+            <v-card :elevation="getElevation" :outlined="getOutlined">
                 <v-card-title>{{ title }}</v-card-title>
                 <v-divider />
                 <v-card-text>
@@ -90,6 +90,8 @@
 </template>
 
 <script>
+import { mapGetters } from 'vuex'
+
 export default {
     name: 'NewScriptPrompt',
     data: () => ({
@@ -106,6 +108,12 @@ export default {
         resolvePromise: undefined,
         rejectPromise: undefined
     }),
+    computed: {
+        ...mapGetters({
+            getElevation: 'settings/getElevation',
+            getOutlined: 'settings/getOutlined'
+        })
+    },
     methods: {
         show(opts = {}) {
             // Set few settings

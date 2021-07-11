@@ -1,5 +1,5 @@
 <template>
-    <v-card>
+    <v-card :elevation="getElevation" :outlined="getOutlined">
         <v-card-title class="headline d-flex">
             <span class="mr-auto">
                 Scripts
@@ -27,7 +27,6 @@
             <v-text-field
                 v-model="search"
                 label="Search Files"
-                dark
                 flat
                 solo-inverted
                 hide-details
@@ -37,7 +36,6 @@
             <v-checkbox
                 v-model="caseSensitive"
                 color="secondary"
-                dark
                 hide-details
                 label="Case sensitive search"
             />
@@ -93,6 +91,8 @@
 </template>
 
 <script>
+import { mapGetters } from 'vuex'
+
 import RunScript from '~/components/scripts/RunScript.vue'
 import AddScript from '~/components/scripts/AddScript.vue'
 import AddFolder from '~/components/scripts/AddFolder.vue'
@@ -116,6 +116,10 @@ export default {
         }
     },
     computed: {
+        ...mapGetters({
+            getElevation: 'settings/getElevation',
+            getOutlined: 'settings/getOutlined'
+        }),
         filter() {
             return this.caseSensitive
                 ? (item, search, textKey) => item[textKey].includes(search)

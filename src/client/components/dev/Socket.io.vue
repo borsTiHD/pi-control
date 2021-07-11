@@ -1,5 +1,5 @@
 <template>
-    <v-card>
+    <v-card :elevation="getElevation" :outlined="getOutlined">
         <v-card-title class="headline">Socket.io Playground</v-card-title>
         <v-card-actions>
             <v-btn
@@ -24,6 +24,7 @@
 </template>
 
 <script>
+import { mapGetters } from 'vuex'
 
 export default {
     name: 'SocketIo',
@@ -33,6 +34,12 @@ export default {
             socket: null,
             text: ''
         }
+    },
+    computed: {
+        ...mapGetters({
+            getElevation: 'settings/getElevation',
+            getOutlined: 'settings/getOutlined'
+        })
     },
     activated() {
         // Socket.IO: Joining room

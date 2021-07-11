@@ -1,7 +1,7 @@
 <template>
     <v-row justify="center" align="center">
         <v-col cols="12" sm="8" md="6">
-            <v-card>
+            <v-card :elevation="getElevation" :outlined="getOutlined">
                 <v-card-text>
                     <v-skeleton-loader
                         type="table-heading, paragraph, table-row-divider, sentences, button, table-tfoot"
@@ -20,6 +20,8 @@ export default {
     auth: false,
     computed: {
         ...mapGetters({
+            getElevation: 'settings/getElevation',
+            getOutlined: 'settings/getOutlined',
             getAlreadyVisited: 'settings/getAlreadyVisited'
         })
     },

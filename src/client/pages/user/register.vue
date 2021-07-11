@@ -1,7 +1,7 @@
 <template>
     <v-row align="center" justify="center" class="mt-12">
         <v-col v-if="regAllowed" cols="12" md="6" lg="3">
-            <v-card>
+            <v-card :elevation="getElevation" :outlined="getOutlined">
                 <v-card-title class="headline">Registration</v-card-title>
                 <v-card-text>
                     <authentication-form button-title="Register" :loading="loading" @submit="register" />
@@ -9,7 +9,7 @@
             </v-card>
         </v-col>
         <v-col v-else-if="$auth.loggedIn" cols="12" md="6" lg="6">
-            <v-card>
+            <v-card :elevation="getElevation" :outlined="getOutlined">
                 <v-card-title class="headline">Logged in</v-card-title>
                 <v-card-text>
                     <v-alert
@@ -24,7 +24,7 @@
             </v-card>
         </v-col>
         <v-col v-else cols="12" md="6" lg="6">
-            <v-card>
+            <v-card :elevation="getElevation" :outlined="getOutlined">
                 <v-card-title class="headline">Registration not available</v-card-title>
                 <v-card-text>
                     <v-alert
@@ -42,6 +42,7 @@
 </template>
 
 <script>
+import { mapGetters } from 'vuex'
 import AuthenticationForm from '@/components/forms/AuthentiactionForm'
 
 export default {
@@ -54,6 +55,12 @@ export default {
         loading: false,
         regAllowed: false
     }),
+    computed: {
+        ...mapGetters({
+            getElevation: 'settings/getElevation',
+            getOutlined: 'settings/getOutlined'
+        })
+    },
     created() {
         if (process.client) {
             this.isRegistrationAllowed()
