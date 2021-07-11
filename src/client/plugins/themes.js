@@ -8,8 +8,8 @@ export default [
         name: 'Default',
         theme: {
             light: {
-                primary: colors.red.base,
-                secondary: '#6e3434',
+                primary: '#E03F54',
+                secondary: '#424242',
                 accent: '#82B1FF',
                 error: '#FF5252',
                 info: '#2196F3',
@@ -23,8 +23,8 @@ export default [
                 footerBackground: '#F5F5F5'
             },
             dark: {
-                primary: colors.red.base,
-                secondary: '#6e3434',
+                primary: '#E03F54',
+                secondary: '#424242',
                 accent: '#FF4081',
                 error: '#FF5252',
                 info: '#2196F3',
@@ -35,6 +35,41 @@ export default [
                 cardBackground: '#1E1E1E',
                 sidebarBackground: '#363636',
                 systemBarBackground: colors.red.base,
+                footerBackground: '#272727'
+            }
+        }
+    },
+    {
+        name: 'Vuetify',
+        theme: {
+            light: {
+                primary: colors.blue.darken2,
+                secondary: colors.amber.darken3,
+                accent: colors.grey.darken3,
+                error: colors.deepOrange.accent4,
+                info: colors.teal.lighten1,
+                success: colors.green.accent3,
+                warning: colors.amber.base,
+                color: '#3d3d3d',
+                background: '#fff',
+                cardBackground: '#FFFFFF',
+                sidebarBackground: '#FFFFFF',
+                systemBarBackground: '#F5F5F5',
+                footerBackground: '#F5F5F5'
+            },
+            dark: {
+                primary: colors.blue.darken2,
+                accent: colors.grey.darken3,
+                secondary: colors.amber.darken3,
+                info: colors.teal.lighten1,
+                warning: colors.amber.base,
+                error: colors.deepOrange.accent4,
+                success: colors.green.accent3,
+                color: '#FFFFFF',
+                background: '#121212',
+                cardBackground: '#1E1E1E',
+                sidebarBackground: '#363636',
+                systemBarBackground: '#272727',
                 footerBackground: '#272727'
             }
         }
