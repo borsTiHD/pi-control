@@ -8,7 +8,7 @@ export const state = () => ({
         skin: 'Default',
         darkMode: true,
         elevation: 0,
-        outlined: true,
+        outlined: false,
         custom: {} // Custom Theme Colors
     }
 })
