@@ -19,7 +19,7 @@ export default [
                 background: '#faf8f8',
                 cardBackground: '#FFFFFF',
                 sidebarBackground: '#FFFFFF',
-                systemBarBackground: colors.red.base,
+                systemBarBackground: '#F5F5F5',
                 footerBackground: '#F5F5F5'
             },
             dark: {
@@ -34,7 +34,7 @@ export default [
                 background: '#121212',
                 cardBackground: '#1E1E1E',
                 sidebarBackground: '#363636',
-                systemBarBackground: colors.red.base,
+                systemBarBackground: '#272727',
                 footerBackground: '#272727'
             }
         }
@@ -89,7 +89,7 @@ export default [
                 background: '#FAF8F8',
                 cardBackground: '#FFFFFF',
                 sidebarBackground: '#FFFFFF',
-                systemBarBackground: '#1E2A42',
+                systemBarBackground: '#FFFFFF',
                 footerBackground: '#FFFFFF'
             },
             dark: {
@@ -124,7 +124,7 @@ export default [
                 background: '#faf8f8',
                 cardBackground: '#FFFFFF',
                 sidebarBackground: '#FFFFFF',
-                systemBarBackground: '#060C19',
+                systemBarBackground: '#F5F5F5',
                 footerBackground: '#F5F5F5'
             },
             dark: {
@@ -139,7 +139,7 @@ export default [
                 background: '#202B43',
                 cardBackground: '#182338',
                 sidebarBackground: '#182338',
-                systemBarBackground: '#060C19',
+                systemBarBackground: '#182338',
                 footerBackground: '#182338'
             }
         }
@@ -159,7 +159,7 @@ export default [
                 background: '#fff',
                 cardBackground: '#FFFFFF',
                 sidebarBackground: '#FFFFFF',
-                systemBarBackground: '#1976D2',
+                systemBarBackground: '#2196F3',
                 footerBackground: '#F5F5F5'
             },
             dark: {
