@@ -108,7 +108,8 @@ export default {
     // Plugins to run before rendering page: https://go.nuxtjs.dev/config-plugins
     plugins: [
         { mode: 'client', src: '@/plugins/persistedState.client.js' },
-        { mode: 'client', src: '@/plugins/run-script.js' }
+        { mode: 'client', src: '@/plugins/run-script.js' },
+        { mode: 'client', src: '@/plugins/change-theme.js' }
     ],
 
     // Auto import components: https://go.nuxtjs.dev/config-components

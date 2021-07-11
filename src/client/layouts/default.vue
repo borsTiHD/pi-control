@@ -39,6 +39,7 @@ export default {
     },
     computed: {
         ...mapGetters({
+            getActiveSkin: 'settings/getActiveSkin',
             getDarkMode: 'settings/getDarkMode'
         })
     },
@@ -50,6 +51,7 @@ export default {
 
             // Setting container height
             setImmediate(() => {
+                this.$design.changeTheme(this.getActiveSkin) // Changing theme with plugin
                 this.onResize()
             })
         }
