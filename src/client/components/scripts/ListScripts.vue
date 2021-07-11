@@ -1,5 +1,5 @@
 <template>
-    <v-card>
+    <v-card :elevation="getElevation" :outlined="getOutlined">
         <v-card-title class="headline d-flex">
             <span class="mr-auto">
                 Scripts
@@ -93,6 +93,8 @@
 </template>
 
 <script>
+import { mapGetters } from 'vuex'
+
 import RunScript from '~/components/scripts/RunScript.vue'
 import AddScript from '~/components/scripts/AddScript.vue'
 import AddFolder from '~/components/scripts/AddFolder.vue'
@@ -116,6 +118,10 @@ export default {
         }
     },
     computed: {
+        ...mapGetters({
+            getElevation: 'settings/getElevation',
+            getOutlined: 'settings/getOutlined'
+        }),
         filter() {
             return this.caseSensitive
                 ? (item, search, textKey) => item[textKey].includes(search)

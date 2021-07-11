@@ -3,7 +3,7 @@
         v-model="show"
         max-width="600px"
     >
-        <v-card>
+        <v-card :elevation="getElevation" :outlined="getOutlined">
             <v-card-title>Custom Design:</v-card-title>
             <v-divider />
             <v-card-text>
@@ -82,6 +82,8 @@ export default {
     }),
     computed: {
         ...mapGetters({
+            getElevation: 'settings/getElevation',
+            getOutlined: 'settings/getOutlined',
             getCustomTheme: 'settings/getCustomTheme'
         }),
         darkMode() {

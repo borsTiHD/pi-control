@@ -1,5 +1,5 @@
 <template>
-    <v-card class="flex d-flex flex-column">
+    <v-card :elevation="getElevation" :outlined="getOutlined" class="flex d-flex flex-column">
         <v-card-title class="headline">
             Auto Refresh
         </v-card-title>
@@ -39,6 +39,8 @@ export default {
     name: 'AutoRefresh',
     computed: {
         ...mapGetters({
+            getElevation: 'settings/getElevation',
+            getOutlined: 'settings/getOutlined',
             getAutoRefresh: 'settings/getAutoRefresh'
         })
     },

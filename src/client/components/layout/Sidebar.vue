@@ -1,5 +1,11 @@
 <template>
-    <v-navigation-drawer v-model="drawer" clipped fixed app>
+    <v-navigation-drawer
+        v-model="drawer"
+        :floating="!getOutlined"
+        clipped
+        fixed
+        app
+    >
         <v-list nav>
             <v-list-item-group
                 v-model="selectedItem"
@@ -38,6 +44,7 @@ export default {
     }),
     computed: {
         ...mapGetters({
+            getOutlined: 'settings/getOutlined',
             getDrawer: 'layout/getDrawer'
         }),
         items() {

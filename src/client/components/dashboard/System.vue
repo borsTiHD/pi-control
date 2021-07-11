@@ -1,5 +1,5 @@
 <template>
-    <v-card class="flex d-flex flex-column">
+    <v-card :elevation="getElevation" :outlined="getOutlined" class="flex d-flex flex-column">
         <v-card-title class="headline">
             <v-icon
                 large
@@ -98,6 +98,8 @@ export default {
     },
     computed: {
         ...mapGetters({
+            getElevation: 'settings/getElevation',
+            getOutlined: 'settings/getOutlined',
             getKernelData: 'device/getKernelData',
             getOperatingSystem: 'device/getOperatingSystem'
         }),

@@ -1,7 +1,7 @@
 <template>
     <v-row justify="center" align="center">
         <v-col cols="12" sm="8" md="6">
-            <v-card>
+            <v-card :elevation="getElevation" :outlined="getOutlined">
                 <v-card-title class="headline">Welcome to {{ appName }}</v-card-title>
                 <v-card-text>
                     <p>
@@ -43,6 +43,7 @@
 </template>
 
 <script>
+import { mapGetters } from 'vuex'
 import pkg from 'projRoot/package.json'
 
 export default {
@@ -54,6 +55,10 @@ export default {
         }
     },
     computed: {
+        ...mapGetters({
+            getElevation: 'settings/getElevation',
+            getOutlined: 'settings/getOutlined'
+        }),
         repoUrl() {
             return pkg.repository.url
         },

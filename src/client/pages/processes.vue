@@ -1,7 +1,7 @@
 <template>
     <v-row justify="center">
         <v-col class="d-flex flex-column">
-            <v-card class="flex d-flex flex-column">
+            <v-card :elevation="getElevation" :outlined="getOutlined" class="flex d-flex flex-column">
                 <v-card-title class="headline">
                     <v-icon
                         large
@@ -49,6 +49,8 @@
 </template>
 
 <script>
+import { mapGetters } from 'vuex'
+
 export default {
     name: 'Processes',
     components: {},
@@ -63,6 +65,10 @@ export default {
         }
     },
     computed: {
+        ...mapGetters({
+            getElevation: 'settings/getElevation',
+            getOutlined: 'settings/getOutlined'
+        }),
         headers() {
             const headers = this.table.headers
             if (!headers || !Array.isArray(headers)) {
