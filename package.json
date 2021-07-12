@@ -51,7 +51,7 @@
     "lowdb": "^2.1.0",
     "minimist": "^1.2.5",
     "moment": "^2.29.1",
-    "nodemon": "^2.0.9",
+    "nodemon": "^2.0.12",
     "passport": "^0.4.1",
     "passport-jwt": "^4.0.0",
     "passport-local": "^1.0.0",
