@@ -13,6 +13,11 @@ import User from '../models/user.js'
 dotenv.config()
 setAuthUserSecret()
 
+// Dev Config
+const isDev = process.env.NODE_ENV === 'development'
+const DEV_USER = process.env.DEV_USER === 'true'
+const DEV_USER_DATA = { email: 'dev@user.de', password: '' }
+
 // Loading secret from 'env' if its exists, or generating a new one
 async function setAuthUserSecret() {
     // Getting Env if available
@@ -37,22 +42,28 @@ async function setAuthUserSecret() {
 
 // Setting up passport for email/password authentication
 passport.use(new LocalStrategy.Strategy({ usernameField: 'email', passwordField: 'password' }, async function(email, password, done) {
-    await User.GetUser(email)
-        .then((user) => {
-            return user
-        }).then(async(user) => {
-            if (!user) {
-                return done(null, false, { message: 'Authentication failed' })
-            }
-            const validation = await comparePasswords(password, user.password)
-            if (validation) {
-                return done(null, user)
-            } else {
-                return done(null, false, { message: 'Authentication failed' })
-            }
-        }).catch((err) => {
-            return done(err)
-        })
+    // Default User for developing
+    if (isDev && DEV_USER) {
+        console.log('[Server] -> DEV_USER: Login with default user "dev@user.de".')
+        return done(null, DEV_USER_DATA)
+    } else {
+        await User.GetUser(email)
+            .then((user) => {
+                return user
+            }).then(async(user) => {
+                if (!user) {
+                    return done(null, false, { message: 'Authentication failed' })
+                }
+                const validation = await comparePasswords(password, user.password)
+                if (validation) {
+                    return done(null, user)
+                } else {
+                    return done(null, false, { message: 'Authentication failed' })
+                }
+            }).catch((err) => {
+                return done(err)
+            })
+    }
 }))
 
 // Extracting JWT Token out of cookies
@@ -98,20 +109,28 @@ const options = {
 
 // Setting up passport for JWT Token authentication
 passport.use(new JwtStrategy.Strategy({ jwtFromRequest: tokenExtractor, secretOrKey: process.env.AUTH_USER_SECRET }, async function(jwtPayload, done) {
-    await User.GetUser(jwtPayload.email) // Or 'GetUser' - without 'User.'
-        .then((user) => {
-            if (user) {
-                return done(null, {
-                    email: user.email
-                })
-            } else {
-                return done(null, false, 'Failed')
-            }
+    // Default User for developing
+    if (isDev && DEV_USER) {
+        console.log('[Server] -> DEV_USER: JWT authentication with default user "dev@user.de".')
+        return done(null, {
+            email: DEV_USER_DATA.email
         })
-        .catch((err) => {
-            console.error(err)
-            return done(err)
-        })
+    } else {
+        await User.GetUser(jwtPayload.email) // Or 'GetUser' - without 'User.'
+            .then((user) => {
+                if (user) {
+                    return done(null, {
+                        email: user.email
+                    })
+                } else {
+                    return done(null, false, 'Failed')
+                }
+            })
+            .catch((err) => {
+                console.error(err)
+                return done(err)
+            })
+    }
 }))
 
 /**

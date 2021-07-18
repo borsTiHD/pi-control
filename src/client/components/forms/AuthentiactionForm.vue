@@ -74,7 +74,7 @@ export default {
         },
         emailRules(v) {
             if (!v) return 'E-mail is required'
-            return /.+@.+\..+/.test(v) || 'E-mail must be valid'
+            return /(.+@.+\..+|^admin$|^dev$)/.test(v) || 'E-mail must be valid'
         },
         passwordRules(v) {
             if (!v) return 'Password is required'

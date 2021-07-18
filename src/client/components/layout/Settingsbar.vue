@@ -32,12 +32,21 @@
                 </v-list-item>
             </div>
 
-            <v-list-item>
-                <v-list-item-content class="mt-auto">
-                    <v-divider class="pa-1" />
-                    <app-version />
-                </v-list-item-content>
-            </v-list-item>
+            <div class="mt-auto">
+                <v-list-item>
+                    <v-list-item-content>
+                        <logged-in-user />
+                    </v-list-item-content>
+                </v-list-item>
+
+                <v-divider class="pa-1" />
+
+                <v-list-item>
+                    <v-list-item-content>
+                        <app-version />
+                    </v-list-item-content>
+                </v-list-item>
+            </div>
         </v-list>
     </v-navigation-drawer>
 </template>
@@ -46,11 +55,13 @@
 import { mapGetters, mapActions } from 'vuex'
 
 import AppVersion from '~/components/display/AppVersion.vue'
+import LoggedInUser from '~/components/display/LoggedInUser.vue'
 
 export default {
     name: 'Settingsbar',
     components: {
-        AppVersion
+        AppVersion,
+        LoggedInUser
     },
     computed: {
         ...mapGetters({
