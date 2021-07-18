@@ -7,6 +7,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 ### Added
 - Themes: New default theme has been added, moreover users can choose between several themes and even create their own.
+- Developing: New '.env' variable added. Set 'DEV_USER' to 'true' and you can login with default user for developing purpose.
 
 ## [0.0.2] - 2021-07-09
 ### Added
