@@ -4,11 +4,14 @@ import createError from 'http-errors'
 import express from 'express'
 import cors from 'cors'
 import cookieParser from 'cookie-parser'
+import swaggerJsdoc from 'swagger-jsdoc'
+import swaggerUi from 'swagger-ui-express'
 import passport from 'passport'
 import baseRoutes from './router.js'
+import initSwaggerDoc from './swagger.js'
 
 // Exporting Express Setup
-export default function(isDev) {
+export default function(isDev, config) {
     // Config
     const DIST_DIR = path.join('dist', 'client')
 
@@ -20,6 +23,15 @@ export default function(isDev) {
     app.use(express.urlencoded({ extended: true })) // for form data
     app.use(cookieParser()) // Cookies
     app.use(passport.initialize()) // Authentication
+
+    // Swagger Init
+    const SWAGGER_DOC = initSwaggerDoc(config)
+    const specs = swaggerJsdoc(SWAGGER_DOC)
+    app.use(
+        '/api-docs',
+        swaggerUi.serve,
+        swaggerUi.setup(specs)
+    )
 
     // Router/Endpoints
     const baseUrl = '/api/v1'
