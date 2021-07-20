@@ -3,10 +3,7 @@ import pkg from '../package-json.js'
 // Exporting Swagger Config
 export default function(config) {
     const apis = [
-        './express/routes/index.js',
-        './express/routes/help.js',
-        './express/routes/authentication.js',
-        './express/routes/scripts.js'
+        './src/api/express/routes/*.js'
     ]
     const swaggerDefinition = {
         definition: {
