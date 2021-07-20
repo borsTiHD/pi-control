@@ -1,19 +1,14 @@
-import path from 'path'
-import { fileURLToPath } from 'url'
-import fs from 'fs-extra'
-
-// Path CONST
-// we need to change up how __dirname is used for ES6 purposes
-const __dirname = path.dirname(fileURLToPath(import.meta.url))
-const PROJECT_ROOT = path.join(__dirname, '..', '..', '..')
-const PKG_FILE = path.join(PROJECT_ROOT, 'package.json')
-
-// Package.json
-const pkg = JSON.parse(fs.readFileSync(PKG_FILE)) // import pkg from '~root/package.json'
+import pkg from '../package-json.js'
 
 // Exporting Swagger Config
 export default function(config) {
-    const swaggerDoc = {
+    const apis = [
+        './express/routes/index.js',
+        './express/routes/help.js',
+        './express/routes/authentication.js',
+        './express/routes/scripts.js'
+    ]
+    const swaggerDefinition = {
         definition: {
             openapi: '3.0.0',
             info: {
@@ -60,13 +55,13 @@ export default function(config) {
             security: {
                 bearerAuth: []
             }
-        },
-        apis: [
-            './routes/index.js',
-            './routes/help.js',
-            './routes/authentication.js',
-            './routes/scripts.js'
-        ]
+        }
     }
-    return swaggerDoc
+    return {
+        // Import swaggerDefinitions
+        ...swaggerDefinition,
+        // Path to the API docs
+        // Note that this path is relative to the current directory from which the Node.js is ran, not the application itself.
+        apis
+    }
 }
