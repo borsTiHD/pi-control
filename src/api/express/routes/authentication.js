@@ -1,3 +1,34 @@
+/**
+ * @swagger
+ *  components:
+ *      schemas:
+ *          User:
+ *              type: object
+ *              required:
+ *                  - email
+ *                  - password
+ *              properties:
+ *                  email:
+ *                      type: string
+ *                      description: User email address for login.
+ *                  password:
+ *                      type: string
+ *                      description: User password for login.
+ *              example:
+ *                  email: admin@admin.de
+ *                  password: mySecretPassword
+ *          Token:
+ *              type: object
+ *              required:
+ *                  - token
+ *              properties:
+ *                  token:
+ *                      type: string
+ *                      description: Jwt token
+ *              example:
+ *                  token: eyJhWDdDWjfsdaAFAWDasfdawdrawd5cCI6IkpXVCJ9.eyJlbWFpbCIWQDhawjidhUIIUWDihuqwdgJHG213IwODE0fQ.FjHQt5WOsdD2234Fws
+ */
+
 // Imports
 import express from 'express'
 import passport from 'passport'
@@ -12,7 +43,29 @@ const router = express.Router()
  *  Router: Baseurl -> '/auth/..'
 */
 
-// User Login Route
+/**
+ * @swagger
+ *  /auth/login:
+ *      post:
+ *          description: Login a user with email and password.
+ *          requestBody:
+ *              required: true
+ *              content:
+ *                  application/json:
+ *                      schema:
+ *                          $ref: '#/components/schemas/User'
+ *          responses:
+ *              200:
+ *                  description: Returns an object with a jwt token after successful login.
+ *                  content:
+ *                      application/json:
+ *                          schema:
+ *                              $ref: '#/components/schemas/Token'
+ *              500:
+ *                  description: Error in the authentication process.
+ *              403:
+ *                  description: Login failed, wrong user data, or user does not exists.
+ */
 router.post('/login', (req, res) => {
     passport.authenticate('local', { session: false }, (err, user, message) => {
         if (err) {
@@ -91,7 +144,37 @@ router.post('/register', async(req, res) => {
         })
 })
 
-// Looks if at least one user is already registered
+/**
+ * @swagger
+ *  /auth/registered-users:
+ *      get:
+ *          description: Looks if at least one user is already registered.
+ *          responses:
+ *              200:
+ *                  description: Returns an object with a jwt token after successful login.
+ *                  content:
+ *                      application/json:
+ *                          schema:
+ *                              type: object
+ *                              properties:
+ *                                  _status:
+ *                                      type: string
+ *                                      description: ok - if request was successful.
+ *                                  info:
+ *                                      type: string
+ *                                      description: Info if at least one user is registered or none.
+ *                                  message:
+ *                                      type: string
+ *                                      description: Message if registrations are possible.
+ *                                  registration:
+ *                                      type: boolean
+ *                                      description: Boolean if registrations are possible or not.
+ *                              example:
+ *                                  _status: ok
+ *                                  info: There is at least one user registered!
+ *                                  message: Registration not available
+ *                                  registration: false
+ */
 router.get('/registered-users', async(req, res) => {
     // Checks if a user is already registered
     const users = await Controller.CountUsers()
