@@ -1,8 +1,15 @@
 /**
  * @swagger
  *  components:
+ *      responses:
+ *          UnauthorizedError:
+ *              description: Error in the authentication process.
+ *          AuthenticationFailedJwt:
+ *              description: Authentication failed. Jwt access token is missing or invalid.
+ *          AuthenticationFailedLogin:
+ *              description: Login failed, wrong user data, or user does not exists.
  *      schemas:
- *          User:
+ *          Login:
  *              type: object
  *              required:
  *                  - email
@@ -17,6 +24,20 @@
  *              example:
  *                  email: admin@admin.de
  *                  password: mySecretPassword
+ *          User:
+ *              type: object
+ *              properties:
+ *                  user:
+ *                      type: object
+ *                      properties:
+ *                          email:
+ *                              type: string
+ *                              description: User email address.
+ *              security:
+ *                  - bearerAuth: []
+ *              example:
+ *                  user:
+ *                      email: admin@admin.de
  *          Token:
  *              type: object
  *              required:
@@ -36,12 +57,8 @@ import passport from 'passport'
 // Controller
 import Controller from '../controllers/authentication.controller.js'
 
-// Routes
+// Router: Baseurl -> '/auth/..'
 const router = express.Router()
-
-/*
- *  Router: Baseurl -> '/auth/..'
-*/
 
 /**
  * @swagger
@@ -53,7 +70,7 @@ const router = express.Router()
  *              content:
  *                  application/json:
  *                      schema:
- *                          $ref: '#/components/schemas/User'
+ *                          $ref: '#/components/schemas/Login'
  *          responses:
  *              200:
  *                  description: Returns an object with a jwt token after successful login.
@@ -62,9 +79,9 @@ const router = express.Router()
  *                          schema:
  *                              $ref: '#/components/schemas/Token'
  *              500:
- *                  description: Error in the authentication process.
+ *                  $ref: '#/components/responses/UnauthorizedError'
  *              403:
- *                  description: Login failed, wrong user data, or user does not exists.
+ *                  $ref: '#/components/responses/AuthenticationFailedJwt'
  */
 router.post('/login', (req, res) => {
     passport.authenticate('local', { session: false }, (err, user, message) => {
@@ -89,7 +106,23 @@ router.post('/login', (req, res) => {
     })(req, res)
 })
 
-// Validates correctness of the token when a user visits restricted pages on the frontend
+/**
+ * @swagger
+ *  /auth/user:
+ *      get:
+ *          description: Validates correctness of the token when a user visits restricted pages on the frontend.
+ *          responses:
+ *              200:
+ *                  description: Returns an object with a jwt token after successful login.
+ *                  content:
+ *                      application/json:
+ *                          schema:
+ *                              $ref: '#/components/schemas/User'
+ *              500:
+ *                  $ref: '#/components/responses/UnauthorizedError'
+ *              403:
+ *                  $ref: '#/components/responses/AuthenticationFailedLogin'
+ */
 router.get('/user', async(req, res) => {
     // console.log(req.cookies['auth._token.local'])
     passport.authenticate('jwt', { session: false }, (err, user, message) => {
