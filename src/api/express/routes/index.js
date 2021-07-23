@@ -1,21 +1,21 @@
 /**
  * @swagger
- *      components:
- *          schemas:
- *              Book:
- *                  type: object
- *                  required:
- *                      - title
- *                      - author
- *                      - finished
- *                  properties:
- *                      id:
- *                          type: integer
- *                          description: The auto-generated id of the book.
- *                      title:
- *                          type: string
- *                          description: The title of your book.
- *                  example:
+ *  components:
+ *      schemas:
+ *          Book:
+ *              type: object
+ *              required:
+ *                  - title
+ *                  - author
+ *                  - finished
+ *              properties:
+ *                  id:
+ *                      type: integer
+ *                      description: The auto-generated id of the book.
+ *                  title:
+ *                      type: string
+ *                      description: The title of your book.
+ *              example:
  *                      title: The Pragmatic Programmer
  */
 
