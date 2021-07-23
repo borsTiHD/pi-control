@@ -6,10 +6,11 @@ const router = express.Router()
  * @swagger
  *  /help:
  *      get:
+ *          summary: empty...
  *          description: Not implemented right now. Could return a documentation in the future...
  *          responses:
  *              200:
- *                  description: Returns a string.
+ *                  description: Returns an object with an info string.
  */
 router.all('/', (req, res, next) => {
     res.json({

@@ -7,10 +7,11 @@ const router = express.Router()
  * @swagger
  *  /:
  *      get:
- *          description: Welcome to express api!
+ *          summary: Entry point.
+ *          description: Welcome to the apps express api!
  *          responses:
  *              200:
- *                  description: Returns a mysterious string.
+ *                  description: Returns an object with an mysterious string.
  */
 router.all('/', (req, res, next) => {
     res.json({

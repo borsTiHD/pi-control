@@ -2,9 +2,13 @@ import pkg from '../package-json.js'
 
 // Exporting Swagger Config
 export default function(config) {
+    // Path to the API docs
+    // Note that this path is relative to the current directory from which the Node.js is ran, not the application itself.
     const apis = [
         './src/api/express/routes/*.js'
     ]
+
+    // Swagger Definitions
     const swaggerDefinition = {
         definition: {
             openapi: '3.0.0',
@@ -55,10 +59,7 @@ export default function(config) {
         }
     }
     return {
-        // Import swaggerDefinitions
         ...swaggerDefinition,
-        // Path to the API docs
-        // Note that this path is relative to the current directory from which the Node.js is ran, not the application itself.
         apis
     }
 }
