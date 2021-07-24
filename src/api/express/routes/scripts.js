@@ -81,9 +81,24 @@ router.get('/list', Controller.list) /* GET list of scripts. */
  *      post:
  *          tags:
  *              - Scripts
- *          summary: Get list of Scripts.
- *          description: Returns an object with a list of available scripts from the host system.
+ *          summary: Spawn a script.
+ *          description: Set a path to an existing script and it will be executed from the host system.
+ *          parameters:
+ *              - in: query
+ *                name: script
+ *                schema:
+ *                  type: string
+ *                required: true
+ *                description: Path of the script to be executed.
+ *              - in: query
+ *                name: args
+ *                schema:
+ *                  type: array
+ *                explode: true
+ *                description: (Optional) arguments to be passed to the script.
  */
+
+// STYLE FOR THE QUERY STILL MISSING!!!
 router.post('/execute', Controller.execute) /* POST: executes a script/file. */
 
 router.get('/read', Controller.read) /* GET a file and returns data. */
