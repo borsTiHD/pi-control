@@ -116,7 +116,7 @@ const execute = asyncHandler(async(req, res, next) => {
     // Spawn script
     const response = await spawn().catch((error) => {
         // REST return
-        res.json({
+        res.status(500).json({
             _status: 'error',
             info: 'Script not successfully executed',
             error
