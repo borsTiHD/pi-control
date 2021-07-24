@@ -1,6 +1,9 @@
 /**
  * @swagger
  *  components:
+ *      responses:
+ *          ErrorObject:
+ *              description: Object with "_status", "info" and "error".
  *      schemas:
  *          ListOfScripts:
  *              type: object
@@ -32,6 +35,18 @@
  *                              items:
  *                                  type: object
  *                                  description: Object with data for another file or folder.
+ *          ScriptExecuted:
+ *              type: object
+ *              properties:
+ *                  _status:
+ *                      type: string
+ *                      description: Status of the request
+ *                  info:
+ *                      type: string
+ *                      description: Readable info what was done.
+ *                  response:
+ *                      type: object
+ *                      description: Response of the executed script.
  */
 
 // Express
@@ -95,10 +110,18 @@ router.get('/list', Controller.list) /* GET list of scripts. */
  *                schema:
  *                  type: array
  *                explode: true
+ *                style: pipeDelimited
  *                description: (Optional) arguments to be passed to the script.
+ *          responses:
+ *              200:
+ *                  description: Returns an object with the response of the scripts.
+ *                  content:
+ *                      application/json:
+ *                          schema:
+ *                              $ref: '#/components/schemas/ScriptExecuted'
+ *              500:
+ *                  $ref: '#/components/responses/ErrorObject'
  */
-
-// STYLE FOR THE QUERY STILL MISSING!!!
 router.post('/execute', Controller.execute) /* POST: executes a script/file. */
 
 router.get('/read', Controller.read) /* GET a file and returns data. */
