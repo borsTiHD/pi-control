@@ -124,7 +124,16 @@ router.get('/list', Controller.list) /* GET list of scripts. */
  */
 router.post('/execute', Controller.execute) /* POST: executes a script/file. */
 
-router.get('/read', Controller.read) /* GET a file and returns data. */
+/**
+ * @swagger
+ *  /scripts/read:
+ *      get:
+ *          tags:
+ *              - Scripts
+ *          summary: Reads a file/folder and returns data.
+ *          description: Reads a file or folder from the host system and returns the source of the file, or stats from the folder.
+ */
+router.get('/read', Controller.read)
 
 router.get('/download', Controller.download) /* GET: downloading a file/folder. */
 
