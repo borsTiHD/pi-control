@@ -147,23 +147,32 @@ const read = asyncHandler(async(req, res, next) => {
     const query = req.query
     const { id, name, type, path } = query
 
-    // Scans stats
-    const stats = await fs.stat(path)
+    try {
+        // Scans stats
+        const stats = await fs.stat(path)
 
-    // Not a folder?
-    if (!stats.isDirectory()) {
-        // Reading file and return result
-        const content = await fs.readFile(path, 'utf-8')
-        res.json({
-            _status: 'ok',
-            info: 'File scannt',
-            script: { id, name, type, path, stats, content }
-        })
-    } else {
-        res.json({
-            _status: 'ok',
-            info: 'Folder scannt',
-            folder: { id, name, type, path, stats }
+        // Not a folder?
+        if (!stats.isDirectory()) {
+            // Reading file and return result
+            const content = await fs.readFile(path, 'utf-8')
+            res.json({
+                _status: 'ok',
+                info: 'File scannt',
+                script: { id, name, type, path, stats, content }
+            })
+        } else {
+            res.json({
+                _status: 'ok',
+                info: 'Folder scannt',
+                folder: { id, name, type, path, stats }
+            })
+        }
+    } catch (error) {
+        // REST return
+        res.status(500).json({
+            _status: 'error',
+            info: 'Script not successfully executed',
+            error
         })
     }
 })
