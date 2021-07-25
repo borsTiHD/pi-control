@@ -48,6 +48,13 @@
  *                  token: eyJhWDdDWjfsdaAFAWDasfdawdrawd5cCI6IkpXVCJ9.eyJlbWFpbCIWQDhawjidhUIIUWDihuqwdgJHG213IwODE0fQ.FjHQt5WOsdD2234Fws
  */
 
+/**
+ * @swagger
+ *  tags:
+ *      name: Users
+ *      description: User management and login
+ */
+
 // Imports
 import express from 'express'
 import passport from 'passport'
@@ -64,7 +71,7 @@ const router = express.Router()
  *      post:
  *          tags:
  *              - Users
- *          summary: User Login.
+ *          summary: User Login
  *          description: Login as an User with email and password.
  *          requestBody:
  *              required: true
@@ -113,7 +120,7 @@ router.post('/login', (req, res) => {
  *      get:
  *          tags:
  *              - Users
- *          summary: User validation.
+ *          summary: User validation
  *          description: Validates correctness of the token when a user visits restricted pages on the frontend.
  *          responses:
  *              200:
@@ -158,7 +165,7 @@ router.get('/user', async(req, res) => {
  *      post:
  *          tags:
  *              - Users
- *          summary: Register a new User.
+ *          summary: Register a new User
  *          description: New user can be registered only if no user has been registered yet.
  *          requestBody:
  *              required: true
@@ -245,7 +252,7 @@ router.post('/register', async(req, res) => {
  *      get:
  *          tags:
  *              - Users
- *          summary: Looks if registrations are available.
+ *          summary: Looks if registrations are available
  *          description: Looks if at least one user is already registered.
  *          responses:
  *              200:

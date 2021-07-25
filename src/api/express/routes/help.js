@@ -6,7 +6,6 @@ const router = express.Router()
  * @swagger
  *  /help:
  *      get:
- *          summary: empty...
  *          description: Not implemented right now. Could return a documentation in the future...
  *          responses:
  *              200:

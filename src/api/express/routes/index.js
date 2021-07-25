@@ -7,7 +7,7 @@ const router = express.Router()
  * @swagger
  *  /:
  *      get:
- *          summary: Entry point.
+ *          summary: Entry point
  *          description: Welcome to the apps express api!
  *          responses:
  *              200:
