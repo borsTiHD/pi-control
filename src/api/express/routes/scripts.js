@@ -47,6 +47,18 @@
  *                  response:
  *                      type: object
  *                      description: Response of the executed script.
+ *          ScriptRead:
+ *              type: object
+ *              properties:
+ *                  _status:
+ *                      type: string
+ *                      description: Status of the request
+ *                  info:
+ *                      type: string
+ *                      description: Readable info what was done.
+ *                  response:
+ *                      type: object
+ *                      description: Response of the executed script.
  */
 
 // Express
@@ -132,6 +144,50 @@ router.post('/execute', Controller.execute) /* POST: executes a script/file. */
  *              - Scripts
  *          summary: Reads a file/folder and returns data.
  *          description: Reads a file or folder from the host system and returns the source of the file, or stats from the folder.
+ *          parameters:
+ *              - in: query
+ *                name: path
+ *                schema:
+ *                  type: string
+ *                required: true
+ *                description: Path of the script.
+ *              - in: query
+ *                name: name
+ *                schema:
+ *                  type: string
+ *                description: (just required for response) - Name of the script.
+ *              - in: query
+ *                name: id
+ *                schema:
+ *                  type: number
+ *                description: (just required for response) - ID of the script.
+ *              - in: query
+ *                name: type
+ *                schema:
+ *                  type: string
+ *                description: (just required for response) - Type of the script.
+ *          responses:
+ *              200:
+ *                  description: Returns an object with the response of the scripts.
+ *                  content:
+ *                      application/json:
+ *                          schema:
+ *                              type: object
+ *                              properties:
+ *                                  _status:
+ *                                      type: string
+ *                                      description: Status of the request
+ *                                  info:
+ *                                      type: string
+ *                                      description: Readable info what was done (read script or folder).
+ *                                  script:
+ *                                      type: object
+ *                                      description: If it was a file. Content of the file.'
+ *                                  folder:
+ *                                      type: object
+ *                                      description: If it was a folder. Content of the folder.'
+ *              500:
+ *                  $ref: '#/components/responses/ErrorObject'
  */
 router.get('/read', Controller.read)
 
