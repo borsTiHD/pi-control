@@ -122,6 +122,8 @@ router.post('/login', (req, res) => {
  *              - Users
  *          summary: User validation
  *          description: Validates correctness of the token when a user visits restricted pages on the frontend.
+ *          security:
+ *              - bearerAuth: []
  *          responses:
  *              200:
  *                  description: Returns an object with a jwt token after successful login.
@@ -133,8 +135,6 @@ router.post('/login', (req, res) => {
  *                  $ref: '#/components/responses/UnauthorizedError'
  *              403:
  *                  $ref: '#/components/responses/AuthenticationFailedLogin'
- *          security:
- *              - bearerAuth: []
  */
 router.get('/user', async(req, res) => {
     // console.log(req.cookies['auth._token.local'])

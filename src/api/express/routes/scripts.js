@@ -85,6 +85,8 @@ const router = express.Router()
  *              - Scripts
  *          summary: Entry point
  *          description: Welcome to the apps scripts express api!
+ *          security:
+ *              - bearerAuth: []
  *          responses:
  *              200:
  *                  description: Returns an object with an mysterious string.
@@ -99,6 +101,8 @@ router.all('/', Controller.index)
  *              - Scripts
  *          summary: Get list of Scripts
  *          description: Returns an object with a list of available scripts from the host system.
+ *          security:
+ *              - bearerAuth: []
  *          responses:
  *              200:
  *                  description: Returns an object with the list of scripts.
@@ -131,6 +135,8 @@ router.get('/list', Controller.list) /* GET list of scripts. */
  *                explode: true
  *                style: pipeDelimited
  *                description: (Optional) arguments to be passed to the script.
+ *          security:
+ *              - bearerAuth: []
  *          responses:
  *              200:
  *                  description: Returns an object with the response of the scripts.
@@ -173,6 +179,8 @@ router.post('/execute', Controller.execute) /* POST: executes a script/file. */
  *                schema:
  *                  type: string
  *                description: (just required for response) - Type of the script.
+ *          security:
+ *              - bearerAuth: []
  *          responses:
  *              200:
  *                  description: Returns an object with the response of the scripts.
