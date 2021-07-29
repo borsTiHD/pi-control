@@ -191,29 +191,39 @@ const download = asyncHandler(async(req, res, next) => {
     const name = query.name
     const filePath = query.path
 
-    // Scans stats
-    const stats = await fs.stat(filePath)
-
-    // Not a folder?
-    if (stats.isFile()) {
-        // Reading file and return result
-        res.download(filePath, name)
-    } else {
-        const fileName = 'backup.zip'
-        const archiv = path.join(scriptPath, fileName)
-        await zipDirectory(filePath, archiv)
-        await res.download(archiv, fileName)
-
+    try {
         // Scans stats
-        const statsBackupFile = await fs.stat(archiv)
-        if (statsBackupFile.isFile()) {
-            await fs.unlink(archiv).catch((error) => {
-                console.error(error)
-                return next()
-            })
+        const stats = await fs.stat(filePath)
+
+        // Not a folder?
+        if (stats.isFile()) {
+            // Reading file and return result
+            res.download(filePath, name)
         } else {
-            console.log('[Download] -> tried to delete backup.zip, but nothing happened.')
+            const fileName = 'backup.zip'
+            const archiv = path.join(scriptPath, fileName)
+            await zipDirectory(filePath, archiv)
+            await res.download(archiv, fileName)
+
+            // Scans stats
+            const statsBackupFile = await fs.stat(archiv)
+            if (statsBackupFile.isFile()) {
+                await fs.unlink(archiv).catch((error) => {
+                    console.error(error)
+                    return next()
+                })
+            } else {
+                console.log('[Download] -> tried to delete backup.zip, but nothing happened.')
+            }
         }
+    } catch (error) {
+        // Return error
+        console.error('[Download] -> An error has occurred while downloading a file.')
+        res.status(500).json({
+            _status: 'error',
+            info: 'Could not prepare files, please try again',
+            error: error.message
+        })
     }
 })
 
