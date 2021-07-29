@@ -1,0 +1,1 @@
+Source: https://emojipedia.org/ninja-cat/
