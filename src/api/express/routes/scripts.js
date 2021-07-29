@@ -77,7 +77,7 @@
  *                          name:
  *                              type: string
  *                              description: Name for the new file.
- *                          text:
+ *                          content:
  *                              type: string
  *                              description: Content for the file.
  *              example:
@@ -85,7 +85,7 @@
  *                  script:
  *                      ext: sh
  *                      name: newFile
- *                      text: echo hello world
+ *                      content: echo hello world
  *          AddingFolder:
  *              type: object
  *              properties:

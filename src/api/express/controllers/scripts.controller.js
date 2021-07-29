@@ -232,7 +232,7 @@ const download = asyncHandler(async(req, res, next) => {
  * @name addFile
  * @function
  * @memberof module:routers/scripts
- * @param {object} data - Object -> form data. Delivers script data: '{ path: "scripts/custom/...", script: { name: "test", ext: "bat", text: "echo test" }}'
+ * @param {object} data - Object -> form data. Delivers script data: '{ path: "scripts/custom/...", script: { name: "test", ext: "bat", content: "echo test" }}'
  */
 const addFile = asyncHandler(async(req, res, next) => {
     const data = req.body
@@ -240,7 +240,7 @@ const addFile = asyncHandler(async(req, res, next) => {
     const file = `${script.name}.${script.ext}`
     const filePath = path.join(data.path, file)
     if (isCustomScript(filePath)) {
-        await fs.outputFile(filePath, script.text).then(async() => {
+        await fs.outputFile(filePath, script.content).then(async() => {
             console.log('[Add Script] -> Changed executable permissions.')
             fs.chmod(filePath, '755')
         }).catch((error) => {
