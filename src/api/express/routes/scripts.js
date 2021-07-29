@@ -2,6 +2,8 @@
  * @swagger
  *  components:
  *      responses:
+ *          OkObject:
+ *              description: Object with "_status", "info" and "request".
  *          ErrorObject:
  *              description: Object with "_status", "info" and "error".
  *      schemas:
@@ -59,6 +61,25 @@
  *                  response:
  *                      type: object
  *                      description: Response of the executed script.
+ *          ScriptAdding:
+ *              type: object
+ *              properties:
+ *                  path:
+ *                      type: string
+ *                      description: Path to the desired target.
+ *                  script:
+ *                      type: object
+ *                      description: Object with script properties
+ *                      properties:
+ *                          ext:
+ *                              type: string
+ *                              description: File extension for the new file.
+ *                          name:
+ *                              type: string
+ *                              description: Name for the new file.
+ *                          text:
+ *                              type: string
+ *                              description: Content for the file.
  */
 
 /**
@@ -111,7 +132,7 @@ router.all('/', Controller.index)
  *                          schema:
  *                              $ref: '#/components/schemas/ListOfScripts'
  */
-router.get('/list', Controller.list) /* GET list of scripts. */
+router.get('/list', Controller.list)
 
 /**
  * @swagger
@@ -147,7 +168,7 @@ router.get('/list', Controller.list) /* GET list of scripts. */
  *              500:
  *                  $ref: '#/components/responses/ErrorObject'
  */
-router.post('/execute', Controller.execute) /* POST: executes a script/file. */
+router.post('/execute', Controller.execute)
 
 /**
  * @swagger
@@ -234,9 +255,31 @@ router.get('/read', Controller.read)
  *              500:
  *                  $ref: '#/components/responses/ErrorObject'
  */
-router.get('/download', Controller.download) /* GET: downloading a file/folder. */
+router.get('/download', Controller.download)
 
-router.post('/add/file', Controller.addFile) /* POST: adding a file to host. */
+/**
+ * @swagger
+ *  /scripts/file:
+ *      post:
+ *          tags:
+ *              - Scripts
+ *          summary: Adding a file
+ *          description: Uploading a new file/script to the host system.
+ *          requestBody:
+ *              required: true
+ *              content:
+ *                  application/json:
+ *                      schema:
+ *                          $ref: '#/components/schemas/ScriptAdding'
+ *          security:
+ *              - bearerAuth: []
+ *          responses:
+ *              200:
+ *                  $ref: '#/components/responses/OkObject'
+ *              500:
+ *                  $ref: '#/components/responses/ErrorObject'
+ */
+router.post('/add/file', Controller.addFile)
 
 router.post('/add/folder', Controller.addFolder) /* POST: adding a folder to host. */
 
