@@ -277,7 +277,7 @@ router.get('/download', Controller.download)
 
 /**
  * @swagger
- *  /scripts/file:
+ *  /scripts/add/file:
  *      post:
  *          tags:
  *              - Scripts
@@ -301,7 +301,7 @@ router.post('/add/file', Controller.addFile)
 
 /**
  * @swagger
- *  /scripts/folder:
+ *  /scripts/add/folder:
  *      post:
  *          tags:
  *              - Scripts
@@ -321,8 +321,31 @@ router.post('/add/file', Controller.addFile)
  *              500:
  *                  $ref: '#/components/responses/ErrorObject'
  */
-router.post('/add/folder', Controller.addFolder) /* POST: adding a folder to host. */
+router.post('/add/folder', Controller.addFolder)
 
+/**
+ * @swagger
+ *  /scripts/delete:
+ *      post:
+ *          tags:
+ *              - Scripts
+ *          summary: Deletes a file or folder
+ *          description: Deletes a specific file or folder from the host system.
+ *          parameters:
+ *              - in: query
+ *                name: path
+ *                schema:
+ *                  type: string
+ *                required: true
+ *                description: Path of the script (with filename) or folder.
+ *          security:
+ *              - bearerAuth: []
+ *          responses:
+ *              200:
+ *                  $ref: '#/components/responses/OkObject'
+ *              500:
+ *                  $ref: '#/components/responses/ErrorObject'
+ */
 router.post('/delete', Controller.deleteFileOrFolder) /* POST: deleting a given file/folder. */
 
 router.post('/edit/file', Controller.editFile) /* POST: editing a file. */
