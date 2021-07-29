@@ -43,7 +43,7 @@
                                 cols="12"
                             >
                                 <v-textarea
-                                    v-model="input.text"
+                                    v-model="input.content"
                                     label="Script content:"
                                     :rules="[ validateTextfield ]"
                                     :required="true"
@@ -125,7 +125,7 @@ export default {
             this.input = {
                 name: '',
                 ext: 'sh',
-                text: ''
+                content: ''
             }
 
             // Set data if options delivered

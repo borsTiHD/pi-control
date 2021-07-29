@@ -2,9 +2,16 @@
 import express from 'express'
 const router = express.Router()
 
-// Route: '/help' -> just for testing purpose right now
+/**
+ * @swagger
+ *  /help:
+ *      get:
+ *          description: Not implemented right now. Could return a documentation in the future...
+ *          responses:
+ *              200:
+ *                  description: Returns an object with an info string.
+ */
 router.all('/', (req, res, next) => {
-    console.log('[API] -> PLEASE HELP ME!')
     res.json({
         _status: 'ok',
         info: 'You are searching for help?'

@@ -116,7 +116,7 @@ const execute = asyncHandler(async(req, res, next) => {
     // Spawn script
     const response = await spawn().catch((error) => {
         // REST return
-        res.json({
+        res.status(500).json({
             _status: 'error',
             info: 'Script not successfully executed',
             error
@@ -147,23 +147,32 @@ const read = asyncHandler(async(req, res, next) => {
     const query = req.query
     const { id, name, type, path } = query
 
-    // Scans stats
-    const stats = await fs.stat(path)
+    try {
+        // Scans stats
+        const stats = await fs.stat(path)
 
-    // Not a folder?
-    if (!stats.isDirectory()) {
-        // Reading file and return result
-        const content = await fs.readFile(path, 'utf-8')
-        res.json({
-            _status: 'ok',
-            info: 'File scannt',
-            script: { id, name, type, path, stats, content }
-        })
-    } else {
-        res.json({
-            _status: 'ok',
-            info: 'Folder scannt',
-            folder: { id, name, type, path, stats }
+        // Not a folder?
+        if (!stats.isDirectory()) {
+            // Reading file and return result
+            const content = await fs.readFile(path, 'utf-8')
+            res.json({
+                _status: 'ok',
+                info: 'File scannt',
+                script: { id, name, type, path, stats, content }
+            })
+        } else {
+            res.json({
+                _status: 'ok',
+                info: 'Folder scannt',
+                folder: { id, name, type, path, stats }
+            })
+        }
+    } catch (error) {
+        // REST return
+        res.status(500).json({
+            _status: 'error',
+            info: 'Script not successfully executed',
+            error
         })
     }
 })
@@ -182,29 +191,39 @@ const download = asyncHandler(async(req, res, next) => {
     const name = query.name
     const filePath = query.path
 
-    // Scans stats
-    const stats = await fs.stat(filePath)
-
-    // Not a folder?
-    if (stats.isFile()) {
-        // Reading file and return result
-        res.download(filePath, name)
-    } else {
-        const fileName = 'backup.zip'
-        const archiv = path.join(scriptPath, fileName)
-        await zipDirectory(filePath, archiv)
-        await res.download(archiv, fileName)
-
+    try {
         // Scans stats
-        const statsBackupFile = await fs.stat(archiv)
-        if (statsBackupFile.isFile()) {
-            await fs.unlink(archiv).catch((error) => {
-                console.error(error)
-                return next()
-            })
+        const stats = await fs.stat(filePath)
+
+        // Not a folder?
+        if (stats.isFile()) {
+            // Reading file and return result
+            res.download(filePath, name)
         } else {
-            console.log('[Download] -> tried to delete backup.zip, but nothing happened.')
+            const fileName = 'backup.zip'
+            const archiv = path.join(scriptPath, fileName)
+            await zipDirectory(filePath, archiv)
+            await res.download(archiv, fileName)
+
+            // Scans stats
+            const statsBackupFile = await fs.stat(archiv)
+            if (statsBackupFile.isFile()) {
+                await fs.unlink(archiv).catch((error) => {
+                    console.error(error)
+                    return next()
+                })
+            } else {
+                console.log('[Download] -> tried to delete backup.zip, but nothing happened.')
+            }
         }
+    } catch (error) {
+        // Return error
+        console.error('[Download] -> An error has occurred while downloading a file.')
+        res.status(500).json({
+            _status: 'error',
+            info: 'Could not prepare files, please try again',
+            error: error.message
+        })
     }
 })
 
@@ -213,7 +232,7 @@ const download = asyncHandler(async(req, res, next) => {
  * @name addFile
  * @function
  * @memberof module:routers/scripts
- * @param {object} data - Object -> form data. Delivers script data: '{ path: "scripts/custom/...", script: { name: "test", ext: "bat", text: "echo test" }}'
+ * @param {object} data - Object -> form data. Delivers script data: '{ path: "scripts/custom/...", script: { name: "test", ext: "bat", content: "echo test" }}'
  */
 const addFile = asyncHandler(async(req, res, next) => {
     const data = req.body
@@ -221,7 +240,7 @@ const addFile = asyncHandler(async(req, res, next) => {
     const file = `${script.name}.${script.ext}`
     const filePath = path.join(data.path, file)
     if (isCustomScript(filePath)) {
-        await fs.outputFile(filePath, script.text).then(async() => {
+        await fs.outputFile(filePath, script.content).then(async() => {
             console.log('[Add Script] -> Changed executable permissions.')
             fs.chmod(filePath, '755')
         }).catch((error) => {

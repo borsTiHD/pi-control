@@ -77,7 +77,7 @@ export default {
                 input: {
                     name: file[0],
                     ext: file[1],
-                    text: script.content
+                    content: script.content
                 }
             }).then((res) => res).catch((err) => {
                 console.error('[Edit Script] -> User canceled.')
@@ -92,7 +92,7 @@ export default {
                 oldFile: this.item,
                 newFile: {
                     name: `${scriptData.name}.${scriptData.ext}`,
-                    content: scriptData.text
+                    content: scriptData.content
                 }
             }
 
