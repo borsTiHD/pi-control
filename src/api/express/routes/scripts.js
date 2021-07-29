@@ -399,6 +399,51 @@ router.post('/delete', Controller.deleteFileOrFolder) /* POST: deleting a given 
  */
 router.post('/edit/file', Controller.editFile) /* POST: editing a file. */
 
+/**
+ * @swagger
+ *  /scripts/edit/folder:
+ *      post:
+ *          tags:
+ *              - Scripts
+ *          summary: Editing a folder
+ *          description: Editing an existing folder from the host system.
+ *          parameters:
+ *              - in: query
+ *                name: oldFolder
+ *                schema:
+ *                  type: object
+ *                  properties:
+ *                      name:
+ *                          type: string
+ *                          description: Name of the folder.
+ *                      path:
+ *                          type: string
+ *                          description: Path of the desired target.
+ *                  example:
+ *                      name: child
+ *                      path: scripts\custom\child
+ *                required: true
+ *                description: Object with old folder details.
+ *              - in: query
+ *                name: newFolder
+ *                schema:
+ *                  type: object
+ *                  properties:
+ *                      name:
+ *                          type: string
+ *                          description: New name for the folder.
+ *                  example:
+ *                      name: newName
+ *                required: true
+ *                description: Object with new folder details.
+ *          security:
+ *              - bearerAuth: []
+ *          responses:
+ *              200:
+ *                  $ref: '#/components/responses/OkObject'
+ *              500:
+ *                  $ref: '#/components/responses/ErrorObject'
+ */
 router.post('/edit/folder', Controller.editFolder) /* POST: editing a folder. */
 
 export default router
