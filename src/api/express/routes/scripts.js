@@ -206,6 +206,34 @@ router.post('/execute', Controller.execute) /* POST: executes a script/file. */
  */
 router.get('/read', Controller.read)
 
+/**
+ * @swagger
+ *  /scripts/download:
+ *      get:
+ *          tags:
+ *              - Scripts
+ *          summary: Downloads a file or folder
+ *          description: Downloads a single file or a hole folder (zipped as backup.zip) from the host system.
+ *          parameters:
+ *              - in: query
+ *                name: path
+ *                schema:
+ *                  type: string
+ *                required: true
+ *                description: Path of the script or folder.
+ *              - in: query
+ *                name: name
+ *                schema:
+ *                  type: string
+ *                description: (optional) - Name of the script. Not needed for directories.
+ *          security:
+ *              - bearerAuth: []
+ *          responses:
+ *              200:
+ *                  description: Downloading the requested file or the zipped folder.
+ *              500:
+ *                  $ref: '#/components/responses/ErrorObject'
+ */
 router.get('/download', Controller.download) /* GET: downloading a file/folder. */
 
 router.post('/add/file', Controller.addFile) /* POST: adding a file to host. */
