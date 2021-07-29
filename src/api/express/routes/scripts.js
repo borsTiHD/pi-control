@@ -61,7 +61,7 @@
  *                  response:
  *                      type: object
  *                      description: Response of the executed script.
- *          ScriptAdding:
+ *          AddingScript:
  *              type: object
  *              properties:
  *                  path:
@@ -80,6 +80,24 @@
  *                          text:
  *                              type: string
  *                              description: Content for the file.
+ *              example:
+ *                  path: scripts\custom\child
+ *                  script:
+ *                      ext: sh
+ *                      name: newFile
+ *                      text: echo hello world
+ *          AddingFolder:
+ *              type: object
+ *              properties:
+ *                  name:
+ *                      type: string
+ *                      description: Name for the folder.
+ *                  path:
+ *                      type: string
+ *                      description: Path to the desired target.
+ *              example:
+ *                  name: newFolder
+ *                  path: scripts\custom\child
  */
 
 /**
@@ -270,7 +288,7 @@ router.get('/download', Controller.download)
  *              content:
  *                  application/json:
  *                      schema:
- *                          $ref: '#/components/schemas/ScriptAdding'
+ *                          $ref: '#/components/schemas/AddingScript'
  *          security:
  *              - bearerAuth: []
  *          responses:
@@ -281,6 +299,28 @@ router.get('/download', Controller.download)
  */
 router.post('/add/file', Controller.addFile)
 
+/**
+ * @swagger
+ *  /scripts/folder:
+ *      post:
+ *          tags:
+ *              - Scripts
+ *          summary: Adding a new folder
+ *          description: Creating a new folder on the host system.
+ *          requestBody:
+ *              required: true
+ *              content:
+ *                  application/json:
+ *                      schema:
+ *                          $ref: '#/components/schemas/AddingFolder'
+ *          security:
+ *              - bearerAuth: []
+ *          responses:
+ *              200:
+ *                  $ref: '#/components/responses/OkObject'
+ *              500:
+ *                  $ref: '#/components/responses/ErrorObject'
+ */
 router.post('/add/folder', Controller.addFolder) /* POST: adding a folder to host. */
 
 router.post('/delete', Controller.deleteFileOrFolder) /* POST: deleting a given file/folder. */
