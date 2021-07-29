@@ -348,6 +348,55 @@ router.post('/add/folder', Controller.addFolder)
  */
 router.post('/delete', Controller.deleteFileOrFolder) /* POST: deleting a given file/folder. */
 
+/**
+ * @swagger
+ *  /scripts/edit/file:
+ *      post:
+ *          tags:
+ *              - Scripts
+ *          summary: Editing a file
+ *          description: Editing an existing file from the host system.
+ *          parameters:
+ *              - in: query
+ *                name: oldFile
+ *                schema:
+ *                  type: object
+ *                  properties:
+ *                      name:
+ *                          type: string
+ *                          description: Name of the file.
+ *                      path:
+ *                          type: string
+ *                          description: Path of the desired target.
+ *                  example:
+ *                      name: testName.sh
+ *                      path: scripts\custom\child\testName.sh
+ *                required: true
+ *                description: Object with old script details.
+ *              - in: query
+ *                name: newFile
+ *                schema:
+ *                  type: object
+ *                  properties:
+ *                      name:
+ *                          type: string
+ *                          description: New name for the file (or old name, if it has not changed).
+ *                      content:
+ *                          type: string
+ *                          description: New content for the file.
+ *                  example:
+ *                      name: testName.sh
+ *                      content: changed content
+ *                required: true
+ *                description: Object with new script details.
+ *          security:
+ *              - bearerAuth: []
+ *          responses:
+ *              200:
+ *                  $ref: '#/components/responses/OkObject'
+ *              500:
+ *                  $ref: '#/components/responses/ErrorObject'
+ */
 router.post('/edit/file', Controller.editFile) /* POST: editing a file. */
 
 router.post('/edit/folder', Controller.editFolder) /* POST: editing a folder. */
