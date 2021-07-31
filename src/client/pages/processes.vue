@@ -173,7 +173,7 @@ export default {
             const headers = this.table.headers // message.data.columns
             const rawItems = message.data.processes
 
-            // Saving in database
+            // Replacing database witzh new data
             Process.create({
                 data: rawItems.map((row) => {
                     if (!row || !Array.isArray(row)) {
@@ -181,6 +181,8 @@ export default {
                     }
                     const result = {}
                     row.forEach((value, index) => {
+                        console.log('-'.repeat(12))
+                        console.log('row:', row)
                         console.log('index:', index)
                         console.log('value:', value)
                         console.log('headers[index].value:', headers[index].value)
