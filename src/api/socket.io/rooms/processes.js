@@ -1,16 +1,51 @@
 // Imports
 import path from 'path'
 
-// Controller
-import clientNumInRoom from '../controllers/clientNumInRoom.js'
-
 // ChildProcess Spawn Import
 import ChildProcessClass from '../../classes/ChildProcessClass.js'
 const childProcessSpawn = new ChildProcessClass()
 
-export default (io, roomName, interval) => {
-    // Promise for spawning
-    const spawn = (script, args) => {
+export default (io, roomName, duration) => {
+    // Interval for room tasks
+    let interval = null
+
+    // Create Room Event
+    io.of('/').adapter.on('create-room', (room) => {
+        if (room === roomName) {
+            console.log(`[Socket.io] -> Room '${room}' was created - starting room tasks`)
+
+            // Initialize room interval
+            interval = initialize()
+        }
+    })
+
+    // Delete Room Event
+    io.of('/').adapter.on('delete-room', (room) => {
+        if (room === roomName) {
+            console.log(`[Socket.io] -> Room '${room}' was deleted - stopping room tasks`)
+
+            // Cleaning interval
+            clearInterval(interval)
+            interval = null
+        }
+    })
+
+    // Joining Room Event
+    io.of('/').adapter.on('join-room', (room, id) => {
+        if (room === roomName) {
+            console.log(`[Socket.io] -> Socket '${id}' has joined room ${room}`)
+        }
+    })
+
+    // Leaving Room Event
+    io.of('/').adapter.on('leave-room', (room, id) => {
+        if (room === roomName) {
+            console.log(`[Socket.io] -> Socket '${id}' has left room ${room}`)
+        }
+    })
+
+    // Promise for spawning scripts
+    function spawn(script, args) {
         return new Promise((resolve, reject) => {
             // Spawn Script
             childProcessSpawn.execShell(script, args, (pid, output) => { }, (pid, output, exitCode) => {
@@ -21,13 +56,11 @@ export default (io, roomName, interval) => {
         })
     }
 
-    setInterval(async() => {
-        // Clients - Sends events only when clients are in the room
-        const clients = clientNumInRoom(io, roomName)
-        if (clients > 0) {
+    // Room logic
+    function initialize() {
+        return setInterval(async() => {
+            console.log(`[Socket.io] -> Room '${roomName}' performs its task`)
             try {
-                console.log(`[Socket.io] -> ${clients} online users in room '${roomName}'`)
-
                 // Script options
                 const script = path.join('.', 'scripts', 'server', 'misc', 'top.sh')
                 const args = null
@@ -81,6 +114,6 @@ export default (io, roomName, interval) => {
             } catch (error) {
                 io.to(roomName).emit('processes', { _status: 'error', error: error.message, info: 'Something went wrong' })
             }
-        }
-    }, interval)
+        }, duration)
+    }
 }

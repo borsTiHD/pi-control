@@ -37,6 +37,6 @@ export default function(httpServer, isDev, config) {
     initConnection(io) // Event: 'connection'
 
     // Registering Rooms
-    initProcessesRoom(io, 'processes', 2000)
-    initTestRoom(io, 'testRoom', 2000)
+    initProcessesRoom(io, 'processes', 2000) // io object, room-name, interval duration
+    initTestRoom(io, 'testRoom', 2000) // io object, room-name, interval duration
 }
