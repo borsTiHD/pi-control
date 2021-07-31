@@ -14,6 +14,7 @@ const isDev = process.env.NODE_ENV !== 'production'
 // Dev config
 const DEV_PORT_FRONTEND = process.env.DEV_PORT_FRONTEND || DEFAULT.DEV_PORT_FRONTEND // Default Port: 3000
 const DEV_PORT_BACKEND = process.env.DEV_PORT_BACKEND || DEFAULT.DEV_PORT_BACKEND // Default Port: 3001
+const TEST_DATA = !!process.env.TEST_DATA
 
 // Application config
 const HOST_IP = process.env.DEV_HOST_IP || DEFAULT.DEV_HOST_IP
@@ -60,13 +61,15 @@ const env = {
         dev: isDev,
         PORT_BACKEND,
         PORT_FRONTEND,
-        HOST_IP
+        HOST_IP,
+        TEST_DATA
     },
     privateRuntimeConfig: {
         dev: isDev,
         PORT_BACKEND,
         PORT_FRONTEND,
-        HOST_IP
+        HOST_IP,
+        TEST_DATA
     }
 }
 

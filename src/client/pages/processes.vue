@@ -126,7 +126,7 @@ export default {
     },
     created() {
         // Dev: Test data
-        if (process.env.dev) {
+        if (this.$config.TEST_DATA) {
             const headers = this.table.headers
             const rawData = [
                 ['782', 'pihole', '10', '-10', '296572', '221584', '25428', 'R', '52,9', '2,8', '1171:06', 'pihole-FTL'],
