@@ -31,6 +31,9 @@ const PKG_FILE = path.join(PROJECT_ROOT, 'package.json')
 // Package.json
 const pkg = JSON.parse(fs.readFileSync(PKG_FILE)) // import pkg from '../../package.json'
 
+// Webpage title
+const headTitle = isDev ? `${pkg.productName.replace(' 🐱‍👤', '')} - DEV` : pkg.productName.replace(' 🐱‍👤', '')
+
 // Alias
 const alias = {
     alias: {
@@ -87,7 +90,7 @@ export default {
     // Global page headers: https://go.nuxtjs.dev/config-head
     head: {
         titleTemplate: '%s',
-        title: isDev ? `${pkg.productName} - DEV` : pkg.productName,
+        title: headTitle,
         htmlAttrs: {
             lang: 'en'
         },
