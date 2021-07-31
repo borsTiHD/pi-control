@@ -5,7 +5,6 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
-### Added
 
 ## [0.1.0] - 2021-07-31
 ### Added
@@ -14,6 +13,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - PWA: Adding pwa functionality. User can install the app on their devices (add to home screen).
 - Swagger: Adding Swagger documentation for the backends REST Api. Only for developer mode.
 - Developing: New '.env' variable added. Set 'DEV_USER' to 'true' and you can login with default user for developing purpose.
+
+### Changed
 - App: Update dependencies.
 
 ## [0.0.2] - 2021-07-09
