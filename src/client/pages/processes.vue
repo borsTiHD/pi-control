@@ -37,7 +37,7 @@
 
                 <v-card-text>
                     <v-data-table
-                        :headers="headers"
+                        :headers="table.headers"
                         :items="items"
                         :search="table.search"
                         :items-per-page="-1"
@@ -49,6 +49,7 @@
 </template>
 
 <script>
+import Process from '@/models/Process'
 import { mapGetters } from 'vuex'
 
 export default {
@@ -57,8 +58,56 @@ export default {
     data() {
         return {
             table: {
-                headers: null,
-                items: null,
+                headers: [
+                    {
+                        text: 'PID',
+                        value: 'pid'
+                    },
+                    {
+                        text: 'USER',
+                        value: 'user'
+                    },
+                    {
+                        text: 'PR',
+                        value: 'pr'
+                    },
+                    {
+                        text: 'NI',
+                        value: 'ni'
+                    },
+                    {
+                        text: 'VIRT',
+                        value: 'virt'
+                    },
+                    {
+                        text: 'RES',
+                        value: 'res'
+                    },
+                    {
+                        text: 'SHR',
+                        value: 'shr'
+                    },
+                    {
+                        text: 'S',
+                        value: 's'
+                    },
+                    {
+                        text: '%CPU',
+                        value: 'cpu'
+                    },
+                    {
+                        text: '%MEM',
+                        value: 'mem'
+                    },
+                    {
+                        text: 'TIME+',
+                        value: 'time'
+                    },
+                    {
+                        text: 'COMMAND',
+                        value: 'command'
+                    }
+                ],
                 search: ''
             },
             autoRefresh: true
@@ -69,41 +118,17 @@ export default {
             getElevation: 'settings/getElevation',
             getOutlined: 'settings/getOutlined'
         }),
-        headers() {
-            const headers = this.table.headers
-            if (!headers || !Array.isArray(headers)) {
-                return []
-            }
-            return headers.map((item) => {
-                return {
-                    text: item,
-                    value: item
-                }
-            })
-        },
         items() {
-            const items = this.table.items
-            const headers = this.table.headers
-            if (!items || !Array.isArray(items)) {
-                return []
-            }
-            return items.map((item) => {
-                if (!item || !Array.isArray(item)) {
-                    return []
-                }
-                const result = {}
-                item.forEach((value, index) => {
-                    result[headers[index]] = value
-                })
-                return result
-            })
+            return Process.query()
+                .orderBy('id', 'desc')
+                .get()
         }
     },
     created() {
         // Dev: Test data
         if (process.env.dev) {
-            this.table.headers = ['PID', 'USER', 'PR', 'NI', 'VIRT', 'RES', 'SHR', 'S', '%CPU', '%MEM', 'TIME+', 'COMMAND']
-            this.table.items = [
+            const headers = this.table.headers
+            const rawData = [
                 ['782', 'pihole', '10', '-10', '296572', '221584', '25428', 'R', '52,9', '2,8', '1171:06', 'pihole-FTL'],
                 ['13724', 'pi', '20', '0', '10296', '2920', '2508', 'R', '11,8', '0,0', '0:00.04', 'top'],
                 ['27819', 'root', '0', '-20', '0', '0', '0', 'I', '5,9', '0,0', '0:36.26', 'kworker/2+'],
@@ -112,6 +137,20 @@ export default {
                 ['3', 'root', '0', '-20', '0', '0', '0', 'I', '0,0', '0,0', '0:00.00', 'rcu_gp'],
                 ['4', 'root', '0', '-20', '0', '0', '0', 'I', '0,0', '0,0', '0:00.00', 'rcu_par_gp']
             ]
+
+            // Adding Testdata to database
+            Process.create({
+                data: rawData.map((row) => {
+                    if (!row || !Array.isArray(row)) {
+                        return []
+                    }
+                    const result = {}
+                    row.forEach((value, index) => {
+                        result[headers[index].value] = value
+                    })
+                    return result
+                })
+            })
         }
     },
     activated() {
@@ -131,8 +170,22 @@ export default {
 
             // Saving socket data
             console.log('[Socket.io] -> Message from server \'processes\':', message)
-            this.table.headers = message.data.columns
-            this.table.items = message.data.processes
+            const headers = this.table.headers // message.data.columns
+            const rawItems = message.data.processes
+
+            // Saving in database
+            Process.create({
+                data: rawItems.map((row) => {
+                    if (!row || !Array.isArray(row)) {
+                        return []
+                    }
+                    const result = {}
+                    row.forEach((value, index) => {
+                        result[headers[index].value] = value
+                    })
+                    return result
+                })
+            })
         }
     },
     methods: {
