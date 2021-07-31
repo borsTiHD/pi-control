@@ -41,6 +41,7 @@
                         :items="items"
                         :search="table.search"
                         :items-per-page="-1"
+                        :loading="loading"
                     >
                         <template v-for="h in table.headers" #[`header.${h.value}`]="{ header }">
                             <v-tooltip :key="h.value" bottom>
@@ -67,6 +68,7 @@ export default {
     data() {
         return {
             table: {
+                search: '',
                 headers: [
                     {
                         text: 'PID',
@@ -128,9 +130,9 @@ export default {
                         value: 'command',
                         tooltip: 'Shows the name of the processes.'
                     }
-                ],
-                search: ''
+                ]
             },
+            loading: false,
             autoRefresh: true
         }
     },
@@ -146,6 +148,9 @@ export default {
         }
     },
     created() {
+        // Set loading
+        this.loading = true
+
         // Dev: Test data
         if (this.$config.TEST_DATA) {
             const headers = this.table.headers
@@ -172,6 +177,7 @@ export default {
                     return result
                 })
             })
+            this.loading = false
         }
     },
     activated() {
@@ -186,6 +192,8 @@ export default {
         processes(message) {
             if (message._status === 'error') {
                 console.error('[Socket.io] -> Message from server \'processes\':', message)
+                // Set loading to 'false' after we get an error
+                this.loading = false
                 return false
             }
 
@@ -215,12 +223,16 @@ export default {
                     return result
                 })
             })
+
+            // Set loading to 'false' after we get data
+            this.loading = false
         }
     },
     methods: {
         socketListening(state) {
             if (state) {
                 // Socket.IO: Joining room
+                this.loading = true // Set loading to true after the app joins the room
                 this.$socket.emit('room:join', 'processes')
             } else {
                 // Socket.IO: Leaving room
