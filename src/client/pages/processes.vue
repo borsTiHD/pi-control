@@ -200,10 +200,10 @@ export default {
         socketListening(state) {
             if (state) {
                 // Socket.IO: Joining room
-                this.$socket.emit('room:join', 'processesRoom')
+                this.$socket.emit('room:join', 'processes')
             } else {
                 // Socket.IO: Leaving room
-                this.$socket.emit('room:leave', 'processesRoom')
+                this.$socket.emit('room:leave', 'processes')
             }
         },
         refreshSwitch(event) {
