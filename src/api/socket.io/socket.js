@@ -4,7 +4,7 @@ import { Server } from 'socket.io'
 
 // Listeners / Rooms
 import initConnection from './listeners/connection.js'
-import initProcessesRoom from './rooms/processesRoom.js'
+import initProcessesRoom from './rooms/processes.js'
 import initTestRoom from './rooms/testRoom.js'
 
 // Socket.io: Register passport as middleware for authentication with jwt
@@ -37,6 +37,6 @@ export default function(httpServer, isDev, config) {
     initConnection(io) // Event: 'connection'
 
     // Registering Rooms
-    initProcessesRoom(io, 'processesRoom', 2000)
-    initTestRoom(io, 'testRoom', 2000)
+    initProcessesRoom(io, 'processes', 2000) // io object, room-name, interval duration
+    initTestRoom(io, 'testRoom', 2000) // io object, room-name, interval duration
 }

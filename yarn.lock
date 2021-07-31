@@ -1885,6 +1885,13 @@
   optionalDependencies:
     prettier "^1.18.2"
 
+"@vuex-orm/core@^0.36.4":
+  version "0.36.4"
+  resolved "https://registry.yarnpkg.com/@vuex-orm/core/-/core-0.36.4.tgz#9e2b1b8dfd74c2a508f1862ffa3e4a2c1e4cc60c"
+  integrity sha512-Wkq1G+FtcEQ4LbhEZUZalhuErb2nY2nuBo2UeGVpbVKkMss5piJhw7bt5TpWecDNmIUc2BzaenDDqm08AAe7Hw==
+  dependencies:
+    normalizr "^3.6.0"
+
 "@webassemblyjs/ast@1.11.1":
   version "1.11.1"
   resolved "https://registry.yarnpkg.com/@webassemblyjs/ast/-/ast-1.11.1.tgz#2bfd767eae1a6996f432ff7e8d7fc75679c0b6a7"
@@ -7427,6 +7434,11 @@ normalize-url@^6.0.1:
   version "6.0.1"
   resolved "https://registry.yarnpkg.com/normalize-url/-/normalize-url-6.0.1.tgz#a4f27f58cf8c7b287b440b8a8201f42d0b00d256"
   integrity sha512-VU4pzAuh7Kip71XEmO9aNREYAdMHFGTVj/i+CaTImS8x0i1d3jUZkXhqluy/PRgjPLMgsLQulYY3PJ/aSbSjpQ==
+
+normalizr@^3.6.0:
+  version "3.6.1"
+  resolved "https://registry.yarnpkg.com/normalizr/-/normalizr-3.6.1.tgz#d367ab840e031ff382141b8d81ce279292ff69fe"
+  integrity sha512-8iEmqXmPtll8PwbEFrbPoDxVw7MKnNvt3PZzR2Xvq9nggEEOgBlNICPXYzyZ4w4AkHUzCU998mdatER3n2VaMA==
 
 npm-run-path@^4.0.0, npm-run-path@^4.0.1:
   version "4.0.1"
