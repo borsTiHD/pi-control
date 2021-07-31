@@ -173,7 +173,7 @@ export default {
             const headers = this.table.headers // message.data.columns
             const rawItems = message.data.processes
 
-            // Replacing database witzh new data
+            // Replacing database with new data
             Process.create({
                 data: rawItems.filter((row) => {
                     if (!row || !Array.isArray(row)) {
