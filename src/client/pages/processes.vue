@@ -181,6 +181,9 @@ export default {
                     }
                     const result = {}
                     row.forEach((value, index) => {
+                        console.log('index:', index)
+                        console.log('value:', value)
+                        console.log('headers[index].value:', headers[index].value)
                         result[headers[index].value] = value
                     })
                     return result
