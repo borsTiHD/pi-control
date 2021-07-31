@@ -113,6 +113,7 @@ export default {
         { mode: 'client', src: '@/plugins/persistedState.client.js' },
         { mode: 'client', src: '@/plugins/run-script.js' },
         { mode: 'client', src: '@/plugins/change-theme.js' },
+        { mode: 'client', src: '@/plugins/pwa.client.js' },
         { mode: 'client', src: '@/plugins/pwa-update.client.js' }
     ],
 
