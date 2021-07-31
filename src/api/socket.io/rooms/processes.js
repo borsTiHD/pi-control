@@ -1,5 +1,6 @@
 // Imports
 import path from 'path'
+import initListener from '../controllers/roomEventListener.js'
 
 // ChildProcess Spawn Import
 import ChildProcessClass from '../../classes/ChildProcessClass.js'
@@ -9,39 +10,14 @@ export default (io, roomName, duration) => {
     // Interval for room tasks
     let interval = null
 
-    // Create Room Event
-    io.of('/').adapter.on('create-room', (room) => {
-        if (room === roomName) {
-            console.log(`[Socket.io] -> Room '${room}' was created - starting room tasks`)
-
-            // Initialize room interval
-            interval = initialize()
-        }
-    })
-
-    // Delete Room Event
-    io.of('/').adapter.on('delete-room', (room) => {
-        if (room === roomName) {
-            console.log(`[Socket.io] -> Room '${room}' was deleted - stopping room tasks`)
-
-            // Cleaning interval
-            clearInterval(interval)
-            interval = null
-        }
-    })
-
-    // Joining Room Event
-    io.of('/').adapter.on('join-room', (room, id) => {
-        if (room === roomName) {
-            console.log(`[Socket.io] -> Socket '${id}' has joined room ${room}`)
-        }
-    })
-
-    // Leaving Room Event
-    io.of('/').adapter.on('leave-room', (room, id) => {
-        if (room === roomName) {
-            console.log(`[Socket.io] -> Socket '${id}' has left room ${room}`)
-        }
+    // Room event listener with callbacks for starting/stopping tasks
+    initListener(io, roomName, () => {
+        // Create Room Event: Initialize room interval
+        interval = initialize()
+    }, () => {
+        // Delete Room Event: Cleaning interval
+        clearInterval(interval)
+        interval = null
     })
 
     // Promise for spawning scripts
