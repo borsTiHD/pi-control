@@ -41,7 +41,16 @@
                         :items="items"
                         :search="table.search"
                         :items-per-page="-1"
-                    />
+                    >
+                        <template v-for="h in table.headers" #[`header.${h.value}`]="{ header }">
+                            <v-tooltip :key="h.value" bottom>
+                                <template #activator="{ on }">
+                                    <span v-on="on">{{ header.text }}</span>
+                                </template>
+                                <span>{{ header.tooltip }}</span>
+                            </v-tooltip>
+                        </template>
+                    </v-data-table>
                 </v-card-text>
             </v-card>
         </v-col>
@@ -61,51 +70,63 @@ export default {
                 headers: [
                     {
                         text: 'PID',
-                        value: 'pid'
+                        value: 'pid',
+                        tooltip: 'This is the process ID, a unique positive integer that identifies a process.'
                     },
                     {
                         text: 'USER',
-                        value: 'user'
+                        value: 'user',
+                        tooltip: 'This is the "effective" username (which maps to a user ID) of the user who started the process.'
                     },
                     {
                         text: 'PR',
-                        value: 'pr'
+                        value: 'pr',
+                        tooltip: 'Shows the scheduling priority of the process from the perspective of the kernel.'
                     },
                     {
                         text: 'NI',
-                        value: 'ni'
+                        value: 'ni',
+                        tooltip: 'Shows the "nice" value and affects the priority of a process.'
                     },
                     {
                         text: 'VIRT',
-                        value: 'virt'
+                        value: 'virt',
+                        tooltip: 'Is the total amount of memory consumed by a process. This includes the program\'s code, the data stored by the process in memory, as well as any regions of memory that have been swapped to the disk.'
                     },
                     {
                         text: 'RES',
-                        value: 'res'
+                        value: 'res',
+                        tooltip: 'Is the memory consumed by the process in RAM.'
                     },
                     {
                         text: 'SHR',
-                        value: 'shr'
+                        value: 'shr',
+                        tooltip: 'Is the amount of memory shared with other processes.'
                     },
                     {
                         text: 'S',
-                        value: 's'
+                        value: 's',
+                        tooltip: 'Shows the process state in the single-letter form.'
                     },
                     {
                         text: '%CPU',
-                        value: 'cpu'
+                        value: 'cpu',
+                        tooltip: 'Shows the current CPU utilization in percent.'
                     },
                     {
                         text: '%MEM',
-                        value: 'mem'
+                        value: 'mem',
+                        tooltip: 'Shows used RAM as a percentage of the total RAM available.'
                     },
                     {
                         text: 'TIME+',
-                        value: 'time'
+                        value: 'time',
+                        tooltip: 'This is the total CPU time used by the process since it started, precise to the hundredths of a second.'
                     },
                     {
                         text: 'COMMAND',
-                        value: 'command'
+                        value: 'command',
+                        tooltip: 'Shows the name of the processes.'
                     }
                 ],
                 search: ''
