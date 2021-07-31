@@ -10,7 +10,7 @@
                 v-on="on"
                 @click="goToNewRelease"
             >
-                update
+                Update
             </v-chip>
         </template>
         <span>Update available</span>

@@ -112,7 +112,9 @@ export default {
     plugins: [
         { mode: 'client', src: '@/plugins/persistedState.client.js' },
         { mode: 'client', src: '@/plugins/run-script.js' },
-        { mode: 'client', src: '@/plugins/change-theme.js' }
+        { mode: 'client', src: '@/plugins/change-theme.js' },
+        { mode: 'client', src: '@/plugins/pwa.client.js' },
+        { mode: 'client', src: '@/plugins/pwa-update.client.js' }
     ],
 
     // Auto import components: https://go.nuxtjs.dev/config-components
@@ -123,7 +125,9 @@ export default {
     // https://go.nuxtjs.dev/eslint
         '@nuxtjs/eslint-module',
         // https://go.nuxtjs.dev/vuetify
-        '@nuxtjs/vuetify'
+        '@nuxtjs/vuetify',
+        // https://pwa.nuxtjs.org/
+        '@nuxtjs/pwa'
     ],
 
     // Modules: https://go.nuxtjs.dev/config-modules
@@ -195,6 +199,22 @@ export default {
                 dark: {}
             },
             options: { customProperties: true }
+        }
+    },
+
+    // PWA config - https://pwa.nuxtjs.org/setup
+    pwa: {
+        icon: {
+            /* icon options */
+        },
+        meta: {
+            /* meta options */
+        },
+        manifest: {
+            /* manifest options */
+        },
+        workbox: {
+            /* workbox options */
         }
     },
 

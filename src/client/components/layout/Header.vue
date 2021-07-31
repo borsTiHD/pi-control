@@ -6,6 +6,7 @@
         <v-toolbar-title style="cursor: pointer" @click="$router.push('/')" v-text="title" />
         <v-spacer />
 
+        <app-pwa-chip />
         <app-update-chip />
         <v-btn icon @click.stop="rightDrawer = !rightDrawer">
             <v-icon>mdi-cogs</v-icon>
@@ -17,11 +18,13 @@
 import { mapGetters, mapActions } from 'vuex'
 import pkg from 'projRoot/package.json'
 import AppUpdateChip from '~/components/display/AppUpdateChip.vue'
+import AppPwaChip from '~/components/display/AppPwaChip.vue'
 
 export default {
     name: 'Header',
     components: {
-        AppUpdateChip
+        AppUpdateChip,
+        AppPwaChip
     },
     data() {
         return {

@@ -1401,6 +1401,21 @@
   dependencies:
     http-proxy-middleware "^1.0.6"
 
+"@nuxtjs/pwa@^3.3.5":
+  version "3.3.5"
+  resolved "https://registry.yarnpkg.com/@nuxtjs/pwa/-/pwa-3.3.5.tgz#db7c905536ebe8a464a347b6ae3215810642c044"
+  integrity sha512-8tTmW8DBspWxlJwTimOHTkwfkwPpL9wIcGmy75Gcmin+c9YtX2Ehxmhgt/TLFOC9XsLAqojqynw3/Agr/9OE1w==
+  dependencies:
+    clone-deep "^4.0.1"
+    defu "^3.2.2"
+    execa "^5.0.0"
+    fs-extra "^9.1.0"
+    hasha "^5.2.2"
+    jimp-compact "^0.16.1"
+    lodash.template "^4.5.0"
+    serve-static "^1.14.1"
+    workbox-cdn "^5.1.4"
+
 "@nuxtjs/vuetify@^1.12.1":
   version "1.12.1"
   resolved "https://registry.yarnpkg.com/@nuxtjs/vuetify/-/vuetify-1.12.1.tgz#87dd1e1517b0120c660f4a43a22627c9fe124189"
@@ -6369,6 +6384,11 @@ jest-worker@^27.0.2:
     merge-stream "^2.0.0"
     supports-color "^8.0.0"
 
+jimp-compact@^0.16.1:
+  version "0.16.1"
+  resolved "https://registry.yarnpkg.com/jimp-compact/-/jimp-compact-0.16.1.tgz#9582aea06548a2c1e04dd148d7c3ab92075aefa3"
+  integrity sha512-dZ6Ra7u1G8c4Letq/B5EzAxj4tLFHL+cGtdpR+PVm4yzPDj+lCk+AbivWt1eOM+ikzkowtyV7qSqX6qr3t71Ww==
+
 jiti@^1.9.2:
   version "1.9.2"
   resolved "https://registry.yarnpkg.com/jiti/-/jiti-1.9.2.tgz#2ee44830883dbb1b2e222adc053c3052d0bf3b61"
@@ -11117,6 +11137,11 @@ word-wrap@^1.2.3:
   version "1.2.3"
   resolved "https://registry.yarnpkg.com/word-wrap/-/word-wrap-1.2.3.tgz#610636f6b1f703891bd34771ccb17fb93b47079c"
   integrity sha512-Hz/mrNwitNRh/HUAtM/VT/5VH+ygD6DV7mYKZAtHOrbs8U7lvPS6xf7EJKMF0uW1KJCl0H701g3ZGus+muE5vQ==
+
+workbox-cdn@^5.1.4:
+  version "5.1.4"
+  resolved "https://registry.yarnpkg.com/workbox-cdn/-/workbox-cdn-5.1.4.tgz#dbd8acee70b1978be70106207590bbb76af935cf"
+  integrity sha512-04gM3mi8QGutokkSaA9xunVfjURnLbo9TTWyi8+pSDCEW5cD8u5GbJiliLK1vB9CShk/9OY1UDfW+XcmD+d6KQ==
 
 worker-farm@^1.7.0:
   version "1.7.0"
