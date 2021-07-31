@@ -44,8 +44,10 @@ export default ({ app }, inject) => {
 
                 // Init Listener again
                 initInstallableListener(this)
+                return true
             } else {
-                console.error('[PWA] -> Install prompt did not exists.')
+                console.error('[PWA] -> Install prompt did not exist.')
+                throw new Error('App could not be installed.')
             }
         },
         showInstallPromotion() {
