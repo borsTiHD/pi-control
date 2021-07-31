@@ -175,18 +175,21 @@ export default {
 
             // Replacing database witzh new data
             Process.create({
-                data: rawItems.map((row) => {
+                data: rawItems.filter((row) => {
                     if (!row || !Array.isArray(row)) {
-                        return []
+                        console.log('[Process] -> Item is invalid and will be removed:', row)
+                        return false // skip
+                    } else if (row.length !== 12) {
+                        console.log('[Process] -> Item has invalid length and will be removed:', row)
+                        return false // skip
                     }
+                    return true
+                }).map((row) => {
+                    // Converts array into an object and adds headers
                     const result = {}
                     row.forEach((value, index) => {
-                        console.log('-'.repeat(12))
-                        console.log('row:', row)
-                        console.log('index:', index)
-                        console.log('value:', value)
-                        console.log('headers[index].value:', headers[index].value)
-                        result[headers[index].value] = value
+                        const key = headers[index].value // Getting key from headers
+                        result[key] = value // Create key on object with value from array
                     })
                     return result
                 })

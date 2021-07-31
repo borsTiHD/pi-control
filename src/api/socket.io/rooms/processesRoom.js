@@ -68,9 +68,6 @@ export default (io, roomName, interval) => {
                                 // Stopping loop if index equal or greater 12 - no need to looping more, its already added with the 'combined value'
                                 return index >= 12
                             })
-                            // DEBUGGING!!!
-                            console.log('ITEM is greater than 12:', item)
-                            console.log('NEW ITEM:', newItem)
                             return newItem
                         }
                         return item
