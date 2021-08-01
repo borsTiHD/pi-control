@@ -68,8 +68,10 @@ export default (io, roomName) => {
             const child = spawn(command, args)
 
             // Data output
+            child.stdout.setEncoding('utf8')
             child.stdout.on('data', (data) => {
-                parseProcessData(data).then((result) => {
+                const convertedData = data.toString()
+                parseProcessData(convertedData).then((result) => {
                     io.to(roomName).emit('processes', { _status: 'ok', data: result })
                 }).catch((err) => {
                     io.to(roomName).emit('processes', { _status: 'error', error: err.message, info: 'Error on parsing output' })
@@ -77,8 +79,10 @@ export default (io, roomName) => {
             })
 
             // Error output
+            child.stderr.setEncoding('utf8')
             child.stderr.on('data', (data) => {
-                io.to(roomName).emit('processes', { _status: 'error', error: data, info: 'Error output from child process' })
+                const convertedData = data.toString()
+                io.to(roomName).emit('processes', { _status: 'error', error: convertedData, info: 'Error output from child process' })
             })
 
             // Child closed with error
