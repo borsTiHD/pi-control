@@ -18,7 +18,7 @@ export default (io, roomName) => {
 
     async function parseProcessData(raw) {
         // Parsing Output
-        const outputArr = raw.output.split('\n')
+        const outputArr = raw.split('\n')
         if (Array.isArray(outputArr) && outputArr.length > 6) {
             const info = outputArr.slice(0, 5)
             const columns = outputArr.slice(6, 7)[0].trim().split(/\s+/) // Get only columns, trims leading and trailing whitespaces, also splits at every +whitespace
