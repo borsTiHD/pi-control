@@ -78,6 +78,7 @@ export default (io, roomName) => {
                     // If no chunkdata exists, we will save stream output
                     chunkData = convertedData
                 } else if (/top - /.test(convertedData)) {
+                    io.to(roomName).emit('processes', { _status: 'test', newOutput: convertedData, chunkData })
                     // New data contains a new output/interval
                     // Old chunkdata was completed
                     // Parsing old chunkdata and send result to socket room
