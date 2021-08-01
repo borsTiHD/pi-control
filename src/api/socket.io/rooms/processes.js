@@ -11,13 +11,13 @@ export default (io, roomName) => {
         // Create Room Event: Initialize room tasks
         child = initialize()
     }, () => {
-        // Delete Room Event: Killing child and cleaning old chunkdata
+        // Delete Room Event: Killing child
         child.kill()
         child = null
     })
 
+    // Parsing raw output
     async function parseProcessData(raw) {
-        // Parsing Output
         const outputArr = raw.split('\n')
         if (Array.isArray(outputArr) && outputArr.length > 6) {
             const info = outputArr.slice(0, 5)
