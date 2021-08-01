@@ -64,7 +64,7 @@ export default (io, roomName) => {
         try {
             // Spawn command
             const command = 'top'
-            const args = []
+            const args = ['-b']
             const child = spawn(command, args)
 
             // Data output
