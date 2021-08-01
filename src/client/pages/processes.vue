@@ -133,7 +133,8 @@ export default {
                 ]
             },
             loading: false,
-            autoRefresh: true
+            autoRefresh: true,
+            socketRoom: 'processes'
         }
     },
     computed: {
@@ -195,34 +196,36 @@ export default {
                 // Set loading to 'false' after we get an error
                 this.loading = false
                 return false
-            }
+            } else if (message._status === 'ok') {
+                // Saving socket data
+                console.log('[Socket.io] -> Message from server \'processes\':', message)
+                const headers = this.table.headers // message.data.columns
+                const rawItems = message.data.processes
 
-            // Saving socket data
-            console.log('[Socket.io] -> Message from server \'processes\':', message)
-            const headers = this.table.headers // message.data.columns
-            const rawItems = message.data.processes
-
-            // Replacing database with new data
-            Process.create({
-                data: rawItems.filter((row) => {
-                    if (!row || !Array.isArray(row)) {
-                        console.log('[Process] -> Item is invalid and will be removed:', row)
-                        return false // skip
-                    } else if (row.length !== 12) {
-                        console.log('[Process] -> Item has invalid length and will be removed:', row)
-                        return false // skip
-                    }
-                    return true
-                }).map((row) => {
-                    // Converts array into an object and adds headers
-                    const result = {}
-                    row.forEach((value, index) => {
-                        const key = headers[index].value // Getting key from headers
-                        result[key] = value // Create key on object with value from array
+                // Replacing database with new data
+                Process.create({
+                    data: rawItems.filter((row) => {
+                        if (!row || !Array.isArray(row)) {
+                            console.log('[Process] -> Item is invalid and will be removed:', row)
+                            return false // skip
+                        } else if (row.length !== 12) {
+                            console.log('[Process] -> Item has invalid length and will be removed:', row)
+                            return false // skip
+                        }
+                        return true
+                    }).map((row) => {
+                        // Converts array into an object and adds headers
+                        const result = {}
+                        row.forEach((value, index) => {
+                            const key = headers[index].value // Getting key from headers
+                            result[key] = value // Create key on object with value from array
+                        })
+                        return result
                     })
-                    return result
                 })
-            })
+            } else {
+                console.log('[Socket.io] -> Message from server \'processes\', without usable data:', message)
+            }
 
             // Set loading to 'false' after we get data
             this.loading = false
@@ -233,10 +236,10 @@ export default {
             if (state) {
                 // Socket.IO: Joining room
                 this.loading = true // Set loading to true after the app joins the room
-                this.$socket.emit('room:join', 'processes')
+                this.$socket.emit('room:join', this.socketRoom)
             } else {
                 // Socket.IO: Leaving room
-                this.$socket.emit('room:leave', 'processes')
+                this.$socket.emit('room:leave', this.socketRoom)
             }
         },
         refreshSwitch(event) {
