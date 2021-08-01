@@ -59,7 +59,7 @@ export default (io, roomName) => {
     }
 
     // Room logic
-    async function initialize() {
+    function initialize() {
         console.log(`[Socket.io] -> Room '${roomName}' starts performing its tasks`)
         try {
             // Spawn command
@@ -69,7 +69,7 @@ export default (io, roomName) => {
 
             // Data output
             child.stdout.setEncoding('utf8')
-            for await (const data of child.stdout) {
+            child.stdout.on('data', (data) => {
                 const convertedData = data.toString()
                 io.to(roomName).emit('processes', { _status: 'test', convertedData })
                 parseProcessData(convertedData).then((result) => {
@@ -77,7 +77,7 @@ export default (io, roomName) => {
                 }).catch((err) => {
                     io.to(roomName).emit('processes', { _status: 'error', error: err.message, info: 'Error on parsing output' })
                 })
-            }
+            })
 
             // Error output
             child.stderr.setEncoding('utf8')
