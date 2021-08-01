@@ -71,6 +71,7 @@ export default (io, roomName) => {
             child.stdout.setEncoding('utf8')
             child.stdout.on('data', (data) => {
                 const convertedData = data.toString()
+                io.to(roomName).emit('processes', { _status: 'test', convertedData })
                 parseProcessData(convertedData).then((result) => {
                     io.to(roomName).emit('processes', { _status: 'ok', data: result })
                 }).catch((err) => {
