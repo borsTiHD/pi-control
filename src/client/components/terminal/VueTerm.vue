@@ -34,15 +34,6 @@ export default {
 
         // Prevents resize event from being executed before mounting
         this.resizeActive = true
-
-        // Checks if bufferdata exists and writing them in the temrinal
-
-        /*
-        // TODO
-        if (this.$ssh.streamBuffer && this.$ssh.streamBuffer !== '') {
-            this.write(this.$ssh.streamBuffer)
-        }
-        */
     },
     beforeDestroy() {
         /*
@@ -50,6 +41,14 @@ export default {
         this.$emit('update:buffer', this.$terminal.getSelection().trim())
         this.$terminal.clear()
         */
+    },
+    activated() {
+        // Clears old terminal data
+        this.clear()
+    },
+    deactivated() {
+        // Clears terminal data
+        this.clear()
     },
     methods: {
         fit() {

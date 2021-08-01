@@ -1,4 +1,5 @@
 import initRoomHandlers from './roomHandlers.js'
+import initTerminal from './terminal.js'
 
 export default (io) => {
     // On client connection
@@ -7,6 +8,9 @@ export default (io) => {
 
         // Event: 'room:join' / 'room:leave'
         initRoomHandlers(io, socket)
+
+        // Event: Terminal Events
+        initTerminal(io, socket)
 
         // Event: 'disconnect' - Fires when a client disconnects
         socket.on('disconnect', function() {

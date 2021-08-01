@@ -43,9 +43,17 @@ export default {
         ...mapGetters({
             getElevation: 'settings/getElevation',
             getOutlined: 'settings/getOutlined'
-        })
+        }),
+        getBuffer() {
+            return this.$termClient.getBuffer()
+        }
     },
     activated() {
+        // Checks if connection established
+        if (!this.$termClient.state) {
+            this.$termClient.connect(this.$socket)
+        }
+
         // Creates Interval for resizing
         this.interval = setInterval(() => {
             if (!this.windowHeight) { this.windowHeight = window.innerHeight } // If there is no saved window size yet, it will be set
@@ -60,6 +68,11 @@ export default {
                 this.windowHeight = window.innerHeight
             }
         }, 10)
+
+        // Checks if buffered data exists and writing them into the temrinal
+        if (this.getBuffer !== '') {
+            this.$refs.terminal.write(this.getBuffer)
+        }
     },
     deactivated() {
         // Clears interval
@@ -89,9 +102,8 @@ export default {
             }
         },
         onTyping(data) {
-            // Sends data from terminal to the stream
-            // this.$ssh.stream.write(data)
-            // TODO
+            // Sending data to the host
+            this.$termClient.send(data)
         }
     }
 }
