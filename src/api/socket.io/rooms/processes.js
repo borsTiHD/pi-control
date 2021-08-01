@@ -61,6 +61,7 @@ export default (io, roomName) => {
     // Room logic
     function initialize() {
         console.log(`[Socket.io] -> Room '${roomName}' starts performing its tasks`)
+        const eventName = 'processes'
         try {
             // Collecting chunk data
             let chunkData = null
@@ -82,9 +83,9 @@ export default (io, roomName) => {
                     // Old chunkdata was completed
                     // Parsing old chunkdata and send result to socket room
                     parseProcessData(chunkData).then((result) => {
-                        io.to(roomName).emit('processes', { _status: 'ok', data: result })
+                        io.to(roomName).emit(eventName, { _status: 'ok', data: result })
                     }).catch((err) => {
-                        io.to(roomName).emit('processes', { _status: 'error', error: err.message, info: 'Error on parsing output' })
+                        io.to(roomName).emit(eventName, { _status: 'error', error: err.message, info: 'Error on parsing output' })
                     }).finally(() => {
                         // Old saved data send to socket
                         // New output will be saved as a new interval of data
@@ -103,22 +104,22 @@ export default (io, roomName) => {
             child.stderr.setEncoding('utf8')
             child.stderr.on('data', (data) => {
                 const convertedData = data.toString()
-                io.to(roomName).emit('processes', { _status: 'error', error: convertedData, info: 'Error output from child process' })
+                io.to(roomName).emit(eventName, { _status: 'error', error: convertedData, info: 'Error output from child process' })
             })
 
             // Child closed with error
             child.on('error', (error) => {
-                io.to(roomName).emit('processes', { _status: 'error', error: error.message, info: 'Child process closed with error' })
+                io.to(roomName).emit(eventName, { _status: 'error', error: error.message, info: 'Child process closed with error' })
             })
 
             // Child closed
             child.on('close', (code) => {
-                io.to(roomName).emit('processes', { _status: 'closed', exitcode: code })
+                io.to(roomName).emit(eventName, { _status: 'closed', exitcode: code })
             })
 
             return child
         } catch (error) {
-            io.to(roomName).emit('processes', { _status: 'error', error: error.message, info: 'Something went wrong' })
+            io.to(roomName).emit(eventName, { _status: 'error', error: error.message, info: 'Something went wrong' })
         }
     }
 }
