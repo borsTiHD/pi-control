@@ -78,7 +78,6 @@ export default (io, roomName) => {
                     // If no chunkdata exists, we will save stream output
                     chunkData = convertedData
                 } else if (/top - /.test(convertedData)) {
-                    io.to(roomName).emit('processes', { _status: 'test', newOutput: convertedData, chunkData })
                     // New data contains a new output/interval
                     // Old chunkdata was completed
                     // Parsing old chunkdata and send result to socket room
@@ -90,8 +89,9 @@ export default (io, roomName) => {
                         // Old saved data send to socket
                         // New output will be saved as a new interval of data
                         // We clean old chunks and overwrite it with new output
+                        // New output might contain line breaks, these will be removed
                         chunkData = null
-                        chunkData = convertedData
+                        chunkData = convertedData.trim()
                     })
                 } else {
                     // Adds output to chunkdata
