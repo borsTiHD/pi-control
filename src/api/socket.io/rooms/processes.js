@@ -5,7 +5,6 @@ import initListener from '../controllers/roomEventListener.js'
 export default (io, roomName) => {
     // Childprocess
     let child = null
-    let chunkData = null
 
     // Room event listener with callbacks for starting/stopping tasks
     initListener(io, roomName, () => {
@@ -15,7 +14,6 @@ export default (io, roomName) => {
         // Delete Room Event: Killing child and cleaning old chunkdata
         child.kill()
         child = null
-        chunkData = null
     })
 
     async function parseProcessData(raw) {
@@ -64,6 +62,9 @@ export default (io, roomName) => {
     function initialize() {
         console.log(`[Socket.io] -> Room '${roomName}' starts performing its tasks`)
         try {
+            // Collecting chunk data
+            let chunkData = null
+
             // Spawn command
             const command = 'top'
             const args = ['-b']
