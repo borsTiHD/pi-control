@@ -84,13 +84,13 @@ export default (io, roomName) => {
                         io.to(roomName).emit('processes', { _status: 'ok', data: result })
                     }).catch((err) => {
                         io.to(roomName).emit('processes', { _status: 'error', error: err.message, info: 'Error on parsing output' })
+                    }).finally(() => {
+                        // Old saved data send to socket
+                        // New output will be saved as a new interval of data
+                        // We clean old chunks and overwrite it with new output
+                        chunkData = null
+                        chunkData = convertedData
                     })
-
-                    // Old saved data send to socket
-                    // New output will be saved as a new interval of data
-                    // We clean old chunks and overwrite it with new output
-                    chunkData = null
-                    chunkData = convertedData
                 } else {
                     // Adds output to chunkdata
                     chunkData += convertedData
