@@ -3,17 +3,19 @@ import { spawn } from 'child_process'
 import initListener from '../controllers/roomEventListener.js'
 
 export default (io, roomName) => {
-    // Interval for room tasks
+    // Childprocess
     let child = null
+    let chunkData = null
 
     // Room event listener with callbacks for starting/stopping tasks
     initListener(io, roomName, () => {
-        // Create Room Event: Initialize room interval
+        // Create Room Event: Initialize room tasks
         child = initialize()
     }, () => {
-        // Delete Room Event: Cleaning interval
+        // Delete Room Event: Killing child and cleaning old chunkdata
         child.kill()
         child = null
+        chunkData = null
     })
 
     async function parseProcessData(raw) {
@@ -71,12 +73,28 @@ export default (io, roomName) => {
             child.stdout.setEncoding('utf8')
             child.stdout.on('data', (data) => {
                 const convertedData = data.toString()
-                io.to(roomName).emit('processes', { _status: 'test', convertedData })
-                parseProcessData(convertedData).then((result) => {
-                    io.to(roomName).emit('processes', { _status: 'ok', data: result })
-                }).catch((err) => {
-                    io.to(roomName).emit('processes', { _status: 'error', error: err.message, info: 'Error on parsing output' })
-                })
+                if (!chunkData) {
+                    // If no chunkdata exists, we will save stream output
+                    chunkData = convertedData
+                } else if (/top - /.test(convertedData)) {
+                    // New data contains a new output/interval
+                    // Old chunkdata was completed
+                    // Parsing old chunkdata and send result to socket room
+                    parseProcessData(chunkData).then((result) => {
+                        io.to(roomName).emit('processes', { _status: 'ok', data: result })
+                    }).catch((err) => {
+                        io.to(roomName).emit('processes', { _status: 'error', error: err.message, info: 'Error on parsing output' })
+                    })
+
+                    // Old saved data send to socket
+                    // New output will be saved as a new interval of data
+                    // We clean old chunks and overwrite it with new output
+                    chunkData = null
+                    chunkData = convertedData
+                } else {
+                    // Adds output to chunkdata
+                    chunkData += convertedData
+                }
             })
 
             // Error output
