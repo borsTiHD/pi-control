@@ -48,8 +48,7 @@
                 <div v-else>
                     <v-tabs
                         v-model="tab.current"
-                        background-color="transparent"
-                        color="basil"
+                        @change="tabChanged"
                     >
                         <v-tab
                             v-for="item in tab.items"
@@ -96,7 +95,7 @@
 import VueTerm from '@/components/terminal/VueTerm.vue'
 import AppButton from '@/components/Button.vue'
 
-import { mapGetters } from 'vuex'
+import { mapGetters, mapActions } from 'vuex'
 
 export default {
     name: 'Terminal',
@@ -114,26 +113,24 @@ export default {
                 current: null,
                 items: []
             },
-            socketRoom: 'terminal'
+            loadBuffer: true
         }
     },
     computed: {
         ...mapGetters({
             getElevation: 'settings/getElevation',
-            getOutlined: 'settings/getOutlined'
+            getOutlined: 'settings/getOutlined',
+            getTerminalBuffer: 'terminal/getTerminalBuffer'
         }),
-        getBuffer() {
-            // TODO
-            // this.$termClient.getBuffer()
-            return ''
-        },
         getCurrentTab() {
             // Gets current item from tabs
             return this.tab.items[this.tab.current]
         }
     },
     activated() {
-        // Get open terminals
+        // Get open terminals (send request to backend - socket.io)
+        // Set boolean check to true... next time we receive all terminals, we will update the content with the buffer
+        this.loadBuffer = true
         this.getTerminals()
 
         // OnResize event is allowed
@@ -155,16 +152,6 @@ export default {
                 this.windowHeight = window.innerHeight
             }
         }, 10)
-
-        // TODO
-        // Checks if buffered data exists and writing them into the terminal
-        /*
-        if (this.getBuffer !== '') {
-            const tab = this.getCurrentTab
-            const refId = `terminal-${tab.id}`
-            this.$refs[refId][0].write(this.getBuffer)
-        }
-        */
     },
     deactivated() {
         // OnResize event is not allowed anymore
@@ -186,13 +173,33 @@ export default {
             }
         },
         getAllTerminals(message) {
-            // Saving terminal Id's
             if (message?.terminals) {
-                this.tab.items = message.terminals
+                // Saving terminal Id's
+                const terminals = message.terminals
+                this.tab.items = terminals
+
+                // Checks if buffers should be loaded - only once after the component has been activated
+                if (this.loadBuffer) {
+                    // Checks if stored buffers exist and loads them
+                    terminals.forEach((terminal) => {
+                        const buffer = this.getTerminalBuffer(terminal.id)
+                        if (buffer) {
+                            const refId = `terminal-${terminal.id}`
+                            this.$refs[refId][0].write(buffer)
+                        }
+                    })
+
+                    // Prevents reloading of the buffer until component was inactive again
+                    this.loadBuffer = false
+                }
             }
         }
     },
     methods: {
+        ...mapActions({
+            deleteTerminalBuffer: 'terminal/deleteTerminalBuffer',
+            deleteAllTerminalBuffer: 'terminal/deleteAllTerminalBuffer'
+        }),
         onResize() {
             if (this.resizeAllowed) {
                 // Resized div box from the terminal (container)
@@ -217,6 +224,15 @@ export default {
                 width: rect.width
             }
         },
+        tabChanged(tabIndex) {
+            // Resize Terminal
+            this.onResize()
+            setImmediate(() => {
+                const tab = this.getCurrentTab
+                const refId = `terminal-${tab.id}`
+                this.$refs[refId][0].fit()
+            })
+        },
         onTyping(terminalID, data) {
             // Sending data to the host
             this.$socket.emit('send-to-terminal', { id: terminalID, data })
@@ -235,11 +251,17 @@ export default {
             // Close terminal with id
             // Send request to socket.io server
             this.$socket.emit('close-terminal', id)
+
+            // Deletes buffer from store
+            this.deleteTerminalBuffer(id)
         },
         closeAllTerminals() {
             // Close terminal with id
             // Send request to socket.io server
             this.$socket.emit('close-all-terminals', true)
+
+            // Deletes all buffer from store
+            this.deleteAllTerminalBuffer(true)
         }
     }
 }
