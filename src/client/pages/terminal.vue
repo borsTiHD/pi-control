@@ -84,7 +84,8 @@ export default {
             // Resized div box from the terminal (container)
             // Calculates the height based on the window height minus the height of the remaining boxes (or the start position of the terminal on the y axis) and additional pixels subtracted for the footer
             const el = document.getElementById('terminal-card')
-            this.termHeight = window.innerHeight - this.getOffset(el).top - 120
+            const footer = document.getElementById('footer')
+            this.termHeight = window.innerHeight - this.getOffset(el).top - this.getOffset(footer).height - 80
         },
         getOffset(el) {
             /**
