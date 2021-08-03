@@ -18,6 +18,7 @@ export default {
             // rows: 120
         },
         resizeActive: false,
+        resizeAllowed: true,
         terminal: null,
         fitAddon: null
     }),
@@ -47,14 +48,22 @@ export default {
     activated() {
         // Clears old terminal data
         this.clear()
+
+        // Resizing is allowed
+        this.resizeAllowed = true
     },
     deactivated() {
         // Clears terminal data
         this.clear()
+
+        // Resizing is not allowed
+        this.resizeAllowed = false
     },
     methods: {
         fit() {
-            this.fitAddon.fit()
+            if (this.resizeAllowed) {
+                this.fitAddon.fit()
+            }
         },
         focus() {
             this.terminal.focus()

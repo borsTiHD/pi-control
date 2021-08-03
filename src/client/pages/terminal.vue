@@ -107,6 +107,7 @@ export default {
     data() {
         return {
             interval: null,
+            resizeAllowed: false,
             termHeight: 200,
             windowHeight: null,
             tab: {
@@ -133,10 +134,8 @@ export default {
         // Get open terminals
         this.getTerminals()
 
-        // Checks if connection established
-        if (!this.$termClient.state) {
-            this.$termClient.connect(this.$socket)
-        }
+        // OnResize event is allowed
+        this.resizeAllowed = true
 
         // Creates Interval for resizing
         this.interval = setInterval(() => {
@@ -163,6 +162,9 @@ export default {
         }
     },
     deactivated() {
+        // OnResize event is not allowed anymore
+        this.resizeAllowed = false
+
         // Clears interval
         clearInterval(this.interval)
         this.interval = null
@@ -177,11 +179,13 @@ export default {
     },
     methods: {
         onResize() {
-            // Resized div box from the terminal (container)
-            // Calculates the height based on the window height minus the height of the remaining boxes (or the start position of the terminal on the y axis) and additional pixels subtracted for the footer
-            const el = document.getElementById('terminal-card')
-            const footer = document.getElementById('footer')
-            this.termHeight = window.innerHeight - this.getOffset(el).top - this.getOffset(footer).height - 130
+            if (this.resizeAllowed) {
+                // Resized div box from the terminal (container)
+                // Calculates the height based on the window height minus the height of the remaining boxes (or the start position of the terminal on the y axis) and additional pixels subtracted for the footer
+                const el = document.getElementById('terminal-card')
+                const footer = document.getElementById('footer')
+                this.termHeight = window.innerHeight - this.getOffset(el).top - this.getOffset(footer).height - 130
+            }
         },
         getOffset(el) {
             /**
