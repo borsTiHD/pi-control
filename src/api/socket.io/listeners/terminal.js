@@ -82,7 +82,11 @@ export default (io, socket) => {
         // Getting user data
         const terminal = Terminal.GetTerminal(socket.id, terminalId)
 
+        // Debugging
         console.log('SENDING DATA TO TERMINAL:', terminal, data)
+
+        // Simulating sending data to frontend
+        socket.emit('terminal', { _status: 'ok', id: terminalId, data })
     })
 
     // Event: 'disconnect' - Fires when a client disconnects

@@ -123,7 +123,9 @@ export default {
             getOutlined: 'settings/getOutlined'
         }),
         getBuffer() {
-            return this.$termClient.getBuffer()
+            // TODO
+            // this.$termClient.getBuffer()
+            return ''
         },
         getCurrentTab() {
             // Gets current item from tabs
@@ -154,12 +156,15 @@ export default {
             }
         }, 10)
 
-        // Checks if buffered data exists and writing them into the temrinal
+        // TODO
+        // Checks if buffered data exists and writing them into the terminal
+        /*
         if (this.getBuffer !== '') {
             const tab = this.getCurrentTab
             const refId = `terminal-${tab.id}`
             this.$refs[refId][0].write(this.getBuffer)
         }
+        */
     },
     deactivated() {
         // OnResize event is not allowed anymore
@@ -170,6 +175,16 @@ export default {
         this.interval = null
     },
     sockets: {
+        terminal(message) {
+            // { _status: 'ok', id: terminalId, data }
+            // Incoming data event from a terminal
+            if (message._status === 'ok') {
+                const data = message.data
+                const terminalID = message.id
+                const refId = `terminal-${terminalID}`
+                this.$refs[refId][0].write(data)
+            }
+        },
         getAllTerminals(message) {
             // Saving terminal Id's
             if (message?.terminals) {
