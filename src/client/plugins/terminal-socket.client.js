@@ -17,7 +17,7 @@ class TerminalClass {
     connect(socket) {
         // Sends request to socket server
         this.$socket = socket
-        this.$socket.emit('terminal', 'connect')
+        // this.$socket.emit('new-terminal', true)
 
         // TODO
         // need to load/subscribe to events from socket
