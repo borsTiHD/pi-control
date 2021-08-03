@@ -58,7 +58,7 @@ export default {
     },
     methods: {
         getTerminals() {
-            this.$socket.emit('terminal', 'get-all')
+            this.$socket.emit('get-all-terminals', true)
         },
         createTerminal() {
             this.$socket.emit('new-terminal', true)
