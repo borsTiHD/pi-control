@@ -17,19 +17,21 @@ export default {
             cursorBlink: true
             // rows: 120
         },
-        resizeActive: false
+        resizeActive: false,
+        terminal: null,
+        fitAddon: null
     }),
     mounted() {
         const term = new Terminal(this.options)
-        this.$fitAddon = new FitAddon()
-        term.loadAddon(this.$fitAddon)
+        this.fitAddon = new FitAddon()
+        term.loadAddon(this.fitAddon)
         term.loadAddon(new Unicode11Addon())
         term.unicode.activeVersion = '11'
         term.open(this.$el)
-        this.$fitAddon.fit()
+        this.fitAddon.fit()
 
         // Register Terminal
-        this.$terminal = term
+        this.terminal = term
         this.termEvents() // Key+GUI Events
 
         // Prevents resize event from being executed before mounting
@@ -37,9 +39,9 @@ export default {
     },
     beforeDestroy() {
         /*
-        this.$terminal.selectAll()
-        this.$emit('update:buffer', this.$terminal.getSelection().trim())
-        this.$terminal.clear()
+        this.terminal.selectAll()
+        this.$emit('update:buffer', this.terminal.getSelection().trim())
+        this.terminal.clear()
         */
     },
     activated() {
@@ -52,20 +54,20 @@ export default {
     },
     methods: {
         fit() {
-            this.$fitAddon.fit()
+            this.fitAddon.fit()
         },
         focus() {
-            this.$terminal.focus()
+            this.terminal.focus()
         },
         blur() {
-            this.$terminal.blur()
+            this.terminal.blur()
         },
         write(data) {
-            this.$terminal.write(data) // Writes data into the terminal
-            this.$terminal.scrollToBottom()
+            this.terminal.write(data) // Writes data into the terminal
+            this.terminal.scrollToBottom()
         },
         clear() {
-            this.$terminal.clear()
+            this.terminal.clear()
         },
         typing(data) {
             this.$emit('typing', data) // Sending written data to parent component
@@ -82,7 +84,7 @@ export default {
         },
         termEvents() {
             // Keyboard input by the user
-            this.$terminal.onKey((e) => {
+            this.terminal.onKey((e) => {
                 // Adjusts terminal size
                 this.fit()
 
@@ -117,7 +119,7 @@ export default {
 
             // Mouse Click Events
             /*
-            this.$terminal.element.addEventListener('contextmenu', (e) => {
+            this.terminal.element.addEventListener('contextmenu', (e) => {
                 // Get data from clipboard and paste it in
                 const clip = this.$electron.clipboard.readText()
                 this.typing(clip)
@@ -126,8 +128,8 @@ export default {
 
             // Text Selection -> Copy selected text and put it in clipboard
             /*
-            this.$terminal.onSelectionChange(() => {
-                const selection = this.$terminal.getSelection()
+            this.terminal.onSelectionChange(() => {
+                const selection = this.terminal.getSelection()
                 this.$electron.clipboard.writeText(selection)
                 this.$toast.info('Info...')
             })
@@ -135,9 +137,9 @@ export default {
 
             // GUI Events
             /*
-            this.$terminal.on('blur', () => this.$emit('blur'))
-            this.$terminal.on('focus', () => this.$emit('focus'))
-            this.$terminal.onTitleChange((title) => this.$emit('title-change', title))
+            this.terminal.on('blur', () => this.$emit('blur'))
+            this.terminal.on('focus', () => this.$emit('focus'))
+            this.terminal.onTitleChange((title) => this.$emit('title-change', title))
             */
         }
     }
