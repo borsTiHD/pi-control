@@ -1,8 +1,19 @@
 import Terminal from '../models/terminal.js'
 
 export default (io, socket) => {
-    // Create a Terminal User on database on connection
-    Terminal.CreateUser(socket.id)
+    // Create user for every socket
+    function init() {
+        // Create a Terminal User on database on connection
+        Terminal.CreateUser(socket.id)
+    }
+    init()
+
+    // Updating existing terminals for frontend
+    function sendAllTerminals() {
+        // Sending all terminals, but only the id's
+        const user = Terminal.GetUser(socket.id)
+        socket.emit('getAllTerminals', { _status: 'ok', terminals: user.terminals.map((x) => { return { id: x.id } }) }) // Map returns only the id property
+    }
 
     // Event: 'new-terminal' - Create a new Terminal instance
     socket.on('new-terminal', (message) => {
@@ -14,6 +25,19 @@ export default (io, socket) => {
 
             // Adding terminal to database
             Terminal.AddTerminal(socket.id, 'insert cool terminal object here')
+
+            // Updating all terminals for frontend
+            sendAllTerminals()
+        }
+    })
+
+    // Event: 'get-all-terminals' - Get all open terminal ID's
+    socket.on('get-all-terminals', (message) => {
+        if (message) {
+            console.log(`[Socket.io] -> Terminal: Client '${socket.id}' wants to get all terminals`)
+
+            // Updating all terminals for frontend
+            sendAllTerminals()
         }
     })
 
@@ -27,12 +51,15 @@ export default (io, socket) => {
 
             // Deleting terminal from database
             Terminal.DeleteTerminal(socket.id, terminalID)
+
+            // Updating all terminals for frontend
+            sendAllTerminals()
         }
     })
 
     // Event: 'close-all-terminals' - User wants to close all terminals
-    socket.on('close-all-terminals', (terminalID) => {
-        if (terminalID) {
+    socket.on('close-all-terminals', (message) => {
+        if (message) {
             console.log(`[Socket.io] -> Terminal: Client '${socket.id}' wants to close all terminals`)
 
             // TODO
@@ -40,21 +67,22 @@ export default (io, socket) => {
 
             // Deleting all terminals
             Terminal.DeleteAllTerminals(socket.id)
+
+            // Updating all terminals for frontend
+            sendAllTerminals()
         }
     })
 
-    // Event: 'terminal'
-    socket.on('terminal', (message) => {
-        // Method: 'get-all' - returning all terminal ID's
-        if (message === 'get-all') {
-            console.log(`[Socket.io] -> Terminal: Client '${socket.id}' wants to get all terminals`)
+    // Event: 'send-to-terminal'
+    socket.on('send-to-terminal', (message) => {
+        // Message: { id: terminalID, data: '...' }
+        const terminalId = message.id
+        const data = message.data
 
-            // Getting user data
-            const user = Terminal.GetUser(socket.id)
+        // Getting user data
+        const terminal = Terminal.GetTerminal(socket.id, terminalId)
 
-            // Returning terminals, but only the id's
-            socket.emit('terminal', { _status: 'ok', data: user.terminals.map((x) => { return { id: x.id } }) }) // Map returns only the id property
-        }
+        console.log('SENDING DATA TO TERMINAL:', terminal, data)
     })
 
     // Event: 'disconnect' - Fires when a client disconnects

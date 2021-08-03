@@ -60,6 +60,23 @@ function AddTerminal(userId, terminal) {
     }
 }
 
+// Getting terminal from database by id
+function GetTerminal(userId, terminalId) {
+    // Get user index and check if user exists
+    const userIndex = db.users.findIndex((user) => user.id === userId)
+    if (userIndex !== -1) {
+        // Get User data
+        const user = db.users[userIndex]
+
+        // Get terminal index by id
+        const terminalIndex = user.terminals.findIndex((terminal) => terminal.id === parseInt(terminalId))
+        if (terminalIndex !== -1) {
+            // Return terminal object
+            return user.terminals[terminalIndex]
+        }
+    }
+}
+
 // Delete existing terminal from database
 function DeleteTerminal(userId, terminalId) {
     // Get user index and check if user exists
@@ -70,7 +87,6 @@ function DeleteTerminal(userId, terminalId) {
 
         // Get terminal index by id
         const terminalIndex = user.terminals.findIndex((terminal) => terminal.id === parseInt(terminalId))
-        console.log('Teminalindex found:', terminalIndex)
         if (terminalIndex !== -1) {
             // Delete terminal object by index
             user.terminals.splice(terminalIndex, 1)
@@ -96,6 +112,7 @@ export default {
     DeleteUser,
     GetUser,
     AddTerminal,
+    GetTerminal,
     DeleteTerminal,
     DeleteAllTerminals
 }
