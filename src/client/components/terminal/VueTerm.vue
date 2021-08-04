@@ -65,6 +65,7 @@ export default {
                 const { cols, rows } = this.fitAddon.proposeDimensions()
                 this.terminal.resize(cols, rows)
                 this.fitAddon.fit()
+                this.$emit('resized', { cols, rows })
             }
         },
         focus() {
@@ -96,53 +97,24 @@ export default {
         termEvents() {
             // Keyboard input by the user
             this.terminal.onKey((e) => {
-                // Adjusts terminal size
-                this.fit()
-
-                // Key Events -> https://donsnotes.com/tech/charsets/ascii.html
-                if (e.domEvent.key === 'Enter') {
-                    this.typing('\n')
-                } else if (e.domEvent.key === 'Backspace') {
-                    this.typing('\x7F')
-                } else if (e.domEvent.key === 'Escape') {
-                    this.typing('\x1B')
-                } else if (e.domEvent.key === 'Tab') {
-                    this.typing('\x09')
-                } else if (e.domEvent.ctrlKey && e.domEvent.key === 'c') { // STRG+C
-                    this.typing('\x03\n')
-                } else if (e.domEvent.ctrlKey && e.domEvent.key === 'v') { // STRG+V
-                    // Get data from clipboard and paste it in
-                    // const clip = this.$electron.clipboard.readText()
-                    // this.typing(clip)
-                } else if (e.domEvent.key === 'ArrowLeft') {
-                    this.typing('\x1B[D')
-                } else if (e.domEvent.key === 'ArrowRight') {
-                    this.typing('\x1B[C')
-                } else if (e.domEvent.key === 'ArrowUp') {
-                    this.typing('\x1B[A')
-                } else if (e.domEvent.key === 'ArrowDown') {
-                    this.typing('\x1B[B')
-                } else {
-                    // Sends raw key
-                    this.typing(e.domEvent.key)
-                }
+                // Sends raw key
+                this.typing(e.key)
             })
 
-            // Mouse Click Events
             /*
-            this.terminal.element.addEventListener('contextmenu', (e) => {
+            // Mouse Click Events
+            this.terminal.element.addEventListener('contextmenu', async(e) => {
+                console.log('window.navigator', window.navigator)
                 // Get data from clipboard and paste it in
-                const clip = this.$electron.clipboard.readText()
+                const clip = await window.navigator.clipboard.readText()
                 this.typing(clip)
             })
-            */
 
             // Text Selection -> Copy selected text and put it in clipboard
-            /*
-            this.terminal.onSelectionChange(() => {
+            this.terminal.onSelectionChange(async() => {
                 const selection = this.terminal.getSelection()
-                this.$electron.clipboard.writeText(selection)
-                this.$toast.info('Info...')
+                await window.navigator.clipboard.writeText(selection)
+                this.$toast.info('Text copied...')
             })
             */
 

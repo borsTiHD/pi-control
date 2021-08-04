@@ -74,8 +74,8 @@ export const actions = {
     },
     SOCKET_terminal({ commit, state }, payload) {
         // Socket Event 'terminal': Append buffer data
-        // payload = { _status: 'ok', id: terminalId, data }
-        if (payload._status === 'ok') {
+        // payload = { _status: 'ok', type: 'data', id: terminalId, data }
+        if (payload._status === 'ok' && payload.type === 'data') {
             commit('appendBuffer', { id: payload.id, data: payload.data })
         }
     }

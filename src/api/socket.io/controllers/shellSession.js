@@ -1,5 +1,4 @@
-import { spawn } from 'child_process'
-import fs from 'fs-extra'
+import pty from 'node-pty'
 
 const isWin = process.platform === 'win32'
 const isLinux = process.platform === 'linux'
@@ -7,11 +6,17 @@ const isLinux = process.platform === 'linux'
 export default (cbHandler = () => {}) => {
     // Callback function will emit data output from the session
     // Create child process
-    function spawnChild() {
-        if (isLinux) {
-            return spawn('/bin/sh')
-        } else if (isWin) {
-            return spawn('cmd')
+    function spawnPty() {
+        const shell = isWin ? 'powershell.exe' : 'bash'
+        if (isLinux || isWin) {
+            const ptyProcess = pty.spawn(shell, [], {
+                name: 'xterm-color',
+                cols: 80,
+                rows: 30,
+                cwd: process.env.HOME,
+                env: process.env
+            })
+            return ptyProcess
         } else {
             // Not supporting os
             throw new Error(`Could not spawn a terminal session. The operating system used is not supported: ${process.platform}`)
@@ -20,14 +25,20 @@ export default (cbHandler = () => {}) => {
 
     // Create session
     const session = {
-        terminal: spawnChild(),
+        terminal: spawnPty(),
         handler: cbHandler,
         send(data) {
-            this.terminal.stdin.write(data)
+            this.terminal.write(data)
+        },
+        resize(cols, rows) {
+            this.terminal.resize(Number(cols), Number(rows))
         },
         async cwd() {
+            /*
+            // TODO - needs to rebuild... with better os support
             const cwd = await fs.readlink(`/proc/${this.terminal.pid}/cwd`) // '/proc/' + session.terminal.pid + '/cwd'
             session.handler({ type: 'cwd', data: cwd })
+            */
         },
         kill() {
             this.terminal.kill()
@@ -35,27 +46,13 @@ export default (cbHandler = () => {}) => {
     }
 
     // Handle Data
-    session.terminal.stdout.setEncoding('utf8')
-    session.terminal.stdout.on('data', (buffer) => {
-        const data = buffer.toString()
+    session.terminal.onData((data) => {
         session.handler({ _status: 'ok', type: 'data', data })
     })
 
-    // Handle Error
-    session.terminal.stderr.setEncoding('utf8')
-    session.terminal.stderr.on('data', (buffer) => {
-        const data = buffer.toString()
-        session.handler({ _status: 'error', type: 'data', data })
-    })
-
     // Handle Closure
-    session.terminal.on('close', (exitcode) => {
-        session.handler({ _status: 'ok', type: 'closure', data: exitcode })
-    })
-
-    // Handle Error Closure
-    session.terminal.on('error', (error) => {
-        session.handler({ _status: 'error', type: 'closure', data: error.message })
+    session.terminal.onExit(({ exitCode, signal }) => {
+        session.handler({ _status: 'ok', type: 'closure', data: exitCode, signal })
     })
 
     return session

@@ -82,7 +82,7 @@
                             :key="item.id"
                             :style="`height: ${termHeight}px; background-color: black;`"
                         >
-                            <vue-term :ref="`terminal-${item.id}`" @typing="(data) => { onTyping(item.id, data) }" />
+                            <vue-term :ref="`terminal-${item.id}`" @typing="(data) => { onTyping(item.id, data) }" @resized="(data) => { termResized(item.id, data) }" />
                         </v-tab-item>
                     </v-tabs-items>
                 </div>
@@ -167,22 +167,27 @@ export default {
         terminal(message) {
             // { _status: 'ok', id: terminalId, data }
             // Incoming data event from a terminal
-            if (message._status === 'ok') {
+            if (message._status === 'ok' && message.type === 'data') {
                 const data = message.data
                 const terminalID = message.id
                 const refId = `terminal-${terminalID}`
                 // Only writing data if ref exists
                 if (this.$refs[refId]) { this.$refs[refId][0].write(data) }
+            } else if (message._status === 'ok' && message.type === 'closure') {
+                console.log('[Terminal] -> Terminal closed:', message)
+                this.$toast.info(`Terminal ID ${message.id} closed - Exitcode: ${message.data}`)
+            } else {
+                console.log('[Terminal] -> Message from backend:', message)
             }
         },
         terminalMessage(message) {
-            console.log('[Terminal] -> Message from backend:', message)
             if (message.type === 'info') {
+                console.log('[Terminal] -> Message from backend:', message)
                 this.$toast.info(`${message.data}`)
             } else if (message.type === 'error') {
-                this.$toast.error(`${message.data}`)
+                console.error('[Terminal] -> Error from backend:', message)
             } else {
-                this.$toast.warning(`${message.data}`)
+                console.error('[Terminal] -> Undefined message from backend:', message)
             }
         },
         getAllTerminals(message) {
@@ -225,6 +230,9 @@ export default {
                 this.termHeight = window.innerHeight - this.getOffset(el).top - this.getOffset(footer).height - 130
             }
         },
+        termResized(id, data) {
+            this.$socket.emit('resize-terminal', { id, cols: data.cols, rows: data.rows })
+        },
         getOffset(el) {
             /**
              * getOffset() - Determines the X/Y position of an HTML element
@@ -264,10 +272,6 @@ export default {
         onTyping(terminalID, data) {
             // Sending data to the host
             this.$socket.emit('send-to-terminal', { id: terminalID, data })
-            // Writing to terminal gui
-            const tab = this.getCurrentTab
-            const refId = `terminal-${tab.id}`
-            this.$refs[refId][0].write(data)
         },
         getTerminals() {
             // Get all open terminals

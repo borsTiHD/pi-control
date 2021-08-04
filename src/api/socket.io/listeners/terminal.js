@@ -76,6 +76,20 @@ export default (io, socket) => {
         }
     })
 
+    // Event: 'resize-terminal' - Resize terminal
+    socket.on('resize-terminal', (message) => {
+        // Message = { id: terminalId, cols: number, rows: number }
+        if (message) {
+            try {
+                const terminal = Terminal.GetTerminal(socket.id, message.id)
+                terminal.resize(message.cols, message.rows)
+            } catch (error) {
+                console.error(`[Socket.io] -> Terminal: Client '${socket.id}' - Error on resizing terminal session:`, error)
+                socket.emit('terminalMessage', { type: 'error', data: `Error on resizing terminal session: ${error.message}` })
+            }
+        }
+    })
+
     // Event: 'close-terminal' - User wants to close terminal with id
     socket.on('close-terminal', (terminalID) => {
         if (terminalID) {
