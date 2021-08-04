@@ -67,8 +67,8 @@ export default (io, socket) => {
             console.log(`[Socket.io] -> Terminal: Client '${socket.id}' wants to close terminal ID '${terminalID}'`)
 
             // Getting terminal and kill process
-            const terminal = Terminal.GetTerminal(socket.id, terminalID)
-            terminal.kill()
+            const obj = Terminal.GetTerminal(socket.id, terminalID)
+            obj.terminal.kill()
 
             // Deleting terminal from database
             Terminal.DeleteTerminal(socket.id, terminalID)
@@ -85,8 +85,8 @@ export default (io, socket) => {
 
             // Killing all existing terminals for this user
             const user = Terminal.GetUser(socket.id)
-            user.terminals.forEach((terminal) => {
-                terminal.kill()
+            user.terminals.forEach((obj) => {
+                obj.terminal.kill()
             })
 
             // Deleting all terminals
@@ -103,12 +103,15 @@ export default (io, socket) => {
         const terminalId = message.id
         const data = message.data
 
-        // Getting terminal
-        const terminal = Terminal.GetTerminal(socket.id, terminalId)
-        terminal.send(data)
-
-        // TODO
-        // Error handling is needed here... with a additional message to the frontend :P
+        try {
+            // Getting terminal
+            const obj = Terminal.GetTerminal(socket.id, terminalId)
+            obj.terminal.send(data)
+        } catch (error) {
+            console.error(`[Socket.io] -> Terminal: Client '${socket.id}' - Error on sending data to terminal session:`, error)
+            // TODO
+            // Error handling is needed here... with a additional message to the frontend :P
+        }
     })
 
     // Event: 'disconnect' - Fires when a client disconnects
@@ -117,8 +120,8 @@ export default (io, socket) => {
 
         // Killing all existing terminals for this user
         const user = Terminal.GetUser(socket.id)
-        user.terminals.forEach((terminal) => {
-            terminal.kill()
+        user.terminals.forEach((obj) => {
+            obj.terminal.kill()
         })
 
         // Deleting all user Data
