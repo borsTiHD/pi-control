@@ -53,6 +53,9 @@ export default (cbHandler = () => {}) => {
     // Handle Closure
     session.terminal.onExit(({ exitCode, signal }) => {
         session.handler({ _status: 'ok', type: 'closure', data: exitCode, signal })
+
+        // TODO
+        // If the terminal got closed (eg. 'exit' command) we need to delete the database entry
     })
 
     return session
