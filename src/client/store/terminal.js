@@ -4,7 +4,7 @@ import Vue from 'vue'
 export const state = () => ({
     terminals: [],
     maxBufferSize: 15000,
-    bufferOffset: 1000
+    bufferOffset: 14000
 })
 
 // Sync functions for setting data
@@ -40,7 +40,7 @@ export const mutations = {
             const bufferOffset = state.bufferOffset
             if (bufferLength > maxBufferSize) {
                 // Buffer too long - cutting buffer / older data will be deleted
-                state.terminals[index].buffer = state.terminals[index].buffer.slice(bufferLength - maxBufferSize - bufferOffset)
+                state.terminals[index].buffer = state.terminals[index].buffer.slice(bufferLength - bufferOffset)
             }
         } else {
             // Terminal Id not in store - add terminal Id to store with current buffer data
