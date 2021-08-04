@@ -255,6 +255,7 @@ export default {
                 const tab = this.getCurrentTab
                 const refId = `terminal-${tab.id}`
                 this.$refs[refId][0].fit()
+                this.$refs[refId][0].focus()
 
                 // Checks if buffer was already loaded
                 // Workaround if new terminal was created - loads buffer that was send before VueTerm.vue component got loaded
