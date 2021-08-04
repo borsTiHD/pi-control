@@ -236,6 +236,10 @@ export default {
         onTyping(terminalID, data) {
             // Sending data to the host
             this.$socket.emit('send-to-terminal', { id: terminalID, data })
+            // Writing to terminal gui
+            const tab = this.getCurrentTab
+            const refId = `terminal-${tab.id}`
+            this.$refs[refId][0].write(data)
         },
         getTerminals() {
             // Get all open terminals

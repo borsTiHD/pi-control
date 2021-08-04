@@ -1,15 +1,24 @@
 import { spawn } from 'child_process'
 import fs from 'fs-extra'
 
+const isWin = process.platform === 'win32'
+const isLinux = process.platform === 'linux'
+
 export default (cbHandler = () => {}) => {
     // Callback function will emit data output from the session
     try {
         // Create child process
-        const child = spawn('/bin/sh')
+        function spawnChild() {
+            if (isLinux) {
+                return spawn('/bin/sh')
+            } else if (isWin) {
+                return spawn('cmd')
+            }
+        }
 
         // Create session
         const session = {
-            terminal: child,
+            terminal: spawnChild(),
             handler: cbHandler,
             send(data) {
                 this.terminal.stdin.write(data)
@@ -24,12 +33,14 @@ export default (cbHandler = () => {}) => {
         }
 
         // Handle Data
+        session.terminal.stdout.setEncoding('utf8')
         session.terminal.stdout.on('data', (buffer) => {
             const data = buffer.toString()
             session.handler({ _status: 'ok', type: 'data', data })
         })
 
         // Handle Error
+        session.terminal.stderr.setEncoding('utf8')
         session.terminal.stderr.on('data', (buffer) => {
             const data = buffer.toString()
             session.handler({ _status: 'error', type: 'error', data })
