@@ -36,15 +36,15 @@ function DeleteUser(userId) {
     }
 }
 
-// Getting user from database by id
+// Getting user from database by ID
 function GetUser(id) {
     // Read data from database
     const user = db.users.find((user) => user.id === id)
     return user
 }
 
-// Storing new terminal instance to user
-function AddTerminal(userId, terminal) {
+// Storing new empty terminal instance to user
+function NewTerminal(userId) {
     // Get user index and check if user exists
     const userIndex = db.users.findIndex((user) => user.id === userId)
     if (userIndex !== -1) {
@@ -53,14 +53,35 @@ function AddTerminal(userId, terminal) {
 
         // Increases 'createdTerminals' by one
         user.createdTerminals += 1
+        const id = user.createdTerminals
         user.terminals.push({
-            id: user.createdTerminals, // Use new increased number as terminal id
-            terminal
+            id, // Use new increased number as terminal ID
+            terminal: null
         })
+        return id
     }
+    return false
 }
 
-// Getting terminal from database by id
+// Storing terminal instance in terminalID
+function AddTerminal(userId, terminalId, terminal) {
+    // Get user index and check if user exists
+    const userIndex = db.users.findIndex((user) => user.id === userId)
+    if (userIndex !== -1) {
+        // Get User data
+        const user = db.users[userIndex]
+
+        // Get terminal index by ID
+        const terminalIndex = user.terminals.findIndex((terminal) => terminal.id === parseInt(terminalId))
+        if (terminalIndex !== -1) {
+            // Saving terminal object
+            user.terminals[terminalIndex] = terminal
+        }
+    }
+    return false
+}
+
+// Getting terminal from database by ID
 function GetTerminal(userId, terminalId) {
     // Get user index and check if user exists
     const userIndex = db.users.findIndex((user) => user.id === userId)
@@ -68,7 +89,7 @@ function GetTerminal(userId, terminalId) {
         // Get User data
         const user = db.users[userIndex]
 
-        // Get terminal index by id
+        // Get terminal index by ID
         const terminalIndex = user.terminals.findIndex((terminal) => terminal.id === parseInt(terminalId))
         if (terminalIndex !== -1) {
             // Return terminal object
@@ -85,7 +106,7 @@ function DeleteTerminal(userId, terminalId) {
         // Get User data
         const user = db.users[userIndex]
 
-        // Get terminal index by id
+        // Get terminal index by ID
         const terminalIndex = user.terminals.findIndex((terminal) => terminal.id === parseInt(terminalId))
         if (terminalIndex !== -1) {
             // Delete terminal object by index
@@ -111,6 +132,7 @@ export default {
     CreateUser,
     DeleteUser,
     GetUser,
+    NewTerminal,
     AddTerminal,
     GetTerminal,
     DeleteTerminal,

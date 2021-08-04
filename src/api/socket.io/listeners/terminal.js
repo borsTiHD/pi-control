@@ -1,4 +1,5 @@
 import Terminal from '../models/terminal.js'
+import shellSession from '../controllers/shellSession.js'
 
 export default (io, socket) => {
     // Create user for every socket
@@ -20,13 +21,32 @@ export default (io, socket) => {
         if (message) {
             console.log(`[Socket.io] -> Terminal: Client '${socket.id}' wants to start a new terminal`)
 
+            // Adding an empty terminal to database
+            // Return value is the id for the terminal object
+            const id = Terminal.NewTerminal(socket.id)
+            if (!id) {
+                // TODO
+                // We need a message for the frontend
+
+                // No session could be established, because user does not exists
+                throw new Error('Could not create a terminal because the user does not exist')
+            }
+
+            // Creating new terminal session
+            // Callback function will emit data output
+            const session = shellSession((data) => {
+                // data = { _status: 'ok', type: 'data', data: 'buffer.toString()' }
+                socket.emit('terminal', { id, ...data })
+            })
+
             // TODO
-            // need to spawn child process
+            // If no session could be established, we need a message for the frontend
+            // Generally better error handling here is needed... :D
 
-            // Adding terminal to database
-            Terminal.AddTerminal(socket.id, 'insert cool terminal object here')
+            // Saving session instance in database
+            Terminal.NewTerminal(socket.id, id, session)
 
-            // Updating all terminals for frontend
+            // Sending updated terminals to frontend
             sendAllTerminals()
         }
     })
@@ -36,7 +56,7 @@ export default (io, socket) => {
         if (message) {
             console.log(`[Socket.io] -> Terminal: Client '${socket.id}' wants to get all terminals`)
 
-            // Updating all terminals for frontend
+            // Sending updated terminals to frontend
             sendAllTerminals()
         }
     })
@@ -46,13 +66,14 @@ export default (io, socket) => {
         if (terminalID) {
             console.log(`[Socket.io] -> Terminal: Client '${socket.id}' wants to close terminal ID '${terminalID}'`)
 
-            // TODO
-            // need to kill child process
+            // Getting terminal and kill process
+            const terminal = Terminal.GetTerminal(socket.id, terminalID)
+            terminal.kill()
 
             // Deleting terminal from database
             Terminal.DeleteTerminal(socket.id, terminalID)
 
-            // Updating all terminals for frontend
+            // Sending updated terminals to frontend
             sendAllTerminals()
         }
     })
@@ -62,13 +83,16 @@ export default (io, socket) => {
         if (message) {
             console.log(`[Socket.io] -> Terminal: Client '${socket.id}' wants to close all terminals`)
 
-            // TODO
-            // need to kill all child processes
+            // Killing all existing terminals for this user
+            const user = Terminal.GetUser(socket.id)
+            user.terminals.forEach((terminal) => {
+                terminal.kill()
+            })
 
             // Deleting all terminals
             Terminal.DeleteAllTerminals(socket.id)
 
-            // Updating all terminals for frontend
+            // Sending updated terminals to frontend
             sendAllTerminals()
         }
     })
@@ -79,22 +103,23 @@ export default (io, socket) => {
         const terminalId = message.id
         const data = message.data
 
-        // Getting user data
+        // Getting terminal
         const terminal = Terminal.GetTerminal(socket.id, terminalId)
+        terminal.send(data)
 
-        // Debugging
-        console.log('SENDING DATA TO TERMINAL:', terminal, data)
-
-        // Simulating sending data to frontend
-        socket.emit('terminal', { _status: 'ok', id: terminalId, data })
+        // TODO
+        // Error handling is needed here... with a additional message to the frontend :P
     })
 
     // Event: 'disconnect' - Fires when a client disconnects
     socket.on('disconnect', () => {
         console.log(`[Socket.io] -> Terminal: Client '${socket.id}' disconnects - closing all terminals and deleting user from database`)
 
-        // TODO
-        // need to kill all child processes before deleting all data from database
+        // Killing all existing terminals for this user
+        const user = Terminal.GetUser(socket.id)
+        user.terminals.forEach((terminal) => {
+            terminal.kill()
+        })
 
         // Deleting all user Data
         Terminal.DeleteUser(socket.id)
