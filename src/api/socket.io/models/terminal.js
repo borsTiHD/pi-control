@@ -75,7 +75,7 @@ function AddTerminal(userId, terminalId, terminal) {
         const terminalIndex = user.terminals.findIndex((terminal) => terminal.id === parseInt(terminalId))
         if (terminalIndex !== -1) {
             // Saving terminal object
-            user.terminals[terminalIndex] = terminal
+            user.terminals[terminalIndex].terminal = terminal
         }
     }
     return false
@@ -93,7 +93,7 @@ function GetTerminal(userId, terminalId) {
         const terminalIndex = user.terminals.findIndex((terminal) => terminal.id === parseInt(terminalId))
         if (terminalIndex !== -1) {
             // Return terminal object
-            return user.terminals[terminalIndex]
+            return user.terminals[terminalIndex].terminal
         }
     }
 }

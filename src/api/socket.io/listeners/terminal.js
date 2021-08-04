@@ -44,7 +44,7 @@ export default (io, socket) => {
             // Generally better error handling here is needed... :D
 
             // Saving session instance in database
-            Terminal.NewTerminal(socket.id, id, session)
+            Terminal.AddTerminal(socket.id, id, session)
 
             // Sending updated terminals to frontend
             sendAllTerminals()
@@ -67,8 +67,8 @@ export default (io, socket) => {
             console.log(`[Socket.io] -> Terminal: Client '${socket.id}' wants to close terminal ID '${terminalID}'`)
 
             // Getting terminal and kill process
-            const obj = Terminal.GetTerminal(socket.id, terminalID)
-            obj.terminal.kill()
+            const terminal = Terminal.GetTerminal(socket.id, terminalID)
+            terminal.kill()
 
             // Deleting terminal from database
             Terminal.DeleteTerminal(socket.id, terminalID)
@@ -105,8 +105,8 @@ export default (io, socket) => {
 
         try {
             // Getting terminal
-            const obj = Terminal.GetTerminal(socket.id, terminalId)
-            obj.terminal.send(data)
+            const terminal = Terminal.GetTerminal(socket.id, terminalId)
+            terminal.send(data)
         } catch (error) {
             console.error(`[Socket.io] -> Terminal: Client '${socket.id}' - Error on sending data to terminal session:`, error)
             // TODO
