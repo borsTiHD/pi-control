@@ -113,7 +113,8 @@ export default {
                 current: null,
                 items: []
             },
-            loadBuffer: true
+            loadBuffer: true,
+            bufferLoaded: []
         }
     },
     computed: {
@@ -129,8 +130,9 @@ export default {
     },
     activated() {
         // Get open terminals (send request to backend - socket.io)
-        // Set boolean check to true... next time we receive all terminals, we will update the content with the buffer
+        // Set boolean check to true... next time we receive all terminals, we will update the content with new buffer data
         this.loadBuffer = true
+        this.bufferLoaded = []
         this.getTerminals()
 
         // OnResize event is allowed
@@ -169,7 +171,18 @@ export default {
                 const data = message.data
                 const terminalID = message.id
                 const refId = `terminal-${terminalID}`
-                this.$refs[refId][0].write(data)
+                // Only writing data if ref exists
+                if (this.$refs[refId]) { this.$refs[refId][0].write(data) }
+            }
+        },
+        terminalMessage(message) {
+            console.log('[Terminal] -> Message from backend:', message)
+            if (message.type === 'info') {
+                this.$toast.info(`${message.data}`)
+            } else if (message.type === 'error') {
+                this.$toast.error(`${message.data}`)
+            } else {
+                this.$toast.warning(`${message.data}`)
             }
         },
         getAllTerminals(message) {
@@ -185,7 +198,10 @@ export default {
                         const buffer = this.getTerminalBuffer(terminal.id)
                         if (buffer) {
                             const refId = `terminal-${terminal.id}`
-                            this.$refs[refId][0].write(buffer)
+                            if (this.$refs[refId]) {
+                                this.$refs[refId][0].write(buffer)
+                                this.bufferLoaded.push(terminal.id) // prevents multiple buffer loading
+                            }
                         }
                     })
 
@@ -231,6 +247,18 @@ export default {
                 const tab = this.getCurrentTab
                 const refId = `terminal-${tab.id}`
                 this.$refs[refId][0].fit()
+
+                // Checks if buffer was already loaded
+                // Workaround if new terminal was created - loads buffer that was send before VueTerm.vue component got loaded
+                if (!this.bufferLoaded.includes(tab.id)) {
+                    const buffer = this.getTerminalBuffer(tab.id)
+                    if (buffer) {
+                        if (this.$refs[refId]) {
+                            this.$refs[refId][0].write(buffer)
+                            this.bufferLoaded.push(tab.id) // prevents multiple buffer loading
+                        }
+                    }
+                }
             })
         },
         onTyping(terminalID, data) {

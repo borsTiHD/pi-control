@@ -62,6 +62,8 @@ export default {
     methods: {
         fit() {
             if (this.resizeAllowed) {
+                const { cols, rows } = this.fitAddon.proposeDimensions()
+                this.terminal.resize(cols, rows)
                 this.fitAddon.fit()
             }
         },
