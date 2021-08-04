@@ -27,6 +27,7 @@
     "@nuxtjs/auth-next": "5.0.0-1624817847.21691f1",
     "@nuxtjs/axios": "^5.13.6",
     "core-js": "^3.15.2",
+    "node-pty": "^0.10.1",
     "nuxt": "^2.15.7"
   },
   "devDependencies": {
@@ -53,7 +54,6 @@
     "lowdb": "^2.1.0",
     "minimist": "^1.2.5",
     "moment": "^2.29.1",
-    "node-pty": "^0.10.1",
     "nodemon": "^2.0.12",
     "passport": "^0.4.1",
     "passport-jwt": "^4.0.0",
