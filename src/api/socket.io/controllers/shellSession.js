@@ -13,6 +13,9 @@ export default (cbHandler = () => {}) => {
                 return spawn('/bin/sh')
             } else if (isWin) {
                 return spawn('cmd')
+            } else {
+                // TODO
+                // Error handling for not supporting os
             }
         }
 
