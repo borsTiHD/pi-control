@@ -18,12 +18,17 @@
 </template>
 
 <script>
+import Vue from 'vue'
 import { mapGetters } from 'vuex'
 
 import AppHeader from '~/components/layout/Header.vue'
 import AppSidebar from '~/components/layout/Sidebar.vue'
 import AppFooter from '~/components/layout/Footer.vue'
 import AppAlerts from '~/components/alerts/Alerts'
+
+// Import global mixin
+import titleMixin from '~/mixins/titleMixin.js'
+Vue.mixin(titleMixin)
 
 export default {
     components: {
