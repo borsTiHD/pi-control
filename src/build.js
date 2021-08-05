@@ -7,6 +7,7 @@ import NuxtApp from 'nuxt'
 import dotenv from 'dotenv'
 import release from 'release-it'
 import minimist from 'minimist'
+import prompts from 'prompts'
 import webpackConfig from '../webpack.config.js'
 import releaseItConfig from '../.release-it-config.js'
 import nuxtConfig from './client/nuxt.config.js'
@@ -52,13 +53,35 @@ if (BUNDLE_ONLY) {
 
 // Controlls building
 async function init() {
-    const loader = createLoader()
+    let loader = createLoader()
     try {
+        // If we want to release our build,
+        // ask the user if the changelog got edited,
+        // if not, we script will stop and remind to do that
+        if (RELEASE_IT) {
+            clearInterval(loader)
+            logState('(ℹ) YOU WANT TO RELEASE THE APP')
+            const response = await prompts({
+                type: 'text',
+                name: 'answer',
+                message: 'Did you remember to adjust the changelog? (y/n)'
+                // validate: (value) => value < 18 ? 'Nightclub is 18+ only' : true
+            })
+
+            // If the answer wasn't 'y' or 'yes' the script will stop
+            if (!/(yes|y)/gmi.test(response.answer)) {
+                throw new Error('Question was not answered correclty. The user forgot to adjust the changelog.')
+            }
+            loader = createLoader()
+        }
+
         logState('(ℹ) DELETING OLD FILES')
         await deleteOldFiles()
 
+        clearInterval(loader)
         logState('(ℹ) BUILDING CLIENT')
         await buildNuxt()
+        loader = createLoader()
 
         logState('(ℹ) BUILDING BACKEND')
         await buildWebpack()
@@ -71,6 +94,7 @@ async function init() {
             await archiveProject()
         }
 
+        clearInterval(loader)
         logState('(ℹ) RELEASE HELPER')
         await releaseHelper()
 
@@ -79,6 +103,7 @@ async function init() {
         return true
     } catch (error) {
         clearInterval(loader)
+        console.error(`${colors.FgRed}%s${colors.Reset}`, `(❌) ${error.message}`)
         console.error(`${colors.FgRed}%s${colors.Reset}`, '(❌) ERROR IN BUILD PROCESS')
         console.error(`${colors.FgRed}%s${colors.Reset}`, '(❌) STOP EXECUTION OF CODE')
         return false
