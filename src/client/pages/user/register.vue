@@ -55,6 +55,11 @@ export default {
         loading: false,
         regAllowed: false
     }),
+    head() {
+        return {
+            title: `${this.$options.name} | ${this.headTitle()}`
+        }
+    },
     computed: {
         ...mapGetters({
             getElevation: 'settings/getElevation',

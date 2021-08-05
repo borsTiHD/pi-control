@@ -18,6 +18,11 @@ export default {
     components: {
         AutoRefresh,
         Design
+    },
+    head() {
+        return {
+            title: `${this.$options.name} | ${this.headTitle()}`
+        }
     }
 }
 </script>

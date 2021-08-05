@@ -13,6 +13,11 @@ export default {
     name: 'Scripts',
     components: {
         ListScripts
+    },
+    head() {
+        return {
+            title: `${this.$options.name} | ${this.headTitle()}`
+        }
     }
 }
 </script>

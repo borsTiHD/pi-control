@@ -117,6 +117,11 @@ export default {
             bufferLoaded: []
         }
     },
+    head() {
+        return {
+            title: `${this.$options.name} | ${this.headTitle()}`
+        }
+    },
     computed: {
         ...mapGetters({
             getElevation: 'settings/getElevation',

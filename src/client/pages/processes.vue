@@ -137,6 +137,11 @@ export default {
             socketRoom: 'processes'
         }
     },
+    head() {
+        return {
+            title: `${this.$options.name} | ${this.headTitle()}`
+        }
+    },
     computed: {
         ...mapGetters({
             getElevation: 'settings/getElevation',

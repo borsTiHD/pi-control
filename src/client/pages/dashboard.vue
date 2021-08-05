@@ -82,6 +82,11 @@ export default {
             }
         }
     },
+    head() {
+        return {
+            title: `${this.$options.name} | ${this.headTitle()}`
+        }
+    },
     computed: {
         ...mapGetters({
             getAutoRefresh: 'settings/getAutoRefresh'
