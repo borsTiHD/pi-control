@@ -7,15 +7,6 @@
         app
     >
         <v-list nav>
-            <v-list-item two-line>
-                <v-list-item-avatar>🚀</v-list-item-avatar>
-                <v-list-item-content>
-                    <v-list-item-title>Application</v-list-item-title>
-                    <v-list-item-subtitle>to the moon</v-list-item-subtitle>
-                </v-list-item-content>
-            </v-list-item>
-
-            <v-divider class="pa-1" />
             <v-list-item-group
                 v-model="selectedItem"
                 color="primary"
@@ -26,6 +17,19 @@
                     </v-list-item-action>
                     <v-list-item-content>
                         <v-list-item-title v-text="item.title" />
+                    </v-list-item-content>
+                </v-list-item>
+
+                <!-- Hidden dev page -->
+                <v-divider v-if="$config.dev" class="pa-1" />
+                <v-list-item v-if="$config.dev" to="/dev" router exact>
+                    <v-list-item-action>
+                        <v-icon>{{ $icons.mdiBottleTonicSkullOutline }}</v-icon>
+                    </v-list-item-action>
+                    <v-list-item-content>
+                        <v-list-item-title>
+                            Developement
+                        </v-list-item-title>
                     </v-list-item-content>
                 </v-list-item>
             </v-list-item-group>
@@ -110,15 +114,6 @@ export default {
                         to: '/about'
                     }
                 ])
-            }
-
-            // Hidden dev page
-            if (process.env.dev) {
-                items.push({
-                    icon: this.$icons.mdiBottleTonicSkullOutline,
-                    title: 'Developement',
-                    to: '/dev'
-                })
             }
 
             return items
