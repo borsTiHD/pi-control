@@ -3,7 +3,7 @@ import pty from 'node-pty'
 const isWin = process.platform === 'win32'
 const isLinux = process.platform === 'linux'
 
-export default (cbHandler = () => {}) => {
+export default (cbHandler = () => {}, cbOnClose = () => {}) => {
     // Callback function will emit data output from the session
     // Create child process
     function spawnPty() {
@@ -33,15 +33,11 @@ export default (cbHandler = () => {}) => {
         resize(cols, rows) {
             this.terminal.resize(Number(cols), Number(rows))
         },
-        async cwd() {
-            /*
-            // TODO - needs to rebuild... with better os support
-            const cwd = await fs.readlink(`/proc/${this.terminal.pid}/cwd`) // '/proc/' + session.terminal.pid + '/cwd'
-            session.handler({ type: 'cwd', data: cwd })
-            */
-        },
         kill() {
             this.terminal.kill()
+        },
+        getPid() {
+            return this?.terminal?.pid
         }
     }
 
@@ -53,9 +49,7 @@ export default (cbHandler = () => {}) => {
     // Handle Closure
     session.terminal.onExit(({ exitCode, signal }) => {
         session.handler({ _status: 'ok', type: 'closure', data: exitCode, signal })
-
-        // TODO
-        // If the terminal got closed (eg. 'exit' command) we need to delete the database entry
+        cbOnClose({ exitCode, signal })
     })
 
     return session

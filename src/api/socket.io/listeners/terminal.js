@@ -20,15 +20,34 @@ export default (io, socket) => {
 
     // Deleting not working terminals from database
     function clearTerminals() {
+        function deleteTerminalId(terminalId, terminalObj) {
+            const errorInfo = `Terminal ID ${terminalId} not working. Deleting ID from database...`
+            console.error(`[Socket.io] -> ${errorInfo}`, terminalObj)
+            socket.emit('terminalMessage', { type: 'error', data: errorInfo })
+            // Deleting terminal from database
+            Terminal.DeleteTerminal(socket.id, terminalId)
+        }
+
         // Getting user data
         const user = Terminal.GetUser(socket.id)
         user.terminals.forEach((obj) => {
-            if (!obj.terminal) {
-                const errorInfo = `Terminal ID ${obj.id} not working. Deleting database...`
-                console.error(`[Socket.io] -> ${errorInfo}`, obj.terminal)
-                socket.emit('terminalMessage', { type: 'error', data: errorInfo })
-                // Deleting terminal from database
-                Terminal.DeleteTerminal(socket.id, obj.id)
+            // Trying to detect defectice terminals
+            try {
+                // Check if terminal object exists
+                if (!obj.terminal) {
+                    console.error(`[Socket.io] -> Terminal ID "${obj.id}": Object not existing`)
+                    deleteTerminalId(obj.id, obj.terminal)
+                }
+
+                // Check if pid can be determined
+                const pid = obj.terminal.getPid()
+                if (!pid) {
+                    console.error(`[Socket.io] -> Terminal ID "${obj.id}": Pid could not be determined`)
+                    deleteTerminalId(obj.id, obj.terminal)
+                }
+            } catch (error) {
+                console.error(`[Socket.io] -> Terminal ID "${obj.id}": Undefined error occurred`)
+                deleteTerminalId(obj.id, obj.terminal)
             }
         })
     }
@@ -70,9 +89,7 @@ export default (io, socket) => {
     socket.on('get-all-terminals', (message) => {
         if (message) {
             console.log(`[Socket.io] -> Terminal: Client '${socket.id}' wants to get all terminals`)
-
-            // Sending updated terminals to frontend
-            sendAllTerminals()
+            sendAllTerminals() // Sending updated terminals to frontend
         }
     })
 
@@ -82,10 +99,14 @@ export default (io, socket) => {
         if (message) {
             try {
                 const terminal = Terminal.GetTerminal(socket.id, message.id)
-                terminal.resize(message.cols, message.rows)
+                if (terminal) {
+                    terminal.resize(message.cols, message.rows)
+                } else {
+                    throw new Error('Terminal does not exist')
+                }
             } catch (error) {
-                console.error(`[Socket.io] -> Terminal: Client '${socket.id}' - Error on resizing terminal session:`, error)
-                socket.emit('terminalMessage', { type: 'error', data: `Error on resizing terminal session: ${error.message}` })
+                // console.error(`[Socket.io] -> Terminal: Client '${socket.id}' - Error on resizing terminal session:`, error)
+                // socket.emit('terminalMessage', { type: 'error', data: `Error on resizing terminal session: ${error.message}` })
             }
         }
     })
@@ -97,7 +118,11 @@ export default (io, socket) => {
 
             // Getting terminal and kill process
             const terminal = Terminal.GetTerminal(socket.id, terminalID)
-            terminal.kill()
+            if (terminal) {
+                terminal.kill()
+            } else {
+                throw new Error('Terminal does not exist')
+            }
 
             // Deleting terminal from database
             Terminal.DeleteTerminal(socket.id, terminalID)
@@ -134,7 +159,11 @@ export default (io, socket) => {
         try {
             // Getting terminal and sending data
             const terminal = Terminal.GetTerminal(socket.id, terminalId)
-            terminal.send(data)
+            if (terminal) {
+                terminal.send(data)
+            } else {
+                throw new Error('Terminal does not exist')
+            }
         } catch (error) {
             console.error(`[Socket.io] -> Terminal: Client '${socket.id}' - Error on sending data to terminal session:`, error)
             socket.emit('terminalMessage', { type: 'error', data: `Error on sending data to terminal session: ${error.message}` })
@@ -148,7 +177,13 @@ export default (io, socket) => {
         // Killing all existing terminals for this user
         const user = Terminal.GetUser(socket.id)
         user.terminals.forEach((obj) => {
-            obj.terminal.kill()
+            if (obj.terminal) {
+                try {
+                    obj.terminal.kill()
+                } catch (error) {
+                    // Terminal session not existing...
+                }
+            }
         })
 
         // Deleting all user Data
