@@ -8,7 +8,7 @@ export default [
         name: 'Default',
         theme: {
             light: {
-                primary: '#E03F54',
+                primary: '#F82449',
                 secondary: '#424242',
                 accent: '#82B1FF',
                 error: '#FF5252',
@@ -23,7 +23,7 @@ export default [
                 footerBackground: '#F5F5F5'
             },
             dark: {
-                primary: '#E03F54',
+                primary: '#F82449',
                 secondary: '#424242',
                 accent: '#FF4081',
                 error: '#FF5252',
