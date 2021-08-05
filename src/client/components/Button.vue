@@ -4,7 +4,8 @@
             <v-btn
                 :x-small="xSmall" :small="small" :large="large" :x-large="xLarge"
                 :disabled="disabled" :loading="loading" :class="btnClass" :color="btnColor"
-                :block="block" :outlined="outlined" :text="text" @click="handleClick" v-on="on"
+                :block="block" :outlined="outlined" :text="text" :depressed="depressed" :dark="dark" :light="light"
+                @click="handleClick" v-on="on"
             >
                 <v-icon v-if="icon" :class="iconClass" :size="iconSize">{{ icon }}</v-icon>
                 {{ name }}
@@ -83,6 +84,18 @@ export default {
             default: false
         },
         text: {
+            type: Boolean,
+            default: false
+        },
+        depressed: {
+            type: Boolean,
+            default: false
+        },
+        dark: {
+            type: Boolean,
+            default: false
+        },
+        light: {
             type: Boolean,
             default: false
         }

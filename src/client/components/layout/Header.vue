@@ -11,6 +11,7 @@
 
         <app-pwa-chip />
         <app-update-chip />
+        <donate-chip />
     </v-app-bar>
 </template>
 
@@ -19,12 +20,14 @@ import { mapGetters, mapActions } from 'vuex'
 import pkg from 'projRoot/package.json'
 import AppUpdateChip from '~/components/display/AppUpdateChip.vue'
 import AppPwaChip from '~/components/display/AppPwaChip.vue'
+import DonateChip from '~/components/display/DonateChip.vue'
 
 export default {
     name: 'Header',
     components: {
         AppUpdateChip,
-        AppPwaChip
+        AppPwaChip,
+        DonateChip
     },
     data() {
         return {

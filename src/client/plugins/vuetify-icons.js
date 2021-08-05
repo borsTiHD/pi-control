@@ -47,7 +47,8 @@ import {
     mdiCircleSmall,
     mdiCodeTags,
     mdiHeart,
-    mdiGithub
+    mdiGithub,
+    mdiCreditCardOutline
 } from '@mdi/js'
 
 const MY_ICONS = {
@@ -99,7 +100,8 @@ const MY_ICONS = {
     mdiCircleSmall,
     mdiCodeTags,
     mdiHeart,
-    mdiGithub
+    mdiGithub,
+    mdiCreditCardOutline
 }
 
 export default ({ app }, inject) => {
