@@ -2,7 +2,7 @@ import Vue from 'vue'
 import VueSocketIO from 'vue-socket.io'
 import SocketIO from 'socket.io-client'
 
-export default ({ $auth, $config }) => {
+export default ({ $auth, $config, store }) => {
     const isDev = $config.dev
     const HOST_IP = $config.HOST_IP
     const PORT_BACKEND = $config.PORT_BACKEND
@@ -18,6 +18,11 @@ export default ({ $auth, $config }) => {
 
     Vue.use(new VueSocketIO({
         // debug: !!isDev,
-        connection: SocketIO(connection, options)
+        connection: SocketIO(connection, options),
+        vuex: {
+            store,
+            actionPrefix: 'SOCKET_',
+            mutationPrefix: 'SOCKET_'
+        }
     }))
 }

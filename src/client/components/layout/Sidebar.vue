@@ -64,6 +64,11 @@ export default {
                         to: '/processes'
                     },
                     {
+                        icon: 'mdi-console',
+                        title: 'Terminal',
+                        to: '/terminal'
+                    },
+                    {
                         icon: 'mdi-script-text-outline',
                         title: 'Scripts',
                         to: '/scripts'

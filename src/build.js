@@ -207,12 +207,25 @@ async function archiveProject() {
     const file = path.join(BUILD_DIR, `${pkg.name}-v${pkg.version}.tar.gz`)
     const stream = fs.createWriteStream(file)
 
+    // Creating new package.json object for production
+    const newPkg = JSON.parse(JSON.stringify(pkg))
+    delete newPkg.scripts
+    delete newPkg.dependencies
+    delete newPkg.devDependencies
+    newPkg.scripts = {
+        start: 'node ./dist/server/app.cjs'
+    }
+    newPkg.dependencies = {
+        'node-pty': pkg.dependencies['node-pty']
+    }
+
     return new Promise((resolve, reject) => {
         // Adding files & folders
         archive
             .directory(DIST_DIR, path.join(pkg.name, 'dist')) // Compiled app
             .directory(SCRIPTS_DIR, path.join(pkg.name, 'scripts', 'server')) // Server scripts
-            .append(fs.createReadStream(PKG_FILE), { name: path.join(pkg.name, 'package.json') }) // Package.json
+            // .append(fs.createReadStream(PKG_FILE), { name: path.join(pkg.name, 'package.json') }) // Original Package.json
+            .append(JSON.stringify(newPkg), { name: path.join(pkg.name, 'package.json') }) // Modified Package.json
             .append(fs.createReadStream(path.join(PROJECT_ROOT, 'ecosystem.json')), { name: path.join(pkg.name, 'ecosystem.json') }) // pm2 script
             .append(fs.createReadStream(path.join(PROJECT_ROOT, 'README.md')), { name: path.join(pkg.name, 'README.md') }) // Readme
             .append(fs.createReadStream(path.join(PROJECT_ROOT, 'CHANGELOG.md')), { name: path.join(pkg.name, 'CHANGELOG.md') }) // Changelog

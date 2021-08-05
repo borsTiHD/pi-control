@@ -1,12 +1,16 @@
 import initRoomHandlers from './roomHandlers.js'
+import initTerminal from './terminal.js'
 
 export default (io) => {
     // On client connection
     io.on('connection', (socket) => {
-        console.log('[Socket.io] -> Client connected...')
+        console.log(`[Socket.io] -> Client '${socket.id}' connected...`)
 
         // Event: 'room:join' / 'room:leave'
         initRoomHandlers(io, socket)
+
+        // Event: Terminal Events
+        initTerminal(io, socket)
 
         // Event: 'disconnect' - Fires when a client disconnects
         socket.on('disconnect', function() {
