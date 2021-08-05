@@ -11,7 +11,6 @@
                         :input-value="getAutoRefresh"
                         label="Do you want to scan the data continuously?"
                         hide-details="auto"
-                        inset
                         @change="updateAutoRefresh($event !== null, $event)"
                     />
                 </v-col>
