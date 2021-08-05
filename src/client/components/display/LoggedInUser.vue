@@ -12,9 +12,7 @@
                     v-on="on"
                     @click:close="logoutUser"
                 >
-                    <v-avatar left>
-                        <v-icon>{{ $icons.mdiAccountOutline }}</v-icon>
-                    </v-avatar>
+                    <v-icon left>{{ $icons.mdiAccountOutline }}</v-icon>
                     {{ $auth.loggedIn ? $auth.user.email : 'logged out' }}
                 </v-chip>
             </template>
