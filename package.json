@@ -66,7 +66,7 @@
     "vue-socket.io": "^3.0.10",
     "vue-toastification": "^1.7.11",
     "vuex-persistedstate": "^4.0.0",
-    "webpack": "^5.46.0",
+    "webpack": "^5.48.0",
     "webpack-cli": "^4.7.2",
     "webpack-node-externals": "^3.0.0",
     "xterm": "^4.13.0",
