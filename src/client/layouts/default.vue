@@ -5,7 +5,6 @@
     >
         <app-header />
         <app-sidebar />
-        <app-settingsbar />
 
         <v-main>
             <v-container id="container" fluid :style="`height: ${containerHeight}px;`">
@@ -23,7 +22,6 @@ import { mapGetters } from 'vuex'
 
 import AppHeader from '~/components/layout/Header.vue'
 import AppSidebar from '~/components/layout/Sidebar.vue'
-import AppSettingsbar from '~/components/layout/Settingsbar.vue'
 import AppFooter from '~/components/layout/Footer.vue'
 import AppAlerts from '~/components/alerts/Alerts'
 
@@ -31,7 +29,6 @@ export default {
     components: {
         AppHeader,
         AppSidebar,
-        AppSettingsbar,
         AppFooter,
         AppAlerts
     },

@@ -30,7 +30,7 @@
                     <v-switch
                         :value="darkMode"
                         :input-value="darkMode"
-                        :label="darkMode ? 'Dark Theme' : 'Light Theme'"
+                        label="Dark Mode"
                         hide-details="auto"
                         dense
                         @change="updateDarkMode($event !== null, $event)"
