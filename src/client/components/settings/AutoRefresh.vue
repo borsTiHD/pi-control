@@ -21,7 +21,7 @@
                         dense
                         prominent
                         type="info"
-                        icon="mdi-school"
+                        :icon="$icons.mdiSchool"
                         class="mb-0"
                     >
                         Influences data collecting on the dashboard. If activated, several data (CPU, memory, temperature and uptime) are polled on a regular basis.

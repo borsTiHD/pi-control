@@ -1,7 +1,7 @@
 <template>
     <v-app-bar clipped-left fixed app>
         <v-btn icon @click.stop="drawer = !drawer">
-            <v-icon>mdi-menu</v-icon>
+            <v-icon>{{ $icons.mdiMenu }}</v-icon>
         </v-btn>
         <v-toolbar-title style="cursor: pointer" @click="$router.push('/')" v-text="title" />
         <v-spacer />
@@ -9,7 +9,7 @@
         <app-pwa-chip />
         <app-update-chip />
         <v-btn icon @click.stop="rightDrawer = !rightDrawer">
-            <v-icon>mdi-cogs</v-icon>
+            <v-icon>{{ $icons.mdiCogs }}</v-icon>
         </v-btn>
     </v-app-bar>
 </template>

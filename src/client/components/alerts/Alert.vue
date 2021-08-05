@@ -23,7 +23,7 @@
                     :color="data.color"
                     @click="deleteAlert"
                 >
-                    <v-icon>mdi-close</v-icon>
+                    <v-icon>{{ $icons.mdiClose }}</v-icon>
                 </v-btn>
             </div>
         </div>

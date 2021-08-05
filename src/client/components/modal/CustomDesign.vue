@@ -24,7 +24,7 @@
                                         <!-- Text shows the color code and activates the color picker -->
                                         <v-text-field
                                             :label="name"
-                                            append-icon="mdi-format-color-fill"
+                                            :append-icon="$icons.mdiFormatColorFill"
                                             :value="style"
                                             readonly
                                             v-on="on"

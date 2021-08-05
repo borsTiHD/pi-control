@@ -8,7 +8,7 @@
                         color="primary"
                         class="mr-2"
                     >
-                        mdi-console
+                        {{ $icons.mdiConsole }}
                     </v-icon>
                     Terminal
 
@@ -38,7 +38,7 @@
                         dense
                         prominent
                         type="info"
-                        icon="mdi-school"
+                        :icon="$icons.mdiSchool"
                         class="mb-0"
                     >
                         Click 'New' to create a new terminal window.
@@ -67,7 +67,7 @@
                                         @click="closeTerminal(item.id)"
                                     >
                                         <v-icon>
-                                            mdi-minus
+                                            {{ $icons.mdiMinus }}
                                         </v-icon>
                                     </v-btn>
                                 </template>

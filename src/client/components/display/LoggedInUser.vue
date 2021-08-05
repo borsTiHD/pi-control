@@ -11,7 +11,7 @@
                     v-on="on"
                 >
                     <v-icon left>
-                        mdi-account-outline
+                        {{ $icons.mdiAccountOutline }}
                     </v-icon>
                     <span>{{ $auth.loggedIn ? $auth.user.email : 'logged out' }}</span>
                 </v-chip>

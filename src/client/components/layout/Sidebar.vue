@@ -54,32 +54,32 @@ export default {
             if (this.$auth.loggedIn) {
                 items = items.concat([
                     {
-                        icon: 'mdi-monitor-dashboard',
+                        icon: this.$icons.mdiMonitorDashboard,
                         title: 'Dashboard',
                         to: '/dashboard'
                     },
                     {
-                        icon: 'mdi-car-cruise-control',
+                        icon: this.$icons.mdiCarCruiseControl,
                         title: 'Processes',
                         to: '/processes'
                     },
                     {
-                        icon: 'mdi-console',
+                        icon: this.$icons.mdiConsole,
                         title: 'Terminal',
                         to: '/terminal'
                     },
                     {
-                        icon: 'mdi-script-text-outline',
+                        icon: this.$icons.mdiScriptTextOutline,
                         title: 'Scripts',
                         to: '/scripts'
                     },
                     {
-                        icon: 'mdi-information-outline',
+                        icon: this.$icons.mdiInformationOutline,
                         title: 'About',
                         to: '/about'
                     },
                     {
-                        icon: 'mdi-cogs',
+                        icon: this.$icons.mdiCogs,
                         title: 'Settings',
                         to: '/settings'
                     }
@@ -87,12 +87,12 @@ export default {
             } else if (this.regAllowed) {
                 items = items.concat([
                     {
-                        icon: 'mdi-account-plus',
+                        icon: this.$icons.mdiAccountPlus,
                         title: 'Register',
                         to: '/user/register'
                     },
                     {
-                        icon: 'mdi-information-outline',
+                        icon: this.$icons.mdiInformationOutline,
                         title: 'About',
                         to: '/about'
                     }
@@ -100,12 +100,12 @@ export default {
             } else {
                 items = items.concat([
                     {
-                        icon: 'mdi-account-check ',
+                        icon: this.$icons.mdiAccountCheck,
                         title: 'Login',
                         to: '/user/login'
                     },
                     {
-                        icon: 'mdi-information-outline',
+                        icon: this.$icons.mdiInformationOutline,
                         title: 'About',
                         to: '/about'
                     }
@@ -115,7 +115,7 @@ export default {
             // Hidden dev page
             if (process.env.dev) {
                 items.push({
-                    icon: 'mdi-bottle-tonic-skull-outline',
+                    icon: this.$icons.mdiBottleTonicSkullOutline,
                     title: 'Developement',
                     to: '/dev'
                 })

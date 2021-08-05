@@ -10,7 +10,7 @@
                 v-on="on"
                 @click="runScript"
             >
-                <v-icon>mdi-play-network-outline</v-icon>
+                <v-icon>{{ $icons.mdiPlayNetworkOutline }}</v-icon>
             </v-btn>
         </template>
         <span>Run script</span>

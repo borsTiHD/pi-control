@@ -12,7 +12,7 @@
                         v-bind="attrs"
                         v-on="{ ...tooltip, ...menu }"
                     >
-                        <v-icon>mdi-dots-horizontal</v-icon>
+                        <v-icon>{{ $icons.mdiDotsHorizontal }}</v-icon>
                     </v-btn>
                 </template>
                 <span>Options</span>

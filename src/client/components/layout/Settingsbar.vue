@@ -4,7 +4,7 @@
             <div>
                 <v-list-item>
                     <v-list-item-avatar>
-                        <v-icon>mdi-cogs</v-icon>
+                        <v-icon>{{ $icons.mdiCogs }}</v-icon>
                     </v-list-item-avatar>
                     <v-list-item-content>
                         <v-list-item-title class="title">Quick Settings</v-list-item-title>
@@ -16,7 +16,7 @@
                 <v-list-item @click="changeDarkMode">
                     <v-list-item-action>
                         <v-icon>
-                            {{ darkMode ? 'mdi-weather-sunny' : 'mdi-weather-night' }}
+                            {{ darkMode ? $icons.mdiWeatherSunny : $icons.mdiWeatherNight }}
                         </v-icon>
                     </v-list-item-action>
                     <v-list-item-title>
@@ -26,7 +26,7 @@
 
                 <v-list-item v-if="$auth.loggedIn" @click="logoutUser">
                     <v-list-item-action>
-                        <v-icon>mdi-account-arrow-left</v-icon>
+                        <v-icon>{{ $icons.mdiAccountArrowLeft }}</v-icon>
                     </v-list-item-action>
                     <v-list-item-title>Logout</v-list-item-title>
                 </v-list-item>

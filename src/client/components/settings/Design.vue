@@ -64,7 +64,7 @@
                                 color="primary"
                                 @click="decElevation"
                             >
-                                mdi-minus
+                                {{ $icons.mdiMinus }}
                             </v-icon>
                         </template>
 
@@ -73,7 +73,7 @@
                                 color="primary"
                                 @click="incElevation"
                             >
-                                mdi-plus
+                                {{ $icons.mdiPlus }}
                             </v-icon>
                         </template>
                     </v-slider>

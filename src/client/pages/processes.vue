@@ -8,7 +8,7 @@
                         color="primary"
                         class="mr-2"
                     >
-                        mdi-chip
+                        {{ $icons.mdiChip }}
                     </v-icon>
                     Processes
 
@@ -27,7 +27,7 @@
                     <v-spacer />
                     <v-text-field
                         v-model="table.search"
-                        append-icon="mdi-magnify"
+                        :append-icon="$icons.mdiMagnify"
                         label="Search"
                         single-line
                         hide-details

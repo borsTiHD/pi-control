@@ -10,7 +10,7 @@
                 v-on="on"
                 @click="downloadScript"
             >
-                <v-icon>mdi-cloud-download-outline</v-icon>
+                <v-icon>{{ $icons.mdiCloudDownloadOutline }}</v-icon>
             </v-btn>
         </template>
         <span>Download {{ item.type === 'file' ? 'script' : 'folder' }}</span>

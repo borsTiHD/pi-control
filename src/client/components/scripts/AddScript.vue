@@ -11,7 +11,7 @@
                 @click="addScript"
             >
                 {{ type === 'big' ? 'Add Script' : '' }}
-                <v-icon>mdi-file-plus-outline</v-icon>
+                <v-icon>{{ $icons.mdiFilePlusOutline }}</v-icon>
             </v-btn>
 
             <!-- User prompt for new script -->

@@ -13,7 +13,7 @@
                 <v-card-title class="headline">Logged in</v-card-title>
                 <v-card-text>
                     <v-alert
-                        icon="mdi-shield-lock-outline"
+                        :icon="$icons.mdiShieldLockOutline"
                         prominent
                         text
                         type="info"
@@ -28,7 +28,7 @@
                 <v-card-title class="headline">Registration not available</v-card-title>
                 <v-card-text>
                     <v-alert
-                        icon="mdi-shield-lock-outline"
+                        :icon="$icons.mdiShieldLockOutline"
                         prominent
                         text
                         type="error"

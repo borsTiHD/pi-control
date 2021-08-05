@@ -15,7 +15,7 @@
                             v-on="on"
                             @click="scanFiles"
                         >
-                            <v-icon>mdi-cached</v-icon>
+                            <v-icon>{{ $icons.mdiCached }}</v-icon>
                         </v-btn>
                     </template>
                     <span>Rescan scripts</span>
@@ -31,7 +31,7 @@
                 solo-inverted
                 hide-details
                 clearable
-                clear-icon="mdi-close-circle-outline"
+                :clear-icon="$icons.mdiCloseCircleOutline"
             />
             <v-checkbox
                 v-model="caseSensitive"
@@ -65,7 +65,7 @@
                     >
                         <template #prepend="{ item }">
                             <v-icon>
-                                {{ item.type === 'folder' ? 'mdi-folder' : 'mdi-file-outline' }}
+                                {{ item.type === 'folder' ? $icons.mdiFolder : $icons.mdiFileOutline }}
                             </v-icon>
                         </template>
                         <template #append="{ item }">
@@ -80,7 +80,7 @@
                                 color="primary"
                                 disabled
                             >
-                                <v-icon>mdi-lock-outline</v-icon>
+                                <v-icon>{{ $icons.mdiLockOutline }}</v-icon>
                             </v-btn>
                         </template>
                     </v-treeview>

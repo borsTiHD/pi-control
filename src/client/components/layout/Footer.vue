@@ -1,10 +1,10 @@
 <template>
     <v-footer fixed app class="d-flex justify-center">
         <span class="align-self-center font-weight-thin">&copy; {{ date }} All Rights Reserved</span>
-        <span class="align-self-center"><v-icon color="pink">mdi-circle-small</v-icon></span>
-        <span class="align-self-center font-weight-thin"><v-icon>mdi-code-tags</v-icon> with <v-icon color="pink">mdi-heart</v-icon> in Germany</span>
-        <span class="align-self-center"><v-icon color="pink">mdi-circle-small</v-icon></span>
-        <span class="align-self-center font-weight-thin"><a class="link" :style="darkMode ? 'color: rgba(255, 255, 255)' : 'color: rgba(0, 0, 0, 0.87)'" :href="repoUrl" target="_blank">Source at <v-icon>mdi-github</v-icon></a></span>
+        <span class="align-self-center"><v-icon color="pink">{{ $icons.mdiCircleSmall }}</v-icon></span>
+        <span class="align-self-center font-weight-thin"><v-icon>{{ $icons.mdiCodeTags }}</v-icon> with <v-icon color="pink">{{ $icons.mdiHeart }}</v-icon> in Germany</span>
+        <span class="align-self-center"><v-icon color="pink">{{ $icons.mdiCircleSmall }}</v-icon></span>
+        <span class="align-self-center font-weight-thin"><a class="link" :style="darkMode ? 'color: rgba(255, 255, 255)' : 'color: rgba(0, 0, 0, 0.87)'" :href="repoUrl" target="_blank">Source at <v-icon>{{ $icons.mdiGithub }}</v-icon></a></span>
     </v-footer>
 </template>
 

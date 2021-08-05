@@ -6,7 +6,7 @@
                 color="primary"
                 class="mr-2"
             >
-                mdi-chip
+                {{ $icons.mdiChip }}
             </v-icon>
             CPU
             <v-tooltip right>
@@ -20,7 +20,7 @@
                             :disabled="loading || getAutoRefresh"
                             @click="$emit('rescan')"
                         >
-                            <v-icon>mdi-cached</v-icon>
+                            <v-icon>{{ $icons.mdiCached }}</v-icon>
                         </v-btn>
                     </div>
                 </template>
@@ -71,7 +71,7 @@
                         text
                         prominent
                         type="error"
-                        icon="mdi-cloud-alert"
+                        :icon="$icons.mdiCloudAlert"
                     >
                         {{ textNoData }}
                     </v-alert>

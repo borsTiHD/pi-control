@@ -10,7 +10,7 @@
                 v-on="on"
                 @click="addFolder"
             >
-                <v-icon>mdi-folder-plus-outline</v-icon>
+                <v-icon>{{ $icons.mdiFolderPlusOutline }}</v-icon>
             </v-btn>
 
             <!-- User prompt for new folder -->
