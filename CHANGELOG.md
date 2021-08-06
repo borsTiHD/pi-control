@@ -5,6 +5,18 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
+### Added
+- App: New donation button integrated. Small enough to hopefully not be distracting.
+- App: New user menu displaying users gravatar, if it exists. For that, a hashed email address will be send to [gravatar.com](https://gravatar.com)
+
+### Changed
+- App: Removing settingsbar and integrated all functionality into new user menu and normal sidebar.
+- App: Changing default font to poppins.
+- App: Changing icons from icon-font to '@mdi/js' for better treeshaking and smaller build size.
+- App: Changing default theme colors.
+- App: Changing styles for switch inputs.
+- App: Changing page title to represent the current module.
+- App: Changing hidden dev page position (only for dev).
 
 ## [0.2.0] - 2021-08-05
 ### Added
