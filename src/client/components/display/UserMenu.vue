@@ -25,6 +25,15 @@
                         depressed
                         rounded
                         text
+                        @click="openSettings"
+                    >
+                        Settings
+                    </v-btn>
+                    <v-divider class="my-3" />
+                    <v-btn
+                        depressed
+                        rounded
+                        text
                         @click="loginButtonAction"
                     >
                         {{ loginButtonText }}
@@ -93,6 +102,9 @@ export default {
         async userLogout() {
             console.log('[Logout] -> User logout.')
             await this.$auth.logout(/* .... */)
+        },
+        openSettings() {
+            this.$router.push('/settings')
         }
     }
 }
