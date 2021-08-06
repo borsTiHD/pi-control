@@ -121,11 +121,6 @@ export default {
                         icon: this.$icons.mdiInformationOutline,
                         title: 'About',
                         to: '/about'
-                    },
-                    {
-                        icon: this.$icons.mdiCogs,
-                        title: 'Settings',
-                        to: '/settings'
                     }
                 ])
             } else if (this.regAllowed) {
