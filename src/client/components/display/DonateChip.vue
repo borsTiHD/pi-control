@@ -26,27 +26,40 @@
                         Thank you so much for considering donating to me, I really appreciate it. Your donation will help me continue to work on the app and add new features.
                     </v-card-text>
 
-                    <v-card-text class="d-flex mt-2">
-                        <app-button
-                            name="PayPal.Me"
-                            tooltip="Send via PayPal.Me"
-                            btn-color="#0070ba"
-                            btn-class="flex-grow-1"
-                            :icon="$icons.mdiCreditCardOutline"
-                            outlined
-                            @click="openPaypalMe"
-                        />
-                        <v-spacer />
-                        <span>or</span>
-                        <v-spacer />
-                        <app-button
-                            name="☕ Buy Me a Coffee"
-                            tooltip="Send via buymeacoffee.com"
-                            btn-color="#fd0"
-                            btn-class="flex-grow-1"
-                            outlined
-                            @click="openBuyMeACoffee"
-                        />
+                    <v-card-text>
+                        <v-row>
+                            <v-col cols="12" class="d-flex">
+                                <app-button
+                                    name="PayPal.Me"
+                                    tooltip="Send via PayPal.Me"
+                                    btn-color="#0070ba"
+                                    btn-class="flex-grow-1"
+                                    :icon="$icons.mdiCreditCardOutline"
+                                    outlined
+                                    @click="openPaypalMe"
+                                />
+                                <v-spacer />
+                                <span class="align-self-center">or</span>
+                                <v-spacer />
+                                <app-button
+                                    name="☕ Buy Me a Coffee"
+                                    tooltip="Send via buymeacoffee.com"
+                                    btn-color="#fd0"
+                                    btn-class="flex-grow-1"
+                                    outlined
+                                    @click="openBuyMeACoffee"
+                                />
+                            </v-col>
+                            <v-col class="d-flex justify-center">
+                                <app-button
+                                    name="❤ Github Sponsor"
+                                    tooltip="Support via Github"
+                                    btn-color="primary"
+                                    outlined
+                                    @click="openGithubSponsor"
+                                />
+                            </v-col>
+                        </v-row>
                     </v-card-text>
 
                     <v-divider class="mx-4" />
@@ -80,7 +93,8 @@ export default {
         return {
             dialog: false,
             paypalMe: 'https://paypal.me/borstihd',
-            buyMeACoffee: 'https://www.buymeacoffee.com/borstihd'
+            buyMeACoffee: 'https://www.buymeacoffee.com/borstihd',
+            githubSponsor: 'https://github.com/sponsors/borsTiHD'
         }
     },
     methods: {
@@ -89,6 +103,9 @@ export default {
         },
         openBuyMeACoffee() {
             window.open(this.buyMeACoffee, '_blank')
+        },
+        openGithubSponsor() {
+            window.open(this.githubSponsor, '_blank')
         }
     }
 }
