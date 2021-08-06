@@ -12,21 +12,13 @@
                 x-large
                 v-on="on"
             >
-                <v-avatar>
-                    <v-icon>
-                        {{ $icons.mdiAccountCircle }}
-                    </v-icon>
-                </v-avatar>
+                <user-avatar />
             </v-btn>
         </template>
         <v-card>
             <v-list-item-content class="justify-center">
                 <div class="mx-auto text-center">
-                    <v-avatar>
-                        <v-icon>
-                            {{ $icons.mdiAccountCircle }}
-                        </v-icon>
-                    </v-avatar>
+                    <user-avatar />
                     <p class="text-caption mt-1">{{ $auth.loggedIn ? $auth.user.email : 'currently not logged in' }}</p>
                     <v-divider class="my-3" />
                     <v-btn
@@ -45,11 +37,12 @@
 
 <script>
 // import AppButton from '@/components/Button.vue'
+import UserAvatar from '@/components/display/UserAvatar.vue'
 
 export default {
     name: 'UserMenu',
     components: {
-        // AppButton
+        UserAvatar
     },
     data() {
         return {
