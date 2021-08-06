@@ -5,6 +5,7 @@
                 color="#F82449"
                 bordered
                 small
+                dark
                 v-bind="attrs"
                 v-on="on"
                 @click="dialog = true"
