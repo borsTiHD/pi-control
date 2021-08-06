@@ -2,7 +2,7 @@
     <v-tooltip left>
         <template #activator="{ on, attrs }">
             <v-chip
-                color="primary"
+                color="#F82449"
                 bordered
                 small
                 v-bind="attrs"
