@@ -1,16 +1,18 @@
 <template>
-    <v-app-bar clipped-left fixed app>
-        <v-btn icon @click.stop="drawer = !drawer">
-            <v-icon>mdi-menu</v-icon>
-        </v-btn>
+    <v-app-bar
+        scroll-target="#container"
+        elevate-on-scroll
+        clipped-left
+        app
+    >
+        <v-app-bar-nav-icon @click="drawer = !drawer" />
         <v-toolbar-title style="cursor: pointer" @click="$router.push('/')" v-text="title" />
         <v-spacer />
 
         <app-pwa-chip />
         <app-update-chip />
-        <v-btn icon @click.stop="rightDrawer = !rightDrawer">
-            <v-icon>mdi-cogs</v-icon>
-        </v-btn>
+        <donate-chip />
+        <user-menu />
     </v-app-bar>
 </template>
 
@@ -19,12 +21,16 @@ import { mapGetters, mapActions } from 'vuex'
 import pkg from 'projRoot/package.json'
 import AppUpdateChip from '~/components/display/AppUpdateChip.vue'
 import AppPwaChip from '~/components/display/AppPwaChip.vue'
+import DonateChip from '~/components/display/DonateChip.vue'
+import UserMenu from '~/components/display/UserMenu.vue'
 
 export default {
     name: 'Header',
     components: {
         AppUpdateChip,
-        AppPwaChip
+        AppPwaChip,
+        DonateChip,
+        UserMenu
     },
     data() {
         return {
@@ -34,8 +40,7 @@ export default {
     computed: {
         ...mapGetters({
             isNewRelease: 'isNewRelease',
-            getDrawer: 'layout/getDrawer',
-            getRightDrawer: 'layout/getRightDrawer'
+            getDrawer: 'layout/getDrawer'
         }),
         drawer: {
             get() {
@@ -44,20 +49,11 @@ export default {
             set(value) {
                 this.setDrawer(value)
             }
-        },
-        rightDrawer: {
-            get() {
-                return this.getRightDrawer
-            },
-            set(value) {
-                this.setRightDrawer(value)
-            }
         }
     },
     methods: {
         ...mapActions({
-            setDrawer: 'layout/setDrawer',
-            setRightDrawer: 'layout/setRightDrawer'
+            setDrawer: 'layout/setDrawer'
         })
     }
 }

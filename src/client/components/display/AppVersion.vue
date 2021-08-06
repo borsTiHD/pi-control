@@ -18,10 +18,10 @@
                         loading
                         disabled
                     >
-                        <v-icon>mdi-cached</v-icon>
+                        <v-icon>{{ $icons.mdiCached }}</v-icon>
                     </v-btn>
                     <v-icon v-else left>
-                        mdi-server-plus
+                        {{ $icons.mdiServerPlus }}
                     </v-icon>
                     <span>{{ currentVersion }}</span>
                 </v-chip>

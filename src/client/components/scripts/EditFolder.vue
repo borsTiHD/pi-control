@@ -10,7 +10,7 @@
                 v-on="on"
                 @click="editFolder"
             >
-                <v-icon>mdi-folder-edit-outline</v-icon>
+                <v-icon>{{ $icons.mdiFolderEditOutline }}</v-icon>
             </v-btn>
 
             <!-- User prompt for user data -->

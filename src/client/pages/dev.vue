@@ -24,6 +24,11 @@ export default {
         SwaggerDocs,
         TestsApp,
         TestTerminal
+    },
+    head() {
+        return {
+            title: `${this.$options.name} | ${this.headTitle()}`
+        }
     }
 }
 </script>

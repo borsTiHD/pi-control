@@ -10,7 +10,7 @@
                 v-on="on"
                 @click="deleteScript"
             >
-                <v-icon>mdi-trash-can-outline</v-icon>
+                <v-icon>{{ $icons.mdiTrashCanOutline }}</v-icon>
             </v-btn>
         </template>
         <span>Delete {{ item.type === 'file' ? 'script' : 'folder' }}</span>

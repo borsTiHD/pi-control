@@ -54,6 +54,11 @@ export default {
             continueRoute: '/dashboard'
         }
     },
+    head() {
+        return {
+            title: `${this.$options.name} | ${this.headTitle()}`
+        }
+    },
     computed: {
         ...mapGetters({
             getElevation: 'settings/getElevation',

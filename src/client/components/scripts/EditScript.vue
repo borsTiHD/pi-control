@@ -10,7 +10,7 @@
                 v-on="on"
                 @click="editScript"
             >
-                <v-icon>mdi-file-edit-outline</v-icon>
+                <v-icon>{{ $icons.mdiFileEditOutline }}</v-icon>
             </v-btn>
 
             <!-- User prompt for new script -->

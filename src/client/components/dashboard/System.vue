@@ -6,7 +6,7 @@
                 color="primary"
                 class="mr-2"
             >
-                mdi-laptop
+                {{ $icons.mdiLaptop }}
             </v-icon>
             System
             <v-tooltip right>
@@ -21,7 +21,7 @@
                         v-on="on"
                         @click="$emit('rescan')"
                     >
-                        <v-icon>mdi-cached</v-icon>
+                        <v-icon>{{ $icons.mdiCached }}</v-icon>
                     </v-btn>
                 </template>
                 <span>Rescan</span>
@@ -70,7 +70,7 @@
                         text
                         prominent
                         type="error"
-                        icon="mdi-cloud-alert"
+                        :icon="$icons.mdiCloudAlert"
                     >
                         {{ textNoData }}
                     </v-alert>

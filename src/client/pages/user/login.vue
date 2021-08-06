@@ -5,7 +5,7 @@
                 <v-card-title class="headline">Logged in</v-card-title>
                 <v-card-text>
                     <v-alert
-                        icon="mdi-shield-lock-outline"
+                        :icon="$icons.mdiShieldLockOutline"
                         prominent
                         text
                         type="info"
@@ -39,6 +39,11 @@ export default {
     data: () => ({
         loading: false
     }),
+    head() {
+        return {
+            title: `${this.$options.name} | ${this.headTitle()}`
+        }
+    },
     computed: {
         ...mapGetters({
             getElevation: 'settings/getElevation',
@@ -73,7 +78,8 @@ export default {
                 this.$router.push('/dashboard')
             } catch (error) {
                 console.error('[Login] -> Failed to login:', error)
-                this.$toast.error(error.response.data.message)
+                const message = error.response.data.message || error.message || 'Unknown error has occurred'
+                this.$toast.error(message)
             }
             this.loading = false
         },

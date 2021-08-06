@@ -32,7 +32,7 @@ const PKG_FILE = path.join(PROJECT_ROOT, 'package.json')
 // Package.json
 const pkg = JSON.parse(fs.readFileSync(PKG_FILE)) // import pkg from '../../package.json'
 
-// Webpage title
+// Webpage title, also used in global "titleMixin"
 const headTitle = isDev ? `${pkg.productName.replace(' 🐱‍👤', '')} - DEV` : pkg.productName.replace(' 🐱‍👤', '')
 
 // Alias
@@ -113,6 +113,8 @@ export default {
 
     // Plugins to run before rendering page: https://go.nuxtjs.dev/config-plugins
     plugins: [
+        { mode: 'client', src: '@/plugins/vuetify-font.js' },
+        { mode: 'client', src: '@/plugins/vuetify-icons.js' },
         { src: '@/plugins/vuex-orm.js' },
         { mode: 'client', src: '@/plugins/persistedState.client.js' },
         { mode: 'client', src: '@/plugins/run-script.js' },
@@ -197,6 +199,11 @@ export default {
     // Vuetify module configuration: https://go.nuxtjs.dev/config-vuetify
     vuetify: {
         customVariables: ['~/assets/variables.scss'],
+        treeShake: true,
+        defaultAssets: false,
+        icons: {
+            iconfont: 'mdiSvg'
+        },
         theme: {
             themes: {
                 light: {},

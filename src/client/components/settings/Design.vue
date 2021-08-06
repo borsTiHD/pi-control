@@ -30,7 +30,7 @@
                     <v-switch
                         :value="darkMode"
                         :input-value="darkMode"
-                        :label="darkMode ? 'Dark Theme' : 'Light Theme'"
+                        label="Dark Mode"
                         hide-details="auto"
                         dense
                         @change="updateDarkMode($event !== null, $event)"
@@ -64,7 +64,7 @@
                                 color="primary"
                                 @click="decElevation"
                             >
-                                mdi-minus
+                                {{ $icons.mdiMinus }}
                             </v-icon>
                         </template>
 
@@ -73,7 +73,7 @@
                                 color="primary"
                                 @click="incElevation"
                             >
-                                mdi-plus
+                                {{ $icons.mdiPlus }}
                             </v-icon>
                         </template>
                     </v-slider>
