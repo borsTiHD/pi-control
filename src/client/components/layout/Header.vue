@@ -12,6 +12,7 @@
         <app-pwa-chip />
         <app-update-chip />
         <donate-chip />
+        <user-menu />
     </v-app-bar>
 </template>
 
@@ -21,13 +22,15 @@ import pkg from 'projRoot/package.json'
 import AppUpdateChip from '~/components/display/AppUpdateChip.vue'
 import AppPwaChip from '~/components/display/AppPwaChip.vue'
 import DonateChip from '~/components/display/DonateChip.vue'
+import UserMenu from '~/components/display/UserMenu.vue'
 
 export default {
     name: 'Header',
     components: {
         AppUpdateChip,
         AppPwaChip,
-        DonateChip
+        DonateChip,
+        UserMenu
     },
     data() {
         return {
