@@ -13,7 +13,6 @@
             <!-- Sidebar Navigation -->
             <v-list-item-group
                 v-model="selectedItem"
-                color="primary"
             >
                 <!-- Pages -->
                 <v-list-item v-for="(item, i) in items" :key="i" :to="item.to" router exact>
