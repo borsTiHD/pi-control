@@ -2,6 +2,7 @@
     <v-navigation-drawer
         v-model="drawer"
         :floating="!getOutlined"
+        temporary
         absolute
         clipped
         app
