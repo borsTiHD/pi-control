@@ -33,9 +33,13 @@
  *                          email:
  *                              type: string
  *                              description: User email address.
+ *                          emailMd5:
+ *                              type: string
+ *                              description: User email but md5 hashed.
  *              example:
  *                  user:
  *                      email: admin@admin.de
+ *                      emailMd5: 069840f6917e85a02167febb964f0041
  *          Token:
  *              type: object
  *              required:
@@ -98,7 +102,7 @@ router.post('/login', (req, res) => {
             return res.status(500).json({
                 _status: 'error',
                 info: 'An error has occurred',
-                err
+                message: err?.message
             })
         } else if (!user) {
             // you should log it
@@ -121,7 +125,7 @@ router.post('/login', (req, res) => {
  *          tags:
  *              - Users
  *          summary: User validation
- *          description: Validates correctness of the token when a user visits restricted pages on the frontend.
+ *          description: Validates correctness of the token when a user visits restricted pages on the frontend. Also returns user data.
  *          security:
  *              - bearerAuth: []
  *          responses:
@@ -144,7 +148,7 @@ router.get('/user', async(req, res) => {
             return res.status(400).json({
                 _status: 'error',
                 info: 'An error has occurred',
-                err
+                message: err?.message
             })
         } else if (!user) {
             // you should log it

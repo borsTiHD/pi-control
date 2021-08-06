@@ -40,6 +40,12 @@ async function setAuthUserSecret() {
     return secret
 }
 
+// MD5 Hash a string
+function md5HashString(string) {
+    const hash = crypto.createHash('md5').update(string).digest('hex')
+    return hash
+}
+
 // Setting up passport for email/password authentication
 passport.use(new LocalStrategy.Strategy({ usernameField: 'email', passwordField: 'password' }, async function(email, password, done) {
     // Default User for developing
@@ -56,7 +62,8 @@ passport.use(new LocalStrategy.Strategy({ usernameField: 'email', passwordField:
                 }
                 const validation = await comparePasswords(password, user.password)
                 if (validation) {
-                    return done(null, user)
+                    const hash = md5HashString(user.email)
+                    return done(null, { ...user, emailMd5: hash })
                 } else {
                     return done(null, false, { message: 'Authentication failed' })
                 }
@@ -116,11 +123,13 @@ passport.use(new JwtStrategy.Strategy({ jwtFromRequest: tokenExtractor, secretOr
             email: DEV_USER_DATA.email
         })
     } else {
-        await User.GetUser(jwtPayload.email) // Or 'GetUser' - without 'User.'
+        await User.GetUser(jwtPayload.email)
             .then((user) => {
                 if (user) {
+                    const hash = md5HashString(user.email)
                     return done(null, {
-                        email: user.email
+                        email: user.email,
+                        emailMd5: hash
                     })
                 } else {
                     return done(null, false, 'Failed')

@@ -100,7 +100,8 @@ export default {
                 }
             } catch (error) {
                 console.error('[Register] -> Failed to login:', error)
-                this.$toast.error(error.response.data.message)
+                const message = error.response.data.message || error.message || 'Unknown error has occurred'
+                this.$toast.error(message)
             }
             this.loading = false
         },
