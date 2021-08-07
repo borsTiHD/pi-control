@@ -49,6 +49,7 @@ async function nonWindowsSingleCall(options) {
 
     // Parsing single lines
     const processes = lines.map((line, index) => {
+        console.log('Line:', line)
         const match = psOutputRegex.exec(line)
         if (match === null) {
             throw new Error(ERROR_MESSAGE_PARSING_FAILED)
