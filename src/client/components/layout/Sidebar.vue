@@ -7,10 +7,15 @@
         clipped
         app
     >
+        <!-- Sidebar -->
         <v-list
-            class="d-flex flex-column justify-space-between fill-height"
+            class="d-flex flex-column fill-height"
             nav
         >
+            <!-- Header copy -->
+            <v-toolbar-title class="ma-3 text-center" v-text="title" />
+            <v-divider class="pa-1" />
+
             <!-- Sidebar Navigation -->
             <v-list-item-group
                 v-model="selectedItem"
@@ -74,6 +79,7 @@
 
 <script>
 import { mapGetters, mapActions } from 'vuex'
+import pkg from 'projRoot/package.json'
 
 import AppVersion from '~/components/display/AppVersion.vue'
 
@@ -83,6 +89,7 @@ export default {
         AppVersion
     },
     data: () => ({
+        title: `${pkg.productName}`,
         regAllowed: false,
         selectedItem: 1
     }),
