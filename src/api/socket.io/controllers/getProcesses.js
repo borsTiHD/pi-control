@@ -20,7 +20,7 @@ async function nonWindows(options) {
 async function nonWindowsSingleCall(options) {
     const command = 'ps'
     const flags = options.all === false ? 'wwxo' : 'awwxo'
-    const psFields = 'pid,ppid,uid,user,tty,stat,%cpu,%mem,etime,time,comm,args' // original: 'pid,ppid,uid,%cpu,%mem,comm,args'
+    const psFields = 'pid,ppid,uid,user,tty,stat,%cpu,%mem,time,comm,args' // original: 'pid,ppid,uid,%cpu,%mem,comm,args'
     const ERROR_MESSAGE_PARSING_FAILED = 'Error on parsing script output'
 
     // TODO: Use the promise version of `execFile` when https://github.com/nodejs/node/issues/28244 is fixed.
@@ -44,7 +44,7 @@ async function nonWindowsSingleCall(options) {
     let argsPosition
 
     // TODO: Use named capture groups when targeting Node.js 10
-    const psOutputRegex = /^[ \t]*(?<pid>\d+)[ \t]+(?<ppid>\d+)[ \t]+(?<uid>\d+)[ \t]+(?<user>\d+)[ \t]+(?<tty>\d+)[ \t]+(?<stat>\d+)[ \t]+(?<cpu>\d+\.\d+)[ \t]+(?<memory>\d+\.\d+)[ \t]+(?<etime>\d+)[ \t]+(?<time>\d+)[ \t]+/
+    const psOutputRegex = /^^[ \t]*(?<pid>\d+)[ \t]+(?<ppid>\d+)[ \t]+(?<uid>\d+)[ \t]+(?<user>\D*?)[ \t]+(?<tty>\D*?)[ \t]+(?<stat>\D*?)[ \t]+(?<cpu>\d+\.\d+)[ \t]+(?<memory>\d+\.\d+)[ \t]+(?<time>.*?)[ \t]++/
     // const psOutputRegex = /^[ \t]*(?<pid>\d+)[ \t]+(?<ppid>\d+)[ \t]+(?<uid>\d+)[ \t]+(?<cpu>\d+\.\d+)[ \t]+(?<memory>\d+\.\d+)[ \t]+/
 
     // Parsing single lines
@@ -55,7 +55,7 @@ async function nonWindowsSingleCall(options) {
             throw new Error(ERROR_MESSAGE_PARSING_FAILED)
         }
 
-        const { pid, ppid, uid, user, tty, stat, cpu, memory, etime, time } = match.groups
+        const { pid, ppid, uid, user, tty, stat, cpu, memory, time } = match.groups
 
         const processInfo = {
             pid: Number.parseInt(pid, 10),
@@ -66,22 +66,25 @@ async function nonWindowsSingleCall(options) {
             stat,
             cpu: Number.parseFloat(cpu),
             memory: Number.parseFloat(memory),
-            etime,
             time,
             name: undefined,
             cmd: undefined
         }
 
         if (processInfo.pid === psPid) {
+            console.log('LINE FOR PS INDEXE:', line)
             psIndex = index
-            commPosition = line.indexOf('ps', match[0].length)
-            argsPosition = line.indexOf('ps', commPosition + 2)
+            commPosition = line.indexOf(command, match[0].length)
+            argsPosition = line.indexOf(command, commPosition + 2)
         }
 
         return processInfo
     })
 
     if (psIndex === undefined || commPosition === -1 || argsPosition === -1) {
+        console.log('psIndex', psIndex)
+        console.log('commPosition', commPosition)
+        console.log('argsPosition', argsPosition)
         throw new Error(ERROR_MESSAGE_PARSING_FAILED)
     }
 
