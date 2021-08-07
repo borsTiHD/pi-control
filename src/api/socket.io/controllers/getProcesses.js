@@ -145,7 +145,7 @@ async function isWindows() {
     lines[lines.length - 1] += '\n' // appends a 'new line' to the last item in array -> so that the regex rule can take effect
 
     // 'Get-Process' regex
-    const psOutputRegex = /^[ \t]*(?<handles>\d+)[ \t]*(?<npm>\d+)[ \t]*(?<pm>\d+)[ \t]*(?<ws>\d+)[ \t]+(?<cpu>\d+\.\d+\,\d+|\d+\,\d+|\d+)[ \t]+(?<pid>\d+)[ \t]+(?<si>\d+)[ \t]+(?<name>.*?)[ \n]/
+    const psOutputRegex = /^[ \t]*(?<handles>\d+)[ \t]*(?<npm>\d+)[ \t]*(?<pm>\d+)[ \t]*(?<ws>\d+)[ \t]+(?<cpu>\d+\.\d+,\d+|\d+,\d+|\d+)[ \t]+(?<pid>\d+)[ \t]+(?<si>\d+)[ \t]+(?<name>.*?)[ \n]/
 
     // Parsing single lines
     const processes = lines.map((line) => {
