@@ -18,6 +18,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - App: Changing page title to represent the current module.
 - App: Changing hidden dev page position (only for dev).
 
+### Refactor
+- Processes: Completely rebuilt. Checks running processes with 'ps'. In addition, windows is now supported. 🤷‍♀️
+
 ## [0.2.0] - 2021-08-05
 ### Added
 - Terminal: New page to start terminals on the host system.
