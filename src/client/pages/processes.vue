@@ -73,22 +73,22 @@ export default {
                     {
                         text: 'PID',
                         value: 'pid',
-                        tooltip: 'This is the process ID, a unique positive integer that identifies a process.'
+                        tooltip: 'This is the process ID.'
                     },
                     {
                         text: 'PPID',
                         value: 'ppid',
-                        tooltip: 'xxx'
+                        tooltip: 'This is the parent process ID.'
                     },
                     {
                         text: 'UID',
                         value: 'uid',
-                        tooltip: 'xxx'
+                        tooltip: 'User ID'
                     },
                     {
                         text: 'USER',
                         value: 'user',
-                        tooltip: 'This is the "effective" username (which maps to a user ID) of the user who started the process.'
+                        tooltip: 'This is the "effective" username who started the process.'
                     },
                     {
                         text: '%CPU',
@@ -103,17 +103,17 @@ export default {
                     {
                         text: 'TIME',
                         value: 'time',
-                        tooltip: 'This is the total CPU time used by the process since it started, precise to the hundredths of a second.'
+                        tooltip: 'This is the total CPU time used by the process.'
                     },
                     {
                         text: 'NAME',
                         value: 'name',
-                        tooltip: 'xxx'
+                        tooltip: 'Shows the name of the processes.'
                     },
                     {
                         text: 'COMMAND',
                         value: 'cmd',
-                        tooltip: 'Shows the name of the processes.'
+                        tooltip: 'Shows the complete name with argument and path.'
                     }
                 ]
             },
