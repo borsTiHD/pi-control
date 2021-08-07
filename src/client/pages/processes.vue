@@ -76,39 +76,19 @@ export default {
                         tooltip: 'This is the process ID, a unique positive integer that identifies a process.'
                     },
                     {
+                        text: 'PPID',
+                        value: 'ppid',
+                        tooltip: 'xxx'
+                    },
+                    {
+                        text: 'UID',
+                        value: 'uid',
+                        tooltip: 'xxx'
+                    },
+                    {
                         text: 'USER',
                         value: 'user',
                         tooltip: 'This is the "effective" username (which maps to a user ID) of the user who started the process.'
-                    },
-                    {
-                        text: 'PR',
-                        value: 'pr',
-                        tooltip: 'Shows the scheduling priority of the process from the perspective of the kernel.'
-                    },
-                    {
-                        text: 'NI',
-                        value: 'ni',
-                        tooltip: 'Shows the "nice" value and affects the priority of a process.'
-                    },
-                    {
-                        text: 'VIRT',
-                        value: 'virt',
-                        tooltip: 'Is the total amount of memory consumed by a process. This includes the program\'s code, the data stored by the process in memory, as well as any regions of memory that have been swapped to the disk.'
-                    },
-                    {
-                        text: 'RES',
-                        value: 'res',
-                        tooltip: 'Is the memory consumed by the process in RAM.'
-                    },
-                    {
-                        text: 'SHR',
-                        value: 'shr',
-                        tooltip: 'Is the amount of memory shared with other processes.'
-                    },
-                    {
-                        text: 'S',
-                        value: 's',
-                        tooltip: 'Shows the process state in the single-letter form.'
                     },
                     {
                         text: '%CPU',
@@ -117,17 +97,22 @@ export default {
                     },
                     {
                         text: '%MEM',
-                        value: 'mem',
+                        value: 'memory',
                         tooltip: 'Shows used RAM as a percentage of the total RAM available.'
                     },
                     {
-                        text: 'TIME+',
+                        text: 'TIME',
                         value: 'time',
                         tooltip: 'This is the total CPU time used by the process since it started, precise to the hundredths of a second.'
                     },
                     {
+                        text: 'NAME',
+                        value: 'name',
+                        tooltip: 'xxx'
+                    },
+                    {
                         text: 'COMMAND',
-                        value: 'command',
+                        value: 'cmd',
                         tooltip: 'Shows the name of the processes.'
                     }
                 ]
@@ -159,6 +144,7 @@ export default {
 
         // Dev: Test data
         if (this.$config.TEST_DATA) {
+            /*
             const headers = this.table.headers
             const rawData = [
                 ['782', 'pihole', '10', '-10', '296572', '221584', '25428', 'R', '52,9', '2,8', '1171:06', 'pihole-FTL'],
@@ -184,6 +170,7 @@ export default {
                 })
             })
             this.loading = false
+            */
         }
     },
     activated() {
@@ -204,29 +191,11 @@ export default {
             } else if (message._status === 'ok') {
                 // Saving socket data
                 console.log('[Socket.io] -> Message from server \'processes\':', message)
-                const headers = this.table.headers // message.data.columns
-                const rawItems = message.data.processes
+                const processes = message.data.processes
 
                 // Replacing database with new data
                 Process.create({
-                    data: rawItems.filter((row) => {
-                        if (!row || !Array.isArray(row)) {
-                            console.log('[Process] -> Item is invalid and will be removed:', row)
-                            return false // skip
-                        } else if (row.length !== 12) {
-                            console.log('[Process] -> Item has invalid length and will be removed:', row)
-                            return false // skip
-                        }
-                        return true
-                    }).map((row) => {
-                        // Converts array into an object and adds headers
-                        const result = {}
-                        row.forEach((value, index) => {
-                            const key = headers[index].value // Getting key from headers
-                            result[key] = value // Create key on object with value from array
-                        })
-                        return result
-                    })
+                    data: processes
                 })
             } else {
                 console.log('[Socket.io] -> Message from server \'processes\', without usable data:', message)
