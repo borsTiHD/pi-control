@@ -20,7 +20,7 @@ async function nonWindows(options) {
 async function nonWindowsSingleCall(options) {
     const command = 'ps'
     const flags = options.all === false ? 'wwxo' : 'awwxo'
-    const psFields = 'pid,ppid,uid,user,tty,stat,%cpu,%mem,time,comm,args' // original: 'pid,ppid,uid,%cpu,%mem,comm,args'
+    const psFields = 'pid,ppid,uid,user,%cpu,%mem,time,comm,args' // original: 'pid,ppid,uid,%cpu,%mem,comm,args'
     const ERROR_MESSAGE_PARSING_FAILED = 'Error on parsing script output'
 
     // TODO: Use the promise version of `execFile` when https://github.com/nodejs/node/issues/28244 is fixed.
@@ -44,26 +44,24 @@ async function nonWindowsSingleCall(options) {
     let argsPosition
 
     // TODO: Use named capture groups when targeting Node.js 10
-    const psOutputRegex = /^[ \t]*(?<pid>\d+)[ \t]+(?<ppid>\d+)[ \t]+(?<uid>\d+)[ \t]+(?<user>\D*?)[ \t]+(?<tty>\?|.*?)[ \t]+(?<stat>\D*?)[ \t]+(?<cpu>\d+\.\d+)[ \t]+(?<memory>\d+\.\d+)[ \t]+(?<time>.*?)[ \t]+/
+    const psOutputRegex = /^[ \t]*(?<pid>\d+)[ \t]+(?<ppid>\d+)[ \t]+(?<uid>\d+)[ \t]+(?<user>\D*?)[ \t]+(?<cpu>\d+\.\d+)[ \t]+(?<memory>\d+\.\d+)[ \t]+(?<time>.*?)[ \t]+/
     // const psOutputRegex = /^[ \t]*(?<pid>\d+)[ \t]+(?<ppid>\d+)[ \t]+(?<uid>\d+)[ \t]+(?<cpu>\d+\.\d+)[ \t]+(?<memory>\d+\.\d+)[ \t]+/
 
     // Parsing single lines
     const processes = lines.map((line, index) => {
-        console.log('Line:', line)
         const match = psOutputRegex.exec(line)
+        console.log(line)
         if (match === null) {
             throw new Error(ERROR_MESSAGE_PARSING_FAILED)
         }
 
-        const { pid, ppid, uid, user, tty, stat, cpu, memory, time } = match.groups
+        const { pid, ppid, uid, user, cpu, memory, time } = match.groups
 
         const processInfo = {
             pid: Number.parseInt(pid, 10),
             ppid: Number.parseInt(ppid, 10),
             uid: Number.parseInt(uid, 10),
             user,
-            tty,
-            stat,
             cpu: Number.parseFloat(cpu),
             memory: Number.parseFloat(memory),
             time,
