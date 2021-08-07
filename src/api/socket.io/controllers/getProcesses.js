@@ -50,7 +50,6 @@ async function nonWindowsSingleCall(options) {
     // Parsing single lines
     const processes = lines.map((line, index) => {
         const match = psOutputRegex.exec(line)
-        console.log(line)
         if (match === null) {
             throw new Error(ERROR_MESSAGE_PARSING_FAILED)
         }
@@ -70,7 +69,6 @@ async function nonWindowsSingleCall(options) {
         }
 
         if (processInfo.pid === psPid) {
-            console.log('LINE FOR PS INDEXE:', line)
             psIndex = index
             commPosition = line.indexOf(command, match[0].length)
             argsPosition = line.indexOf(command, commPosition + 2)
@@ -80,9 +78,6 @@ async function nonWindowsSingleCall(options) {
     })
 
     if (psIndex === undefined || commPosition === -1 || argsPosition === -1) {
-        console.log('psIndex', psIndex)
-        console.log('commPosition', commPosition)
-        console.log('argsPosition', argsPosition)
         throw new Error(ERROR_MESSAGE_PARSING_FAILED)
     }
 
