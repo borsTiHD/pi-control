@@ -27,7 +27,7 @@ export default (io, roomName) => {
             const id = setInterval(async() => {
                 try {
                     const psList = await getProcesses()
-                    io.to(roomName).emit(eventName, { _status: 'ok', data: psList })
+                    io.to(roomName).emit(eventName, { _status: 'ok', data: { processes: psList } })
                 } catch (error) {
                     io.to(roomName).emit(eventName, { _status: 'error', error: error.message, info: 'Error on starting tasks' })
                 }

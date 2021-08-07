@@ -1,19 +1,25 @@
 import childProcess from 'child_process'
-// import util from 'util'
+import path from 'path'
+import util from 'util'
 
+// Promisefied execFile
+const execFile = util.promisify(childProcess.execFile)
+
+// CONSTs
 const TEN_MEGABYTES = 1000 * 1000 * 10
-// const execFile = util.promisify(childProcess.execFile)
-
 const isWin = process.platform === 'win32'
 
 // Collecting processes with 'ps' - copied and modified from https://github.com/sindresorhus/ps-list - thank you
 async function nonWindows(options) {
+    return await nonWindowsMultipleCalls(options)
+    /*
     try {
         return await nonWindowsSingleCall(options)
     } catch (err) { // If the error is not a parsing error, it should manifest itself in multicall version too.
         console.error('[Socket.io] -> Error on executing nonWindowsSingleCall():', err)
         return await nonWindowsMultipleCalls(options)
     }
+    */
 }
 
 // Collecting processes with one 'ps' call
@@ -93,7 +99,42 @@ async function nonWindowsSingleCall(options) {
 
 // Collecting processes with multiple 'ps' calls
 async function nonWindowsMultipleCalls(options) {
-    throw new Error('Multiple Call Method not implemented right now')
+    const command = 'ps'
+    const flags = (options.all === false ? '' : 'a') + 'wwxo'
+    const psFields = ['comm', 'args', 'ppid', 'uid', 'user', '%cpu', '%mem', 'time'] // default: ['comm', 'args', 'ppid', 'uid', '%cpu', '%mem']
+    const ret = {}
+
+    await Promise.all(psFields.map(async(cmd) => {
+        const { stdout } = await execFile(command, [flags, `pid,${cmd}`], { maxBuffer: TEN_MEGABYTES })
+
+        for (let line of stdout.trim().split('\n').slice(1)) {
+            line = line.trim()
+            const [pid] = line.split(' ', 1)
+            const val = line.slice(pid.length + 1).trim()
+
+            if (ret[pid] === undefined) {
+                ret[pid] = {}
+            }
+
+            ret[pid][cmd] = val
+        }
+    }))
+
+    // Filter out inconsistencies as there might be race
+    // issues due to differences in `ps` between the spawns
+    return Object.entries(ret)
+        .filter(([, value]) => value.comm && value.args && value.ppid && value.uid && value.user && value['%cpu'] && value['%mem'] && value.time)
+        .map(([key, value]) => ({
+            pid: Number.parseInt(key, 10),
+            ppid: Number.parseInt(value.ppid, 10),
+            uid: Number.parseInt(value.uid, 10),
+            user: value.user,
+            cpu: Number.parseFloat(value['%cpu']) || Number.parseInt(value['%cpu'], 10),
+            memory: Number.parseFloat(value['%mem']) || Number.parseInt(value['%mem'], 10),
+            time: value.time,
+            name: path.basename(value.comm),
+            cmd: value.args
+        }))
 }
 
 // Collecting processes on windows
