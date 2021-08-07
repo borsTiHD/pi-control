@@ -11,6 +11,7 @@ async function nonWindows(options) {
     try {
         return await nonWindowsSingleCall(options)
     } catch (err) { // If the error is not a parsing error, it should manifest itself in multicall version too.
+        console.error('[Socket.io] -> Error on executing nonWindowsSingleCall():', err)
         return await nonWindowsMultipleCalls(options)
     }
 }
