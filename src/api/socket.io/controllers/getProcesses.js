@@ -44,7 +44,7 @@ async function nonWindowsSingleCall(options) {
     let argsPosition
 
     // TODO: Use named capture groups when targeting Node.js 10
-    const psOutputRegex = /^[ \t]*(?<pid>\d+)[ \t]+(?<ppid>\d+)[ \t]+(?<uid>\d+)[ \t]+(?<user>\D*?)[ \t]+(?<cpu>\d+\.\d+)[ \t]+(?<memory>\d+\.\d+)[ \t]+(?<time>.*?)[ \t]+/
+    const psOutputRegex = /^[ \t]*(?<pid>\d+)[ \t]+(?<ppid>\d+)[ \t]+(?<uid>\d+)[ \t]+(?<user>\D*?)[ \t]+(?<cpu>\d+\.\d+|\d+)[ \t]+(?<memory>\d+\.\d+|\d+)[ \t]+(?<time>.*?)[ \t]+/
     // const psOutputRegex = /^[ \t]*(?<pid>\d+)[ \t]+(?<ppid>\d+)[ \t]+(?<uid>\d+)[ \t]+(?<cpu>\d+\.\d+)[ \t]+(?<memory>\d+\.\d+)[ \t]+/
 
     // Parsing single lines
@@ -62,8 +62,8 @@ async function nonWindowsSingleCall(options) {
             ppid: Number.parseInt(ppid, 10),
             uid: Number.parseInt(uid, 10),
             user,
-            cpu: Number.parseFloat(cpu),
-            memory: Number.parseFloat(memory),
+            cpu: Number.parseFloat(cpu) || Number.parseInt(cpu, 10),
+            memory: Number.parseFloat(memory) || Number.parseInt(memory, 10),
             time,
             name: undefined,
             cmd: undefined
