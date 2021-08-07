@@ -13,7 +13,7 @@ export default class Process extends Model {
             uid: this.number(0),
             user: this.string(''),
             cpu: this.number(0),
-            mem: this.number(0),
+            memory: this.number(0),
             time: this.string(''),
             name: this.string(''),
             cmd: this.string('')
