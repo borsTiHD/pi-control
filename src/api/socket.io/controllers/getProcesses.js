@@ -44,7 +44,7 @@ async function nonWindowsSingleCall(options) {
     let argsPosition
 
     // TODO: Use named capture groups when targeting Node.js 10
-    const psOutputRegex = /^[ \t]*(?<pid>\d+)[ \t]+(?<ppid>\d+)[ \t]+(?<uid>\d+)[ \t]+(?<user>\D*?)[ \t]+(?<tty>\D*?)[ \t]+(?<stat>\D*?)[ \t]+(?<cpu>\d+\.\d+)[ \t]+(?<memory>\d+\.\d+)[ \t]+(?<time>.*?)[ \t]+/
+    const psOutputRegex = /^[ \t]*(?<pid>\d+)[ \t]+(?<ppid>\d+)[ \t]+(?<uid>\d+)[ \t]+(?<user>\D*?)[ \t]+(?<tty>\?|.*?)[ \t]+(?<stat>\D*?)[ \t]+(?<cpu>\d+\.\d+)[ \t]+(?<memory>\d+\.\d+)[ \t]+(?<time>.*?)[ \t]+/
     // const psOutputRegex = /^[ \t]*(?<pid>\d+)[ \t]+(?<ppid>\d+)[ \t]+(?<uid>\d+)[ \t]+(?<cpu>\d+\.\d+)[ \t]+(?<memory>\d+\.\d+)[ \t]+/
 
     // Parsing single lines
