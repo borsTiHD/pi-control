@@ -37,13 +37,13 @@
 
                 <v-card-text>
                     <v-data-table
-                        :headers="table.headers"
+                        :headers="headers"
                         :items="items"
                         :search="table.search"
                         :items-per-page="-1"
                         :loading="loading"
                     >
-                        <template v-for="h in table.headers" #[`header.${h.value}`]="{ header }">
+                        <template v-for="h in headers" #[`header.${h.value}`]="{ header }">
                             <v-tooltip :key="h.value" bottom>
                                 <template #activator="{ on }">
                                     <span v-on="on">{{ header.text }}</span>
@@ -67,9 +67,10 @@ export default {
     components: {},
     data() {
         return {
+            isWin: false,
             table: {
                 search: '',
-                headers: [
+                headersNonWin: [
                     {
                         text: 'PID',
                         value: 'pid',
@@ -108,12 +109,54 @@ export default {
                     {
                         text: 'NAME',
                         value: 'name',
-                        tooltip: 'Shows the name of the processes.'
+                        tooltip: 'Shows the name of the process.'
                     },
                     {
                         text: 'COMMAND',
                         value: 'cmd',
                         tooltip: 'Shows the complete name with argument and path.'
+                    }
+                ],
+                headersWin: [
+                    {
+                        text: 'PID',
+                        value: 'pid',
+                        tooltip: 'This is the process ID.'
+                    },
+                    {
+                        text: 'Handles',
+                        value: 'handles',
+                        tooltip: 'The number of handles that the process has opened.'
+                    },
+                    {
+                        text: 'CPU(s)',
+                        value: 'cpu',
+                        tooltip: 'The amount of processor time that the process has used on all processors, in seconds.'
+                    },
+                    {
+                        text: 'NPM(K)',
+                        value: 'npm',
+                        tooltip: 'The amount of non-paged memory that the process is using, in kilobytes.'
+                    },
+                    {
+                        text: 'PM(K)',
+                        value: 'pm',
+                        tooltip: 'The amount of pageable memory that the process is using, in kilobytes.'
+                    },
+                    {
+                        text: 'WS(K)',
+                        value: 'ws',
+                        tooltip: 'The size of the working set of the process, in kilobytes. The working set consists of the pages of memory that were recently referenced by the process.'
+                    },
+                    {
+                        text: 'SI',
+                        value: 'si',
+                        tooltip: ''
+                    },
+                    {
+                        text: 'NAME',
+                        value: 'name',
+                        tooltip: 'Shows the name of the process.'
                     }
                 ]
             },
@@ -136,42 +179,17 @@ export default {
             return Process.query()
                 .orderBy('id', 'desc')
                 .get()
+        },
+        headers() {
+            if (this.isWin) {
+                return this.table.headersWin
+            }
+            return this.table.headersNonWin
         }
     },
     created() {
         // Set loading
         this.loading = true
-
-        // Dev: Test data
-        if (this.$config.TEST_DATA) {
-            /*
-            const headers = this.table.headers
-            const rawData = [
-                ['782', 'pihole', '10', '-10', '296572', '221584', '25428', 'R', '52,9', '2,8', '1171:06', 'pihole-FTL'],
-                ['13724', 'pi', '20', '0', '10296', '2920', '2508', 'R', '11,8', '0,0', '0:00.04', 'top'],
-                ['27819', 'root', '0', '-20', '0', '0', '0', 'I', '5,9', '0,0', '0:36.26', 'kworker/2+'],
-                ['1', 'root', '20', '0', '34864', '8248', '6348', 'S', '0,0', '0,1', '2:14.98', 'systemd'],
-                ['2', 'root', '20', '0', '0', '0', '0', 'S', '0,0', '0,0', '0:06.72', 'kthreadd'],
-                ['3', 'root', '0', '-20', '0', '0', '0', 'I', '0,0', '0,0', '0:00.00', 'rcu_gp'],
-                ['4', 'root', '0', '-20', '0', '0', '0', 'I', '0,0', '0,0', '0:00.00', 'rcu_par_gp']
-            ]
-
-            // Adding Testdata to database
-            Process.create({
-                data: rawData.map((row) => {
-                    if (!row || !Array.isArray(row)) {
-                        return []
-                    }
-                    const result = {}
-                    row.forEach((value, index) => {
-                        result[headers[index].value] = value
-                    })
-                    return result
-                })
-            })
-            this.loading = false
-            */
-        }
     },
     activated() {
         // Socket.IO: Joining room - only if autoRefresh is on
@@ -190,8 +208,9 @@ export default {
                 return false
             } else if (message._status === 'ok') {
                 // Saving socket data
-                console.log('[Socket.io] -> Message from server \'processes\':', message)
+                // console.log('[Socket.io] -> Message from server \'processes\':', message)
                 const processes = message.data.processes
+                this.isWin = message?.data?.isWin
 
                 // Replacing database with new data
                 Process.create({

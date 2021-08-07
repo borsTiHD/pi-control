@@ -9,14 +9,20 @@ export default class Process extends Model {
         return {
             id: this.uid(),
             pid: this.number(0),
-            ppid: this.number(0),
-            uid: this.number(0),
-            user: this.string(''),
+            ppid: this.number(0).nullable(),
+            uid: this.number(0).nullable(),
+            user: this.string('').nullable(),
             cpu: this.number(0),
-            memory: this.number(0),
-            time: this.string(''),
+            memory: this.number(0).nullable(),
+            time: this.string('').nullable(),
             name: this.string(''),
-            cmd: this.string('')
+            cmd: this.string('').nullable(),
+            // Additional fields, only used on windows
+            handles: this.string('').nullable(),
+            npm: this.number(0).nullable(),
+            pm: this.number(0).nullable(),
+            si: this.number(0).nullable(),
+            ws: this.number(0).nullable()
         }
     }
 }

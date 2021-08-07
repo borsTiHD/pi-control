@@ -26,8 +26,9 @@ export default (io, roomName) => {
         try {
             const id = setInterval(async() => {
                 try {
+                    const isWin = process.platform === 'win32'
                     const psList = await getProcesses()
-                    io.to(roomName).emit(eventName, { _status: 'ok', data: { processes: psList } })
+                    io.to(roomName).emit(eventName, { _status: 'ok', data: { processes: psList, isWin } })
                 } catch (error) {
                     io.to(roomName).emit(eventName, { _status: 'error', error: error.message, info: 'Error on starting tasks' })
                 }

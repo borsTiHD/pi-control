@@ -6,10 +6,11 @@ import util from 'util'
 const execFile = util.promisify(childProcess.execFile)
 
 // CONSTs
-const TEN_MEGABYTES = 1000 * 1000 * 10
 const isWin = process.platform === 'win32'
+const TEN_MEGABYTES = 1000 * 1000 * 10
+const ERROR_MESSAGE_PARSING_FAILED = 'Error on parsing script output'
 
-// Collecting processes with 'ps' - copied and modified from https://github.com/sindresorhus/ps-list - thank you
+// Collecting processes with 'ps' - copied and modified from https://github.com/sindresorhus/ps-list - thank you :)
 async function nonWindows(options) {
     try {
         return await nonWindowsSingleCall(options)
@@ -24,7 +25,6 @@ async function nonWindowsSingleCall(options) {
     const command = 'ps'
     const flags = options.all === false ? 'wwxo' : 'awwxo'
     const psFields = 'pid,ppid,uid,user,%cpu,%mem,time,comm,args' // original: 'pid,ppid,uid,%cpu,%mem,comm,args'
-    const ERROR_MESSAGE_PARSING_FAILED = 'Error on parsing script output'
 
     // TODO: Use the promise version of `execFile` when https://github.com/nodejs/node/issues/28244 is fixed.
     const [psPid, stdout] = await new Promise((resolve, reject) => {
@@ -135,8 +135,40 @@ async function nonWindowsMultipleCalls(options) {
 }
 
 // Collecting processes on windows
-function isWindows(options) {
-    throw new Error('Operating system is currently not supported')
+async function isWindows() {
+    const command = 'powershell'
+    const args = ['Get-Process'] // 'Get-Process | Format-Table Id, Cpu, VM, TotalProcessorTime, Name, Path'
+    const { stdout } = await execFile(command, args, { maxBuffer: TEN_MEGABYTES })
+
+    // Parsing into Lines
+    const lines = stdout.trim().split('\n').slice(2) // deletes first two lines with headers
+    lines[lines.length - 1] += '\n' // appends a 'new line' to the last item in array -> so that the regex rule can take effect
+
+    // 'Get-Process' regex
+    const psOutputRegex = /^[ \t]*(?<handles>\d+)[ \t]*(?<npm>\d+)[ \t]*(?<pm>\d+)[ \t]*(?<ws>\d+)[ \t]+(?<cpu>\d+\.\d+\,\d+|\d+\,\d+|\d+)[ \t]+(?<pid>\d+)[ \t]+(?<si>\d+)[ \t]+(?<name>.*?)[ \n]/
+
+    // Parsing single lines
+    const processes = lines.map((line) => {
+        const match = psOutputRegex.exec(line)
+        if (match === null) {
+            throw new Error(ERROR_MESSAGE_PARSING_FAILED)
+        }
+
+        // Building result
+        const { handles, npm, pm, ws, cpu, pid, si, name } = match.groups
+        const processInfo = {
+            handles: Number.parseInt(handles, 10),
+            npm: Number.parseInt(npm, 10),
+            pm: Number.parseInt(pm, 10),
+            ws: Number.parseInt(ws, 10),
+            cpu: Number.parseFloat(cpu) || Number.parseInt(cpu, 10),
+            pid: Number.parseInt(pid, 10),
+            si: Number.parseInt(si, 10),
+            name
+        }
+        return processInfo
+    })
+    return processes
 }
 
 // Export module
