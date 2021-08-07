@@ -11,15 +11,12 @@ const isWin = process.platform === 'win32'
 
 // Collecting processes with 'ps' - copied and modified from https://github.com/sindresorhus/ps-list - thank you
 async function nonWindows(options) {
-    return await nonWindowsMultipleCalls(options)
-    /*
     try {
         return await nonWindowsSingleCall(options)
     } catch (err) { // If the error is not a parsing error, it should manifest itself in multicall version too.
-        console.error('[Socket.io] -> Error on executing nonWindowsSingleCall():', err)
+        console.error('[Socket.io] -> Error on executing nonWindowsSingleCall(), trying multiple calls next:', err)
         return await nonWindowsMultipleCalls(options)
     }
-    */
 }
 
 // Collecting processes with one 'ps' call
