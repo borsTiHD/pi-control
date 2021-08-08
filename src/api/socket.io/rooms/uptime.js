@@ -5,14 +5,13 @@ import getUptime from '../controllers/data/getUptime.js'
 // Room Event name
 const eventName = 'uptime'
 
-export default (io, roomName) => {
+export default (io, roomName, duration = 60 * 1000) => {
     // Interval
     let intervalId = null
 
     // Room event listener with callbacks for starting/stopping tasks
     initListener(io, roomName, () => {
         // Create Room Event: Initialize room tasks
-        const duration = 2 * 1000 // Interval duration in milliseconds
         intervalId = initialize(duration)
     }, () => {
         // Delete Room Event: Clearing interval
@@ -23,17 +22,19 @@ export default (io, roomName) => {
     // Room logic
     function initialize(duration) {
         console.log(`[Socket.io] -> Room '${roomName}' starts performing its tasks`)
-        try {
-            const id = setInterval(async() => {
-                try {
-                    const isWin = process.platform === 'win32'
-                    const uptime = await getUptime()
-                    io.to(roomName).emit(eventName, { _status: 'ok', data: { uptime, isWin } })
-                } catch (error) {
-                    io.to(roomName).emit(eventName, { _status: 'error', error: error.message, info: 'Error on getting uptime' })
-                }
-            }, duration)
+        async function getData() {
+            try {
+                const isWin = process.platform === 'win32'
+                const uptime = await getUptime()
+                io.to(roomName).emit(eventName, { _status: 'ok', data: { uptime, isWin } })
+            } catch (error) {
+                io.to(roomName).emit(eventName, { _status: 'error', error: error.message, info: 'Error on getting uptime' })
+            }
+        }
 
+        try {
+            getData() // Get firsttime, then with interval
+            const id = setInterval(() => { getData() }, duration)
             return id
         } catch (error) {
             io.to(roomName).emit(eventName, { _status: 'error', error: error.message, info: 'Something went wrong' })

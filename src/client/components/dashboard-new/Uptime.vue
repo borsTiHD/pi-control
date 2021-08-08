@@ -11,7 +11,7 @@
             Uptime
         </v-card-title>
         <v-card-text>
-            <v-row v-if="loading && !data">
+            <v-row v-if="loading && !systemStartTime">
                 <v-col cols="12">
                     <span>Collecting data...</span>
                     <v-progress-linear
@@ -20,9 +20,16 @@
                     />
                 </v-col>
             </v-row>
-            <v-row v-else-if="data">
-                <v-col cols="12">
-                    {{ data }}
+            <v-row v-else-if="systemStartTime">
+                <v-col cols="12" class="d-flex flex-column">
+                    <span>
+                        <span class="text-subtitle-1">Boot Time:</span>
+                        <span class="ml-2">{{ systemStartTime }}</span>
+                    </span>
+                    <span v-if="uptimeText">
+                        <span class="text-subtitle-1">Uptime:</span>
+                        <span class="ml-2">{{ uptimeText }}</span>
+                    </span>
                 </v-col>
             </v-row>
             <v-row v-else>
@@ -42,6 +49,8 @@
 </template>
 
 <script>
+import moment from 'moment'
+import Uptime from '@/models/Uptime'
 import { mapGetters } from 'vuex'
 
 export default {
@@ -49,6 +58,8 @@ export default {
     data() {
         return {
             loading: false,
+            uptimeInterval: null,
+            uptimeText: null,
             socketRoom: 'uptime',
             textNoData: 'No data could be determined.'
         }
@@ -56,12 +67,13 @@ export default {
     computed: {
         ...mapGetters({
             getElevation: 'settings/getElevation',
-            getOutlined: 'settings/getOutlined',
-            getAutoRefresh: 'settings/getAutoRefresh'
+            getOutlined: 'settings/getOutlined'
         }),
-        data() {
-            if (this.getUptimeData) return this.getUptimeData
-            return false
+        systemStartTime() {
+            const uptime = Uptime.query()
+                .orderBy('id', 'desc')
+                .get()
+            return uptime[0]?.uptime
         }
     },
     created() {
@@ -70,11 +82,20 @@ export default {
     },
     activated() {
         // Socket.IO: Joining room - only if autoRefresh is on
-        if (this.getAutoRefresh) { this.socketListening(true) }
+        this.socketListening(true)
+
+        // Creates interval for uptdating uptime text
+        this.uptimeInterval = setInterval(() => {
+            const duration = this.durationHumanize()
+            this.uptimeText = duration
+        }, 1000)
     },
     deactivated() {
         // Socket.IO: Leaving room
         this.socketListening(false)
+
+        // Clear component interval
+        clearInterval(this.uptimeInterval)
     },
     sockets: {
         uptime(message) {
@@ -84,7 +105,14 @@ export default {
                 this.loading = false
                 return false
             } else if (message._status === 'ok') {
-                console.log('[Socket.io] -> Message from server \'uptime\':', message)
+                // Saving socket data
+                // console.log('[Socket.io] -> Message from server \'uptime\':', message)
+                const uptime = message.data.uptime
+
+                // Replacing database with new data
+                Uptime.create({
+                    data: { uptime }
+                })
             } else {
                 console.log('[Socket.io] -> Message from server \'uptime\', without usable data:', message)
             }
@@ -103,6 +131,35 @@ export default {
                 // Socket.IO: Leaving room
                 this.$socket.emit('room:leave', this.socketRoom)
             }
+        },
+        getDuration(time) {
+            const duration = moment.duration(moment().diff(time))
+            const durationObj = {
+                milliseconds: duration.milliseconds(),
+                seconds: duration.seconds(),
+                minutes: duration.minutes(),
+                hours: duration.hours(),
+                days: duration.days(),
+                weeks: duration.weeks(),
+                months: duration.months(),
+                years: duration.years()
+            }
+            return durationObj
+        },
+        durationHumanize() {
+            const duration = this.getDuration(this.systemStartTime)
+            let text = ''
+
+            // Check times
+            if (duration?.years) { text += ` ${duration.years} years,` }
+            if (duration?.months) { text += ` ${duration.months} months,` }
+            if (duration?.weeks) { text += ` ${duration.weeks} weeks,` }
+            if (duration?.days) { text += ` ${duration.days} days,` }
+            if (duration?.hours) { text += ` ${duration.hours} hours,` }
+            if (duration?.minutes) { text += ` ${duration.minutes} minutes,` }
+            if (duration?.seconds) { text += ` ${duration.seconds} seconds,` }
+
+            return text.trim().slice(0, -1)
         }
     }
 }
