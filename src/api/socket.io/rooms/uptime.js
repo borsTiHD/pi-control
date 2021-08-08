@@ -1,0 +1,42 @@
+// Imports
+import initListener from '../controllers/roomEventListener.js'
+import getUptime from '../controllers/data/getUptime.js'
+
+// Room Event name
+const eventName = 'uptime'
+
+export default (io, roomName) => {
+    // Interval
+    let intervalId = null
+
+    // Room event listener with callbacks for starting/stopping tasks
+    initListener(io, roomName, () => {
+        // Create Room Event: Initialize room tasks
+        const duration = 2 * 1000 // Interval duration in milliseconds
+        intervalId = initialize(duration)
+    }, () => {
+        // Delete Room Event: Clearing interval
+        clearInterval(intervalId)
+        intervalId = null
+    })
+
+    // Room logic
+    function initialize(duration) {
+        console.log(`[Socket.io] -> Room '${roomName}' starts performing its tasks`)
+        try {
+            const id = setInterval(async() => {
+                try {
+                    const isWin = process.platform === 'win32'
+                    const uptime = await getUptime()
+                    io.to(roomName).emit(eventName, { _status: 'ok', data: { uptime, isWin } })
+                } catch (error) {
+                    io.to(roomName).emit(eventName, { _status: 'error', error: error.message, info: 'Error on getting uptime' })
+                }
+            }, duration)
+
+            return id
+        } catch (error) {
+            io.to(roomName).emit(eventName, { _status: 'error', error: error.message, info: 'Something went wrong' })
+        }
+    }
+}
