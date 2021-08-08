@@ -1,6 +1,6 @@
 // Imports
 import initListener from '../controllers/roomEventListener.js'
-import getProcesses from '../controllers/getProcesses.js'
+import getProcesses from '../controllers/data/getProcesses.js'
 
 // Room Event name
 const eventName = 'processes'
