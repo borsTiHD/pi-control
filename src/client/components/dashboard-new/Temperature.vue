@@ -87,7 +87,11 @@ export default {
             const temperature = Temperature.query()
                 .orderBy('timestamp', 'desc')
                 .last()
-            console.log(temperature)
+            const test = Temperature.query()
+                .orderBy('timestamp', 'asc')
+                .last()
+            console.log('desc:', temperature)
+            console.log('asc:', test)
             return temperature?.temperature || false
         }
     },
