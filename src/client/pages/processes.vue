@@ -193,7 +193,10 @@ export default {
     },
     activated() {
         // Socket.IO: Joining room - only if autoRefresh is on
-        if (this.autoRefresh) { this.socketListening(true, this.socketRoom) }
+        if (this.autoRefresh) {
+            this.loading = true // Set loading to true after the app joins the room
+            this.socketListening(true, this.socketRoom)
+        }
     },
     deactivated() {
         // Socket.IO: Leaving room
@@ -228,6 +231,7 @@ export default {
         refreshSwitch(event) {
             if (this.autoRefresh) {
                 // Socket.IO: Joining room
+                this.loading = true // Set loading to true after the app joins the room
                 this.socketListening(true, this.socketRoom)
             } else {
                 // Socket.IO: Leaving room

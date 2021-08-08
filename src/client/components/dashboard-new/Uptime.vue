@@ -81,7 +81,8 @@ export default {
         this.loading = true
     },
     activated() {
-        // Socket.IO: Joining room - only if autoRefresh is on
+        // Socket.IO: Joining room
+        this.loading = true // Set loading to true after the app joins the room
         this.socketListening(true, this.socketRoom)
 
         // Creates interval for uptdating uptime text
