@@ -100,13 +100,13 @@ export default {
     sockets: {
         uptime(message) {
             if (message._status === 'error') {
-                console.error('[Socket.io] -> Message from server \'uptime\':', message)
+                console.error(`[Socket.io] -> Message from server '${this.socketRoom}':`, message)
                 // Set loading to 'false' after we get an error
                 this.loading = false
                 return false
             } else if (message._status === 'ok') {
                 // Saving socket data
-                // console.log('[Socket.io] -> Message from server \'uptime\':', message)
+                // console.log(`[Socket.io] -> Message from server '${this.socketRoom}':`, message)
                 const uptime = message.data.uptime
 
                 // Replacing database with new data
@@ -117,7 +117,7 @@ export default {
                 const duration = this.durationHumanize()
                 this.uptimeText = duration
             } else {
-                console.log('[Socket.io] -> Message from server \'uptime\', without usable data:', message)
+                console.log(`[Socket.io] -> Message from server '${this.socketRoom}', without usable data:`, message)
             }
 
             // Set loading to 'false' after we get data

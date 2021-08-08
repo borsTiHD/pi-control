@@ -202,13 +202,13 @@ export default {
     sockets: {
         processes(message) {
             if (message._status === 'error') {
-                console.error('[Socket.io] -> Message from server \'processes\':', message)
+                console.error(`[Socket.io] -> Message from server '${this.socketRoom}':`, message)
                 // Set loading to 'false' after we get an error
                 this.loading = false
                 return false
             } else if (message._status === 'ok') {
                 // Saving socket data
-                // console.log('[Socket.io] -> Message from server \'processes\':', message)
+                // console.log(`[Socket.io] -> Message from server '${this.socketRoom}':`, message)
                 const processes = message.data.processes
                 this.isWin = message?.data?.isWin
 
@@ -217,7 +217,7 @@ export default {
                     data: processes
                 })
             } else {
-                console.log('[Socket.io] -> Message from server \'processes\', without usable data:', message)
+                console.log(`[Socket.io] -> Message from server '${this.socketRoom}', without usable data:`, message)
             }
 
             // Set loading to 'false' after we get data
