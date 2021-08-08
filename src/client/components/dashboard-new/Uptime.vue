@@ -140,9 +140,9 @@ export default {
                 minutes: duration.minutes(),
                 hours: duration.hours(),
                 days: duration.days(),
-                weeks: duration.weeks(),
-                months: duration.months(),
-                years: duration.years()
+                weeks: Number.parseInt(duration.asWeeks(), 10) // duration.weeks(),
+                // months: duration.months(),
+                // years: duration.years()
             }
             return durationObj
         },
@@ -151,13 +151,13 @@ export default {
             let text = ''
 
             // Check times
-            if (duration?.years) { text += ` ${duration.years} years,` }
-            if (duration?.months) { text += ` ${duration.months} months,` }
+            // if (duration?.years) { text += ` ${duration.years} years,` }
+            // if (duration?.months) { text += ` ${duration.months} months,` }
             if (duration?.weeks) { text += ` ${duration.weeks} weeks,` }
             if (duration?.days) { text += ` ${duration.days} days,` }
             if (duration?.hours) { text += ` ${duration.hours} hours,` }
             if (duration?.minutes) { text += ` ${duration.minutes} minutes,` }
-            if (duration?.seconds) { text += ` ${duration.seconds} seconds,` }
+            // if (duration?.seconds) { text += ` ${duration.seconds} seconds,` }
 
             return text.trim().slice(0, -1)
         }
