@@ -50,14 +50,16 @@
 </template>
 
 <script>
+import moment from 'moment'
 import { mapGetters } from 'vuex'
+import Temperature from '@/models/Temperature'
 
 export default {
     name: 'Temperature',
     data() {
         return {
             loading: false,
-            data: null,
+            // data: null,
             socketRoom: 'temperature',
             textNoData: 'No data could be determined.',
             tempLimits: { // Coloring of equal or greater values (from max to low)
@@ -80,6 +82,13 @@ export default {
                 return parseFloat(temperature)
             }
             return false
+        },
+        data() {
+            const temperature = Temperature.query()
+                .orderBy('timestamp', 'desc')
+                .last()
+            console.log(temperature)
+            return temperature?.temperature || false
         }
     },
     created() {
@@ -106,14 +115,15 @@ export default {
                 // Saving socket data
                 // console.log(`[Socket.io] -> Message from server '${this.socketRoom}':`, message)
                 const data = message.data.temperature
-                this.data = data
+                // this.data = data
 
-                /*
-                // Replacing database with new data
-                Uptime.create({
-                    data: { uptime }
+                // Inserting data into database
+                Temperature.insert({
+                    data: {
+                        temperature: data,
+                        timestamp: moment().unix()
+                    }
                 })
-                */
             } else {
                 console.log(`[Socket.io] -> Message from server '${this.socketRoom}', without usable data:`, message)
             }
