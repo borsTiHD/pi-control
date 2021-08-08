@@ -28,7 +28,7 @@ export default (io, roomName, duration = 5 * 1000) => {
                 const temperature = await getTemperature()
                 io.to(roomName).emit(eventName, { _status: 'ok', data: { temperature, isWin } })
             } catch (error) {
-                io.to(roomName).emit(eventName, { _status: 'error', error: error.message, info: 'Error on getting uptime' })
+                io.to(roomName).emit(eventName, { _status: 'error', error: error.message, info: 'Error on getting temperature' })
             }
         }
 

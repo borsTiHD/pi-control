@@ -56,9 +56,10 @@ export default {
     name: 'Temperature',
     data() {
         return {
+            loading: false,
             data: null,
             socketRoom: 'temperature',
-            textNoData: 'No data could be determined. Please rescan manually.',
+            textNoData: 'No data could be determined.',
             tempLimits: { // Coloring of equal or greater values (from max to low)
                 low: { value: 0, color: 'green' },
                 mid: { value: 50, color: 'yellow' },

@@ -29,35 +29,7 @@ async function nonWindows() {
 
 // Getting windows uptime
 async function isWindows() {
-    try {
-        /*
-        const command = 'powershell'
-        const args = ['(get-date) – (gcim Win32_OperatingSystem).LastBootUpTime | Format-Table Days,Hours,Minutes,Seconds'] // Milliseconds
-        const { stdout } = await execFile(command, args, { maxBuffer: TEN_MEGABYTES })
-
-        // Parsing into Lines
-        const lines = stdout.trim().split('\n').slice(2)
-        const line = lines[0]
-
-        const psOutputRegex = /^[ \t]*(?<days>\d+)[ \t]+(?<hours>\d+)[ \t]+(?<minutes>\d+)[ \t]+(?<seconds>\d+)/
-        const match = psOutputRegex.exec(line)
-        if (match === null) {
-            throw new Error(ERROR_MESSAGE_PARSING_FAILED)
-        }
-
-        // Building result
-        const { days, hours, minutes, seconds } = match.groups
-
-        // Moment.js parsing - Number.parseInt(days, 10)
-        const format = 'YYYY-MM-DD HH:mm:ss'
-        const uptime = moment().subtract(days, 'days').subtract(hours, 'hours').subtract(minutes, 'minutes').subtract(seconds, 'seconds').format(format)
-
-        return uptime
-        */
-    } catch (error) {
-        console.error('[Socket.io] -> Error on executing powershell script to get system temperature:', error)
-        throw new Error(ERROR_MESSAGE_PARSING_FAILED)
-    }
+    throw new Error('Windows is currently not supported')
 }
 
 // Export module
