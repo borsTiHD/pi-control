@@ -88,7 +88,7 @@ export default {
         this.uptimeInterval = setInterval(() => {
             const duration = this.durationHumanize()
             this.uptimeText = duration
-        }, 1000)
+        }, 1000 * 10)
     },
     deactivated() {
         // Socket.IO: Leaving room
@@ -113,6 +113,9 @@ export default {
                 Uptime.create({
                     data: { uptime }
                 })
+
+                const duration = this.durationHumanize()
+                this.uptimeText = duration
             } else {
                 console.log('[Socket.io] -> Message from server \'uptime\', without usable data:', message)
             }
@@ -140,8 +143,8 @@ export default {
                 minutes: duration.minutes(),
                 hours: duration.hours(),
                 days: duration.days(),
-                weeks: Number.parseInt(duration.asWeeks(), 10) // duration.weeks(),
-                // months: duration.months(),
+                // weeks: Number.parseInt(duration.asWeeks(), 10) // duration.weeks(),
+                months: Number.parseInt(duration.asMonths(), 10) // duration.months(),
                 // years: duration.years()
             }
             return durationObj
@@ -152,8 +155,8 @@ export default {
 
             // Check times
             // if (duration?.years) { text += ` ${duration.years} years,` }
-            // if (duration?.months) { text += ` ${duration.months} months,` }
-            if (duration?.weeks) { text += ` ${duration.weeks} weeks,` }
+            if (duration?.months) { text += ` ${duration.months} months,` }
+            // if (duration?.weeks) { text += ` ${duration.weeks} weeks,` }
             if (duration?.days) { text += ` ${duration.days} days,` }
             if (duration?.hours) { text += ` ${duration.hours} hours,` }
             if (duration?.minutes) { text += ` ${duration.minutes} minutes,` }
