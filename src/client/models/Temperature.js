@@ -9,7 +9,7 @@ export default class Temperature extends Model {
         return {
             id: this.uid(),
             temperature: this.string(''),
-            timestamp: this.string('')
+            timestamp: this.number(0)
         }
     }
 }
