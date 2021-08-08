@@ -82,7 +82,7 @@ export default {
     },
     activated() {
         // Socket.IO: Joining room - only if autoRefresh is on
-        this.socketListening(true)
+        this.socketListening(true, this.socketRoom)
 
         // Creates interval for uptdating uptime text
         this.uptimeInterval = setInterval(() => {
@@ -92,7 +92,7 @@ export default {
     },
     deactivated() {
         // Socket.IO: Leaving room
-        this.socketListening(false)
+        this.socketListening(false, this.socketRoom)
 
         // Clear component interval
         clearInterval(this.uptimeInterval)
@@ -125,16 +125,6 @@ export default {
         }
     },
     methods: {
-        socketListening(state) {
-            if (state) {
-                // Socket.IO: Joining room
-                this.loading = true // Set loading to true after the app joins the room
-                this.$socket.emit('room:join', this.socketRoom)
-            } else {
-                // Socket.IO: Leaving room
-                this.$socket.emit('room:leave', this.socketRoom)
-            }
-        },
         getDuration(time) {
             const duration = moment.duration(moment().diff(time))
             const durationObj = {
