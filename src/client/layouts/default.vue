@@ -26,9 +26,11 @@ import AppSidebar from '~/components/layout/Sidebar.vue'
 import AppFooter from '~/components/layout/Footer.vue'
 import AppAlerts from '~/components/alerts/Alerts'
 
-// Import global mixin
+// Import global mixin's
 import titleMixin from '~/mixins/titleMixin.js'
+import socketListening from '~/mixins/socketListening.js'
 Vue.mixin(titleMixin)
+Vue.mixin(socketListening)
 
 export default {
     components: {
