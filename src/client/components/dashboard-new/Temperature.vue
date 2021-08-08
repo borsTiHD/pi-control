@@ -56,6 +56,7 @@ export default {
     name: 'Temperature',
     data() {
         return {
+            data: null,
             socketRoom: 'temperature',
             textNoData: 'No data could be determined. Please rescan manually.',
             tempLimits: { // Coloring of equal or greater values (from max to low)
@@ -71,17 +72,11 @@ export default {
             getElevation: 'settings/getElevation',
             getOutlined: 'settings/getOutlined'
         }),
-        data() {
-            if (this.getTemperatureData) return this.getTemperatureData
-            return false
-        },
         tempValue() {
             // Returns temperature value without any text
             if (this.data) {
-                const arr = this.data.split('=').map((item) => {
-                    return item.replace('\'C', '') // Removes "'C" from value
-                })
-                return parseFloat(arr[1])
+                const temperature = this.data.replace('\'C', '') // Removes "'C" from value
+                return parseFloat(temperature)
             }
             return false
         }
@@ -108,11 +103,11 @@ export default {
                 return false
             } else if (message._status === 'ok') {
                 // Saving socket data
-                console.log(`[Socket.io] -> Message from server '${this.socketRoom}':`, message)
+                // console.log(`[Socket.io] -> Message from server '${this.socketRoom}':`, message)
+                const data = message.data.temperature
+                this.data = data
 
                 /*
-                const uptime = message.data.uptime
-
                 // Replacing database with new data
                 Uptime.create({
                     data: { uptime }

@@ -12,6 +12,7 @@ const ERROR_MESSAGE_PARSING_FAILED = 'Error on parsing script output'
 // Getting Unix uptime
 async function nonWindows() {
     try {
+        // Command gets information from VideoCore GPU on the Raspberry Pi
         const command = 'vcgencmd'
         const args = ['measure_temp']
 
