@@ -158,6 +158,16 @@ export default {
                 ])
             }
 
+            if (this.$config.dev) {
+                items = items.concat([
+                    {
+                        icon: this.$icons.mdiMonitorDashboard,
+                        title: 'Dashboard-NEW',
+                        to: '/dashboard-new'
+                    }
+                ])
+            }
+
             return items
         },
         darkMode() {
