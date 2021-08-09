@@ -28,7 +28,8 @@
     "@nuxtjs/axios": "^5.13.6",
     "core-js": "^3.16.0",
     "node-pty": "^0.10.1",
-    "nuxt": "^2.15.7"
+    "nuxt": "^2.15.7",
+    "nuxt-build-optimisations": "^1.0.5"
   },
   "devDependencies": {
     "@fontsource/poppins": "^4.5.0",

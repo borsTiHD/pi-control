@@ -128,7 +128,10 @@ export default {
 
     // Modules for dev and build (recommended): https://go.nuxtjs.dev/config-modules
     buildModules: [
-    // https://go.nuxtjs.dev/eslint
+        // Nuxt faster Buildtime: https://github.com/harlan-zw/nuxt-build-optimisations
+        'nuxt-build-optimisations',
+
+        // https://go.nuxtjs.dev/eslint
         '@nuxtjs/eslint-module',
         // https://go.nuxtjs.dev/vuetify
         '@nuxtjs/vuetify',
@@ -235,7 +238,14 @@ export default {
     },
 
     // Build Configuration: https://go.nuxtjs.dev/config-build
-    build: {},
+    build: {
+        /*
+        // Nuxt: Experimental features for speed up build time
+        parallel: true, // https://nuxtjs.org/docs/2.x/configuration-glossary/configuration-build#parallel
+        hardSource: true, // https://nuxtjs.org/docs/2.x/configuration-glossary/configuration-build#hardsource
+        cache: true // https://nuxtjs.org/docs/2.x/configuration-glossary/configuration-build#cache
+        */
+    },
 
     // https://nuxtjs.org/docs/2.x/configuration-glossary/configuration-telemetry
     telemetry: false
