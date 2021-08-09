@@ -28,7 +28,7 @@
                 </v-col>
             </v-row>
             <v-row v-else-if="data">
-                <v-col cols="12">
+                <v-col cols="12" class="d-flex">
                     <v-progress-circular
                         :rotate="180"
                         :size="100"
@@ -38,6 +38,9 @@
                     >
                         {{ tempValue }} °C
                     </v-progress-circular>
+                </v-col>
+                <v-col cols="12" class="d-flex">
+                    <temperature-graph />
                 </v-col>
             </v-row>
             <v-row v-else>
@@ -60,9 +63,13 @@
 import moment from 'moment'
 import { mapGetters } from 'vuex'
 import Temperature from '@/models/Temperature'
+import TemperatureGraph from '~/components/dashboard-new/TemperatureGraph.vue'
 
 export default {
     name: 'Temperature',
+    components: {
+        TemperatureGraph
+    },
     data() {
         return {
             loading: false,
