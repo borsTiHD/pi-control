@@ -20,16 +20,28 @@
                     />
                 </v-col>
             </v-row>
-            <v-row v-else-if="systemStartTime">
-                <v-col cols="12" class="d-flex flex-column">
-                    <span>
-                        <span class="text-subtitle-1">Boot Time:</span>
-                        <span class="ml-2">{{ systemStartTime }}</span>
-                    </span>
-                    <span v-if="uptimeText">
-                        <span class="text-subtitle-1">Uptime:</span>
-                        <span class="ml-2">{{ uptimeText }}</span>
-                    </span>
+            <v-row v-else-if="systemStartTime" dense>
+                <v-col cols="12" class="d-flex flex-row">
+                    <v-list-item dense two-line>
+                        <v-list-item-content>
+                            <v-list-item-title>
+                                Boot Time:
+                            </v-list-item-title>
+                            <v-list-item-subtitle>
+                                <v-badge dot inline left /> {{ systemStartTime }}
+                            </v-list-item-subtitle>
+                        </v-list-item-content>
+                    </v-list-item>
+                    <v-list-item v-if="uptimeText" dense two-line>
+                        <v-list-item-content>
+                            <v-list-item-title>
+                                Uptime:
+                            </v-list-item-title>
+                            <v-list-item-subtitle>
+                                <v-badge dot inline left /> {{ uptimeText }}
+                            </v-list-item-subtitle>
+                        </v-list-item-content>
+                    </v-list-item>
                 </v-col>
             </v-row>
             <v-row v-else>
@@ -86,9 +98,9 @@ export default {
         this.socketListening(true, this.socketRoom)
 
         // Creates interval for uptdating uptime text
+        this.durationHumanize()
         this.uptimeInterval = setInterval(() => {
-            const duration = this.durationHumanize()
-            this.uptimeText = duration
+            this.durationHumanize()
         }, 1000 * 10)
     },
     deactivated() {
@@ -115,8 +127,7 @@ export default {
                     data: { uptime }
                 })
 
-                const duration = this.durationHumanize()
-                this.uptimeText = duration
+                this.durationHumanize()
             } else {
                 console.log(`[Socket.io] -> Message from server '${this.socketRoom}', without usable data:`, message)
             }
@@ -129,8 +140,8 @@ export default {
         getDuration(time) {
             const duration = moment.duration(moment().diff(time))
             const durationObj = {
-                milliseconds: duration.milliseconds(),
-                seconds: duration.seconds(),
+                // milliseconds: duration.milliseconds(),
+                // seconds: duration.seconds(),
                 minutes: duration.minutes(),
                 hours: duration.hours(),
                 days: duration.days(),
@@ -153,7 +164,10 @@ export default {
             if (duration?.minutes) { text += ` ${duration.minutes} minutes,` }
             // if (duration?.seconds) { text += ` ${duration.seconds} seconds,` }
 
-            return text.trim().slice(0, -1)
+            const durationText = text.trim().slice(0, -1)
+            this.uptimeText = durationText
+
+            return durationText
         }
     }
 }
