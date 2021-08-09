@@ -1,5 +1,5 @@
 <template>
-    <v-card :elevation="getElevation" :outlined="getOutlined" class="flex d-flex flex-column mt-2">
+    <v-card :elevation="getElevation" :outlined="getOutlined" class="flex d-flex flex-column">
         <v-card-title class="headline">
             <v-icon
                 large
@@ -21,7 +21,7 @@
                 </v-col>
             </v-row>
             <v-row v-else-if="systemStartTime" dense>
-                <v-col cols="12" class="d-flex flex-row">
+                <v-col cols="12">
                     <v-list-item dense two-line>
                         <v-list-item-content>
                             <v-list-item-title>

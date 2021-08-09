@@ -1,5 +1,5 @@
 <template>
-    <v-card :elevation="getElevation" :outlined="getOutlined" class="flex d-flex flex-column mb-2">
+    <v-card :elevation="getElevation" :outlined="getOutlined" class="flex d-flex flex-column">
         <v-card-title class="headline">
             <v-icon
                 large
@@ -119,7 +119,7 @@ export default {
                 return false
             } else if (message._status === 'ok') {
                 // Saving socket data
-                console.log(`[Socket.io] -> Message from server '${this.socketRoom}':`, message)
+                // console.log(`[Socket.io] -> Message from server '${this.socketRoom}':`, message)
                 const data = message.data.temperature
 
                 // TEST DATA - are not real
