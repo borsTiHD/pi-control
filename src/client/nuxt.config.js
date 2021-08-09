@@ -113,14 +113,15 @@ export default {
 
     // Plugins to run before rendering page: https://go.nuxtjs.dev/config-plugins
     plugins: [
+        { src: '@/plugins/vuex-orm.js' },
         { mode: 'client', src: '@/plugins/vuetify-font.js' },
         { mode: 'client', src: '@/plugins/vuetify-icons.js' },
-        { src: '@/plugins/vuex-orm.js' },
         { mode: 'client', src: '@/plugins/persistedState.client.js' },
         { mode: 'client', src: '@/plugins/run-script.js' },
         { mode: 'client', src: '@/plugins/change-theme.js' },
         { mode: 'client', src: '@/plugins/pwa.client.js' },
-        { mode: 'client', src: '@/plugins/pwa-update.client.js' }
+        { mode: 'client', src: '@/plugins/pwa-update.client.js' },
+        { mode: 'client', src: '@/plugins/chart.js' }
     ],
 
     // Auto import components: https://go.nuxtjs.dev/config-components
@@ -131,6 +132,8 @@ export default {
         // Nuxt faster Buildtime: https://github.com/harlan-zw/nuxt-build-optimisations
         'nuxt-build-optimisations',
 
+        // https://composition-api.nuxtjs.org/
+        '@nuxtjs/composition-api/module',
         // https://go.nuxtjs.dev/eslint
         '@nuxtjs/eslint-module',
         // https://go.nuxtjs.dev/vuetify
