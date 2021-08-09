@@ -41,6 +41,6 @@ export default function(httpServer, config) {
     // Registering Rooms
     initProcessesRoom(io, 'processes') // io object, room-name
     initUptimeRoom(io, 'uptime') // io object, room-name
-    initTemperatureRoom(io, 'temperature')
+    initTemperatureRoom(io, 'temperature', { duration: 5 * 1000, TEST_DATA: config.TEST_DATA, DEV: config.DEV })
     initTestRoom(io, 'testRoom', 2000) // io object, room-name, interval duration
 }

@@ -9,6 +9,13 @@
                 {{ $icons.mdiThermometer }}
             </v-icon>
             Temperature
+
+            <v-badge
+                v-if="testData"
+                color="warning"
+                content="TEST DATA"
+                inline
+            />
         </v-card-title>
         <v-card-text>
             <v-row v-if="loading && !data">
@@ -59,7 +66,7 @@ export default {
     data() {
         return {
             loading: false,
-            // data: null,
+            testData: false,
             socketRoom: 'temperature',
             textNoData: 'No data could be determined.',
             tempLimits: { // Coloring of equal or greater values (from max to low)
@@ -112,9 +119,13 @@ export default {
                 return false
             } else if (message._status === 'ok') {
                 // Saving socket data
-                // console.log(`[Socket.io] -> Message from server '${this.socketRoom}':`, message)
+                console.log(`[Socket.io] -> Message from server '${this.socketRoom}':`, message)
                 const data = message.data.temperature
-                // this.data = data
+
+                // TEST DATA - are not real
+                if (message?.data?.TEST_DATA) {
+                    this.testData = true
+                }
 
                 // Inserting data into database
                 Temperature.insert({

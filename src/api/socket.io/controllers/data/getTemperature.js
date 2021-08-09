@@ -28,15 +28,23 @@ async function nonWindows() {
 }
 
 // Getting windows uptime
-async function isWindows() {
+async function isWindows(config) {
+    if (config.DEV && config.TEST_DATA) {
+        const min = 20
+        const max = 60
+        const r = Math.floor(Math.random() * (max - min + 1) + min)
+        return `${r}'C`
+    }
     throw new Error('Windows is currently not supported')
 }
 
 // Export module
-export default async() => {
+export default async(config) => {
+    // Config: { DEV: config.DEV, TEST_DATA: config.TEST_DATA }
+
     // Determines collecting data depending on operating system
     if (isWin) {
-        return isWindows()
+        return isWindows(config)
     } else {
         return await nonWindows()
     }
