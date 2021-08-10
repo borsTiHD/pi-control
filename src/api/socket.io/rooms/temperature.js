@@ -1,6 +1,6 @@
 // Imports
-import initListener from '../controllers/roomEventListener.js'
-import getTemperature from '../controllers/data/getTemperature.js'
+import initListener from '../controllers/roomEventListener.js' // Controller from socket.io folder
+import getTemperature from '../../controllers/getTemperature.js' // Root dir of API Folder
 
 // Room Event name
 const eventName = 'temperature'

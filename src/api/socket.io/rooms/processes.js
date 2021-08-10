@@ -1,6 +1,6 @@
 // Imports
-import initListener from '../controllers/roomEventListener.js'
-import getProcesses from '../controllers/data/getProcesses.js'
+import initListener from '../controllers/roomEventListener.js' // Controller from socket.io folder
+import getProcesses from '../../controllers/getProcesses.js' // Root dir of API Folder
 
 // Room Event name
 const eventName = 'processes'
