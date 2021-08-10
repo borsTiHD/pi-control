@@ -9,6 +9,23 @@
                 {{ $icons.mdiClockOutline }}
             </v-icon>
             Uptime
+            <v-tooltip right>
+                <template #activator="{ on, attrs }">
+                    <div class="d-inline-block" v-bind="attrs" v-on="on">
+                        <v-btn
+                            icon
+                            color="primary"
+                            class="ml-2"
+                            :loading="loading"
+                            :disabled="loading"
+                            @click="getUptime"
+                        >
+                            <v-icon>{{ $icons.mdiCached }}</v-icon>
+                        </v-btn>
+                    </div>
+                </template>
+                <span>Rescan</span>
+            </v-tooltip>
         </v-card-title>
         <v-card-text>
             <v-row v-if="loading && !systemStartTime">
@@ -72,7 +89,6 @@ export default {
             loading: false,
             uptimeInterval: null,
             uptimeText: null,
-            socketRoom: 'uptime',
             textNoData: 'No data could be determined.'
         }
     },
@@ -88,14 +104,9 @@ export default {
             return uptime[0]?.uptime
         }
     },
-    created() {
-        // Set loading
-        this.loading = true
-    },
     activated() {
-        // Socket.IO: Joining room
-        this.loading = true // Set loading to true after the app joins the room
-        this.socketListening(true, this.socketRoom)
+        // Getting Data
+        this.getUptime()
 
         // Creates interval for uptdating uptime text
         this.durationHumanize()
@@ -104,39 +115,30 @@ export default {
         }, 1000 * 10)
     },
     deactivated() {
-        // Socket.IO: Leaving room
-        this.socketListening(false, this.socketRoom)
-
         // Clear component interval
         clearInterval(this.uptimeInterval)
     },
-    sockets: {
-        uptime(message) {
-            if (message._status === 'error') {
-                console.error(`[Socket.io] -> Message from server '${this.socketRoom}':`, message)
-                // Set loading to 'false' after we get an error
-                this.loading = false
-                return false
-            } else if (message._status === 'ok') {
-                // Saving socket data
-                // console.log(`[Socket.io] -> Message from server '${this.socketRoom}':`, message)
-                const uptime = message.data.uptime
-
-                // Replacing database with new data
-                Uptime.create({
-                    data: { uptime }
-                })
-
-                this.durationHumanize()
-            } else {
-                console.log(`[Socket.io] -> Message from server '${this.socketRoom}', without usable data:`, message)
-            }
-
-            // Set loading to 'false' after we get data
-            this.loading = false
-        }
-    },
     methods: {
+        getUptime() {
+            const url = '/device/uptime'
+            this.loading = true
+            this.$axios.get(url)
+                .then((res) => {
+                    console.log('[Uptime] -> Host system uptime:', res.data)
+                    const uptime = res.data.data.uptime
+
+                    // Replacing database with new data
+                    Uptime.create({
+                        data: { uptime }
+                    })
+
+                    this.durationHumanize()
+                }).catch((error) => {
+                    console.error(error)
+                }).finally(() => {
+                    this.loading = false
+                })
+        },
         getDuration(time) {
             const duration = moment.duration(moment().diff(time))
             const durationObj = {
