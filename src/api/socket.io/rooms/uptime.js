@@ -1,6 +1,6 @@
 // Imports
-import initListener from '../controllers/roomEventListener.js'
-import getUptime from '../controllers/data/getUptime.js'
+import initListener from '../controllers/roomEventListener.js' // Controller from socket.io folder
+import getUptime from '../../controllers/getUptime.js' // Root dir of API Folder
 
 // Room Event name
 const eventName = 'uptime'
