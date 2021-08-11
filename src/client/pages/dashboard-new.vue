@@ -4,18 +4,24 @@
             <temperature class="mb-2" />
             <uptime class="mt-2" />
         </v-col>
+        <v-col cols="12" sm="8" md="6" lg="4" class="d-flex flex-column">
+            <system />
+        </v-col>
     </v-row>
 </template>
 
 <script>
 import Uptime from '~/components/dashboard-new/Uptime.vue'
 import Temperature from '~/components/dashboard-new/Temperature.vue'
+import System from '~/components/dashboard-new/System.vue'
+// import Device from '~/components/dashboard-new/Device.vue'
 
 export default {
     name: 'Dashboard',
     components: {
         Uptime,
-        Temperature
+        Temperature,
+        System
     },
     head() {
         return {
