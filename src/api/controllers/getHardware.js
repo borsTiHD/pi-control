@@ -20,6 +20,7 @@ async function nonWindows() {
         // Parsing
         const outputRegex = /^.*model name\s+:\s+(?<processor>.+?)$.*?Hardware\s+:\s+(?<hardware>.+?)$.*?Revision\s+:\s+(?<revision>.+?)$.*?Serial\s+:\s+(?<serial>.+?)$.*?Model\s+:\s+(?<model>.+?)$/gmi
         const rawData = stdout.trim() // For parsing only needed info
+
         const lines = stdout.trim().split('\n').map((line, index) => {
             const split = line.split(': ')
             if (Array.isArray(split) && split.length > 0) {
@@ -27,7 +28,12 @@ async function nonWindows() {
             }
             return null
         }) // For sending all output
+
+        console.log(rawData)
+        console.log(lines)
         const match = outputRegex.exec(rawData)
+        console.log(match)
+
         if (match === null) {
             throw new Error(ERROR_MESSAGE_PARSING_FAILED)
         }
@@ -45,7 +51,7 @@ async function nonWindows() {
             all: lines
         }
     } catch (error) {
-        console.error('[Controller] -> Error on executing shell script to get system information:', error)
+        console.error('[Controller] -> Error on executing shell script to get data:', error)
         throw new Error(ERROR_MESSAGE_PARSING_FAILED)
     }
 }
