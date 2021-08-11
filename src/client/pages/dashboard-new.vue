@@ -7,6 +7,9 @@
         <v-col cols="12" sm="8" md="6" lg="4" class="d-flex flex-column">
             <system />
         </v-col>
+        <v-col cols="12" sm="8" md="6" lg="4" class="d-flex flex-column">
+            <hardware />
+        </v-col>
     </v-row>
 </template>
 
@@ -14,14 +17,15 @@
 import Uptime from '~/components/dashboard-new/Uptime.vue'
 import Temperature from '~/components/dashboard-new/Temperature.vue'
 import System from '~/components/dashboard-new/System.vue'
-// import Device from '~/components/dashboard-new/Device.vue'
+import Hardware from '~/components/dashboard-new/Hardware.vue'
 
 export default {
     name: 'Dashboard',
     components: {
         Uptime,
         Temperature,
-        System
+        System,
+        Hardware
     },
     head() {
         return {

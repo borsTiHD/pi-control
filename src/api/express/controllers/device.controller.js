@@ -4,6 +4,7 @@ import asyncHandler from '../middleware/asyncHandler.js' // Middleware for handl
 // Controller
 import Uptime from '../../controllers/getUptime.js'
 import System from '../../controllers/getSystem.js'
+import Hardware from '../../controllers/getHardware.js'
 
 /**
  * Route serving uptime from host
@@ -50,7 +51,7 @@ const getSystem = asyncHandler(async(req, res, next) => {
         const data = await System(config)
         const result = {
             _status: 'ok',
-            info: 'Runtime from host system determined',
+            info: 'System informations from host system determined',
             data
         }
 
@@ -64,7 +65,46 @@ const getSystem = asyncHandler(async(req, res, next) => {
         // REST return
         res.status(500).json({
             _status: 'error',
-            info: 'Runtime could not be determined',
+            info: 'System informations could not be determined',
+            error: error.message
+        })
+    }
+})
+
+/**
+ * Route serving hardware informations from host
+ * @name getHardware
+ * @function
+ * @memberof module:routers/device
+ */
+const getHardware = asyncHandler(async(req, res, next) => {
+    try {
+        // Config with 'dev' and 'TEST_DATA' check
+        const config = {
+            DEV: process.env.NODE_ENV === 'development',
+            TEST_DATA: process.env.TEST_DATA
+        }
+
+        // Getting data from controller
+        const { parsed, all } = await Hardware(config)
+        const result = {
+            _status: 'ok',
+            info: 'Hardware informations from host system determined',
+            data: parsed,
+            all
+        }
+
+        // If we're using test data, we append the information on our result object
+        if (config.DEV && config.TEST_DATA) { result.TEST_DATA = true }
+
+        // Return results
+        res.json(result)
+    } catch (error) {
+        console.error(error)
+        // REST return
+        res.status(500).json({
+            _status: 'error',
+            info: 'Hardware informations could not be determined',
             error: error.message
         })
     }
@@ -72,5 +112,6 @@ const getSystem = asyncHandler(async(req, res, next) => {
 
 export default {
     getUptime,
-    getSystem
+    getSystem,
+    getHardware
 }
