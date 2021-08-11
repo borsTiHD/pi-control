@@ -26,6 +26,13 @@
                 </template>
                 <span>Rescan</span>
             </v-tooltip>
+
+            <v-badge
+                v-if="testData"
+                color="warning"
+                content="TEST DATA"
+                inline
+            />
         </v-card-title>
         <v-card-text>
             <v-row v-if="loading">
@@ -130,34 +137,6 @@ export default {
                 }).finally(() => {
                     this.loading = false
                 })
-        },
-        crawlHardware(data) {
-            if (!data) return false
-            // Collecting following stuff
-            /*
-            Hardware        : BCM2711
-            Revision        : d03114
-            Serial          : 100000000a21a527
-            Model           : Raspberry Pi 4 Model B Rev 1.4
-            */
-            function crawlingData(data, search) {
-                const patt = new RegExp(`${search}.+$`, 'gm')
-                const matches = data.match(patt)
-                if (Array.isArray(matches)) {
-                    return matches.map((item) => {
-                        return item.replace(search, '').replace(/^\s+:\s+/gm, '')
-                    })[0]
-                }
-                return false
-            }
-
-            // Return results
-            return [
-                { name: 'Hardware:', state: crawlingData(data, 'Hardware') },
-                { name: 'Revision:', state: crawlingData(data, 'Revision') },
-                { name: 'Serial:', state: crawlingData(data, 'Serial') },
-                { name: 'Model:', state: crawlingData(data, 'Model') }
-            ]
         }
     }
 }
