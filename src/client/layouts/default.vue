@@ -19,7 +19,8 @@
 
 <script>
 import Vue from 'vue'
-import { mapGetters } from 'vuex'
+import { mapGetters, mapActions } from 'vuex'
+import Device from '@/models/Device'
 
 import AppHeader from '~/components/layout/Header.vue'
 import AppSidebar from '~/components/layout/Sidebar.vue'
@@ -44,10 +45,22 @@ export default {
             containerHeight: 0
         }
     },
+    async fetch() {
+        // TODO: Getting real device name from host system
+        // For now, we'll invent a name, since only one device is currently in use anyway.
+        const deviceName = 'raspberry-pi' // eg. await getHostName()
+        const device = await Device.create({ data: { name: deviceName } })
+        const deviceId = device.devices[0].id
+        console.log('deviceId:', deviceId)
+        this.setCurrentDeviceId(deviceId)
+
+        console.log(this.getCurrentDeviceId)
+    },
     computed: {
         ...mapGetters({
             getActiveSkin: 'settings/getActiveSkin',
-            getDarkMode: 'settings/getDarkMode'
+            getDarkMode: 'settings/getDarkMode',
+            getCurrentDeviceId: 'device/getCurrentDeviceId'
         }),
         theme() {
             return (this.$vuetify.theme.dark) ? 'dark' : 'light'
@@ -67,6 +80,9 @@ export default {
         }
     },
     methods: {
+        ...mapActions({
+            setCurrentDeviceId: 'device/setCurrentDeviceId'
+        }),
         onResize() {
             // Setting container height for footer
             const container = document.getElementById('container')

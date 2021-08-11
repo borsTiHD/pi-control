@@ -8,6 +8,7 @@ export default class Uptime extends Model {
     static fields() {
         return {
             id: this.uid(),
+            device_id: this.string(null),
             uptime: this.string('').nullable()
         }
     }

@@ -79,7 +79,7 @@
 
 <script>
 import moment from 'moment'
-import Uptime from '@/models/Uptime'
+import Device from '@/models/Device'
 import { mapGetters } from 'vuex'
 
 export default {
@@ -95,13 +95,18 @@ export default {
     computed: {
         ...mapGetters({
             getElevation: 'settings/getElevation',
-            getOutlined: 'settings/getOutlined'
+            getOutlined: 'settings/getOutlined',
+            getCurrentDeviceId: 'device/getCurrentDeviceId'
         }),
         systemStartTime() {
+            return false
+            /*
             const uptime = Uptime.query()
                 .orderBy('id', 'desc')
+                // .whereId(this.todoId)
                 .get()
             return uptime[0]?.uptime
+            */
         }
     },
     created() {
@@ -124,14 +129,20 @@ export default {
             const url = '/device/uptime'
             this.loading = true
             this.$axios.get(url)
-                .then((res) => {
-                    // console.log('[Uptime] -> Host system uptime:', res.data.data)
+                .then(async(res) => {
                     const uptime = res.data.data.uptime
+                    // console.log('[Uptime] -> Host system uptime:', uptime)
 
                     // Replacing database with new data
-                    Uptime.create({
-                        data: { uptime }
+                    const check = await Device.update({
+                        where: this.getCurrentDeviceId,
+                        data: {
+                            id: this.getCurrentDeviceId,
+                            uptime: { uptime }
+                        }
                     })
+
+                    console.log('check:', check)
 
                     this.durationHumanize()
                 }).catch((error) => {

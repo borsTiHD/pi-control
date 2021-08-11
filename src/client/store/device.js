@@ -1,5 +1,6 @@
 // Root Store
 export const state = () => ({
+    currentDeviceId: null,
     uptime: null,
     kernelData: null,
     operatingSystem: null,
@@ -13,6 +14,10 @@ export const state = () => ({
 
 // Sync functions for setting data
 export const mutations = {
+    setCurrentDeviceId(state, payload) {
+        console.log('MUTATION:', payload)
+        state.currentDeviceId = payload
+    },
     setUptimeData(state, payload) {
         state.uptime = payload
     },
@@ -44,6 +49,10 @@ export const mutations = {
 
 // Async functions for setting data and calling mutations
 export const actions = {
+    setCurrentDeviceId({ commit }, payload) {
+        console.log('SET:', payload)
+        commit('setCurrentDeviceId', payload)
+    },
     setUptimeData({ commit }, payload) {
         commit('setUptimeData', payload)
     },
@@ -75,6 +84,9 @@ export const actions = {
 
 // Getting computed data
 export const getters = {
+    getCurrentDeviceId(state) {
+        return state.currentDeviceId
+    },
     getUptimeData(state) {
         return state.uptime
     },
