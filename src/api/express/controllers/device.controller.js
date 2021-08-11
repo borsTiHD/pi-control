@@ -48,13 +48,17 @@ const getSystem = asyncHandler(async(req, res, next) => {
 
         // Getting data from controller
         const data = await System(config)
-
-        // Return results
-        res.json({
+        const result = {
             _status: 'ok',
             info: 'Runtime from host system determined',
             data
-        })
+        }
+
+        // If we're using test data, we append the information on our result object
+        if (config.DEV && config.TEST_DATA) { result.TEST_DATA = true }
+
+        // Return results
+        res.json(result)
     } catch (error) {
         console.error(error)
         // REST return

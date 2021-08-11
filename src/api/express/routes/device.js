@@ -43,6 +43,9 @@
  *                              state:
  *                                  type: string
  *                                  description: State of the system information.
+ *                  TEST_DATA:
+ *                      type: boolean
+ *                      description: Only exists, if the host system is using test data.
  */
 
 /**

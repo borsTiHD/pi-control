@@ -26,6 +26,13 @@
                 </template>
                 <span>Rescan</span>
             </v-tooltip>
+
+            <v-badge
+                v-if="testData"
+                color="warning"
+                content="TEST DATA"
+                inline
+            />
         </v-card-title>
         <v-card-text>
             <v-row v-if="loading">
@@ -89,6 +96,7 @@ export default {
     data() {
         return {
             loading: false,
+            testData: false,
             textNoData: 'No data could be determined.'
         }
     },
@@ -110,6 +118,11 @@ export default {
             this.loading = true
             this.$axios.get(url)
                 .then((res) => {
+                    // TEST DATA - are not real
+                    if (res?.data?.TEST_DATA) {
+                        this.testData = true
+                    }
+
                     // Replacing database with new data
                     const data = res?.data?.data
                     System.create({
