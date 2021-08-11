@@ -14,40 +14,35 @@ async function nonWindows() {
     try {
         const command = 'cat'
         const args = ['/proc/cpuinfo']
-
         const { stdout } = await execFile(command, args, { maxBuffer: TEN_MEGABYTES })
 
-        // Parsing
-        const outputRegex = /^.*model name\s+:\s+(?<processor>.+?)$.*?Hardware\s+:\s+(?<hardware>.+?)$.*?Revision\s+:\s+(?<revision>.+?)$.*?Serial\s+:\s+(?<serial>.+?)$.*?Model\s+:\s+(?<model>.+?)$/gms
-        const rawData = stdout.trim() // For parsing only needed info
-
+        // For 'all' output
         const lines = stdout.trim().split('\n').map((line, index) => {
             const split = line.split(': ')
             if (Array.isArray(split) && split.length > 0) {
                 return { name: split[0].replace(/\t+/, ''), state: split[1] }
             }
             return null
-        }) // For sending all output
+        })
 
-        console.log(rawData)
-        console.log(lines)
+        // For 'parsed' output
+        const outputRegex = /^.*model name\s+:\s+(?<processor>.+?)$.*?Hardware\s+:\s+(?<hardware>.+?)$.*?Revision\s+:\s+(?<revision>.+?)$.*?Serial\s+:\s+(?<serial>.+?)$.*?Model\s+:\s+(?<model>.+?)$/gms
+        const rawData = stdout.trim()
         const match = outputRegex.exec(rawData)
-        console.log(match)
-
         if (match === null) {
-            throw new Error(ERROR_MESSAGE_PARSING_FAILED)
+            throw new Error(ERROR_MESSAGE_PARSING_FAILED) // If nothing matched
         }
-
         const { processor, hardware, revision, serial, model } = match.groups
+        const parsed = [
+            { name: 'Processor', state: processor },
+            { name: 'Hardware', state: hardware },
+            { name: 'Revision', state: revision },
+            { name: 'Serial', state: serial },
+            { name: 'Model', state: model }
+        ]
 
         return {
-            parsed: [
-                { name: 'Processor:', state: processor },
-                { name: 'Hardware:', state: hardware },
-                { name: 'Revision:', state: revision },
-                { name: 'Serial:', state: serial },
-                { name: 'Model:', state: model }
-            ],
+            parsed,
             all: lines
         }
     } catch (error) {
