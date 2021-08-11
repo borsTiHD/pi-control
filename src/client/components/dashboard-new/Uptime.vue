@@ -28,7 +28,7 @@
             </v-tooltip>
         </v-card-title>
         <v-card-text>
-            <v-row v-if="loading && !systemStartTime">
+            <v-row v-if="loading">
                 <v-col cols="12">
                     <span>Collecting data...</span>
                     <v-progress-linear
@@ -104,10 +104,11 @@ export default {
             return uptime[0]?.uptime
         }
     },
-    activated() {
+    created() {
         // Getting Data
         this.getUptime()
-
+    },
+    activated() {
         // Creates interval for uptdating uptime text
         this.durationHumanize()
         this.uptimeInterval = setInterval(() => {
