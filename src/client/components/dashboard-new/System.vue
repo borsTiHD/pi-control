@@ -81,6 +81,7 @@
 </template>
 
 <script>
+import System from '@/models/System'
 import { mapGetters } from 'vuex'
 
 export default {
@@ -88,7 +89,6 @@ export default {
     data() {
         return {
             loading: false,
-            items: [],
             textNoData: 'No data could be determined.'
         }
     },
@@ -96,7 +96,10 @@ export default {
         ...mapGetters({
             getElevation: 'settings/getElevation',
             getOutlined: 'settings/getOutlined'
-        })
+        }),
+        items() {
+            return System.query().get()
+        }
     },
     created() {
         this.getData()
@@ -107,17 +110,11 @@ export default {
             this.loading = true
             this.$axios.get(url)
                 .then((res) => {
-                    console.log('[System] -> Host system information:', res.data.data)
-                    const data = res.data.data
-
-                    this.items = data
-
-                    /*
                     // Replacing database with new data
-                    Uptime.create({
-                        data: { uptime }
+                    const data = res?.data?.data
+                    System.create({
+                        data
                     })
-                    */
                 }).catch((error) => {
                     console.error(error)
                 }).finally(() => {
