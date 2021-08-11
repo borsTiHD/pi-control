@@ -18,13 +18,13 @@ async function nonWindows() {
         const { stdout } = await execFile(command, args, { maxBuffer: TEN_MEGABYTES })
 
         // Parsing
-        const outputRegex = /^.*model name\s+:\s+(?<processor>.+?)$.*?Hardware\s+:\s+(?<hardware>.+?)$.*?Revision\s+:\s+(?<revision>.+?)$.*?Serial\s+:\s+(?<serial>.+?)$.*?Model\s+:\s+(?<model>.+?)$/gmi
+        const outputRegex = /^.*model name\s+:\s+(?<processor>.+?)$.*?Hardware\s+:\s+(?<hardware>.+?)$.*?Revision\s+:\s+(?<revision>.+?)$.*?Serial\s+:\s+(?<serial>.+?)$.*?Model\s+:\s+(?<model>.+?)$/gms
         const rawData = stdout.trim() // For parsing only needed info
 
         const lines = stdout.trim().split('\n').map((line, index) => {
             const split = line.split(': ')
             if (Array.isArray(split) && split.length > 0) {
-                return { name: split[0], state: split[1] }
+                return { name: split[0].replace(/\t+/, ''), state: split[1] }
             }
             return null
         }) // For sending all output
