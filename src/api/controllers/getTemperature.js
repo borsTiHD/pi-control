@@ -22,7 +22,7 @@ async function nonWindows() {
         const data = stdout.trim().split('=')
         return data[1]
     } catch (error) {
-        console.error('[Socket.io] -> Error on executing shell script to get system temperature:', error)
+        console.error('[Controller] -> Error on executing shell script to get system temperature:', error)
         throw new Error(ERROR_MESSAGE_PARSING_FAILED)
     }
 }

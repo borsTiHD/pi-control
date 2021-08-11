@@ -124,7 +124,7 @@ export default {
             this.loading = true
             this.$axios.get(url)
                 .then((res) => {
-                    console.log('[Uptime] -> Host system uptime:', res.data)
+                    console.log('[Uptime] -> Host system uptime:', res.data.data)
                     const uptime = res.data.data.uptime
 
                     // Replacing database with new data

@@ -22,7 +22,7 @@ async function nonWindows() {
         const uptime = stdout.trim()
         return uptime
     } catch (error) {
-        console.error('[Socket.io] -> Error on executing shell script to get system uptime:', error)
+        console.error('[Controller] -> Error on executing shell script to get system uptime:', error)
         throw new Error(ERROR_MESSAGE_PARSING_FAILED)
     }
 }
@@ -53,7 +53,7 @@ async function isWindows() {
 
         return uptime
     } catch (error) {
-        console.error('[Socket.io] -> Error on executing powershell script to get system uptime:', error)
+        console.error('[Controller] -> Error on executing powershell script to get system uptime:', error)
         throw new Error(ERROR_MESSAGE_PARSING_FAILED)
     }
 }
