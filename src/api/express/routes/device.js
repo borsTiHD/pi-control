@@ -32,7 +32,17 @@
  *                      type: string
  *                      description: Readable info what was done.
  *                  data:
- *                      type: object
+ *                      type: array
+ *                      description: Array contains objects with 'name' and 'state'.
+ *                      items:
+ *                          type: object
+ *                          properties:
+ *                              name:
+ *                                  type: string
+ *                                  description: Name of the system information.
+ *                              state:
+ *                                  type: string
+ *                                  description: State of the system information.
  */
 
 /**
