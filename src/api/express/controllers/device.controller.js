@@ -6,6 +6,7 @@ import Uptime from '../../controllers/getUptime.js'
 import System from '../../controllers/getSystem.js'
 import Hardware from '../../controllers/getHardware.js'
 import Temperature from '../../controllers/getTemperature.js'
+import Processes from '../../controllers/getProcesses.js'
 
 /**
  * Route serving uptime from host
@@ -143,7 +144,33 @@ const getTemperature = asyncHandler(async(req, res, next) => {
         // REST return
         res.status(500).json({
             _status: 'error',
-            info: 'System informations could not be determined',
+            info: 'System temperature could not be determined',
+            error: error.message
+        })
+    }
+})
+
+/**
+ * Route serving running processes from host
+ * @name getTemperature
+ * @function
+ * @memberof module:routers/device
+ */
+const getProcesses = asyncHandler(async(req, res, next) => {
+    try {
+        // Getting data from controller
+        const data = await Processes()
+        res.json({
+            _status: 'ok',
+            info: 'Running processes from host system determined',
+            data
+        })
+    } catch (error) {
+        console.error(error)
+        // REST return
+        res.status(500).json({
+            _status: 'error',
+            info: 'Running processes could not be determined',
             error: error.message
         })
     }
@@ -153,5 +180,6 @@ export default {
     getUptime,
     getSystem,
     getHardware,
-    getTemperature
+    getTemperature,
+    getProcesses
 }

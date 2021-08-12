@@ -107,6 +107,22 @@
  *                      type: boolean
  *                      description: Only exists, if the host system is using test data.
  *                      example: true
+ *          ProcessesData:
+ *              type: object
+ *              properties:
+ *                  _status:
+ *                      type: string
+ *                      description: Status of the request
+ *                      example: ok
+ *                  info:
+ *                      type: string
+ *                      description: Readable info what was done.
+ *                      example: Running processes from host system determined
+ *                  data:
+ *                      type: array
+ *                      description: Array contains objects with detail information about a running task. Object structure depends on the operating system used.
+ *                      items:
+ *                          type: object
  */
 
 /**
@@ -212,5 +228,27 @@ router.get('/hardware', Controller.getHardware)
  *                  $ref: '#/components/responses/ErrorObject'
  */
 router.get('/temperature', Controller.getTemperature)
+
+/**
+ * @swagger
+ *  /device/processes:
+ *      get:
+ *          tags:
+ *              - Device
+ *          summary: Get running processes from host system
+ *          description: Returns an object with the running processes from the host system.
+ *          security:
+ *              - bearerAuth: []
+ *          responses:
+ *              200:
+ *                  description: Object with running processes from the host system.
+ *                  content:
+ *                      application/json:
+ *                          schema:
+ *                              $ref: '#/components/schemas/ProcessesData'
+ *              500:
+ *                  $ref: '#/components/responses/ErrorObject'
+ */
+router.get('/processes', Controller.getProcesses)
 
 export default router
