@@ -5,6 +5,7 @@ import asyncHandler from '../middleware/asyncHandler.js' // Middleware for handl
 import Uptime from '../../controllers/getUptime.js'
 import System from '../../controllers/getSystem.js'
 import Hardware from '../../controllers/getHardware.js'
+import Temperature from '../../controllers/getTemperature.js'
 
 /**
  * Route serving uptime from host
@@ -110,8 +111,47 @@ const getHardware = asyncHandler(async(req, res, next) => {
     }
 })
 
+/**
+ * Route serving temperature from host
+ * @name getTemperature
+ * @function
+ * @memberof module:routers/device
+ */
+const getTemperature = asyncHandler(async(req, res, next) => {
+    try {
+        // Config with 'dev' and 'TEST_DATA' check
+        const config = {
+            DEV: process.env.NODE_ENV === 'development',
+            TEST_DATA: process.env.TEST_DATA
+        }
+
+        // Getting data from controller
+        const data = await Temperature(config)
+        const result = {
+            _status: 'ok',
+            info: 'System temperature from host system determined',
+            data
+        }
+
+        // If we're using test data, we append the information on our result object
+        if (config.DEV && config.TEST_DATA) { result.TEST_DATA = true }
+
+        // Return results
+        res.json(result)
+    } catch (error) {
+        console.error(error)
+        // REST return
+        res.status(500).json({
+            _status: 'error',
+            info: 'System informations could not be determined',
+            error: error.message
+        })
+    }
+})
+
 export default {
     getUptime,
     getSystem,
-    getHardware
+    getHardware,
+    getTemperature
 }
