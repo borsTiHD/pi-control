@@ -22,7 +22,7 @@ export default {
         data() {
             const temperature = Temperature.query()
                 .orderBy('timestamp', 'desc')
-                .limit(5).get().reverse()
+                .limit(20).get().reverse()
             return temperature || false
         },
         chartData() {
