@@ -178,6 +178,10 @@ export default {
         localStorage: true,
         strategies: {
             local: {
+                // https://auth.nuxtjs.org/schemes/refresh/#token
+                token: {
+                    maxAge: 1800 * 2 * 24 // In seconds: 1800s (30 min) default
+                },
                 endpoints: {
                     login: {
                         url: '/auth/login',
