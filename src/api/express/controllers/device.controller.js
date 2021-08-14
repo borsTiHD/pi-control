@@ -7,6 +7,7 @@ import System from '../../controllers/getSystem.js'
 import Hardware from '../../controllers/getHardware.js'
 import Temperature from '../../controllers/getTemperature.js'
 import Processes from '../../controllers/getProcesses.js'
+import Diskspace from '../../controllers/getDiskspace.js'
 
 /**
  * Route serving uptime from host
@@ -152,7 +153,7 @@ const getTemperature = asyncHandler(async(req, res, next) => {
 
 /**
  * Route serving running processes from host
- * @name getTemperature
+ * @name getProcesses
  * @function
  * @memberof module:routers/device
  */
@@ -176,10 +177,49 @@ const getProcesses = asyncHandler(async(req, res, next) => {
     }
 })
 
+/**
+ * Route serving diskspace from host
+ * @name getDiskspace
+ * @function
+ * @memberof module:routers/device
+ */
+const getDiskspace = asyncHandler(async(req, res, next) => {
+    try {
+        // Config with 'dev' and 'TEST_DATA' check
+        const config = {
+            DEV: process.env.NODE_ENV === 'development',
+            TEST_DATA: process.env.TEST_DATA
+        }
+
+        // Getting data from controller
+        const data = await Diskspace(config)
+        const result = {
+            _status: 'ok',
+            info: 'Diskspace from host system determined',
+            data
+        }
+
+        // If we're using test data, we append the information on our result object
+        if (config.DEV && config.TEST_DATA) { result.TEST_DATA = true }
+
+        // Return results
+        res.json(result)
+    } catch (error) {
+        console.error(error)
+        // REST return
+        res.status(500).json({
+            _status: 'error',
+            info: 'Diskspace could not be determined',
+            error: error.message
+        })
+    }
+})
+
 export default {
     getUptime,
     getSystem,
     getHardware,
     getTemperature,
-    getProcesses
+    getProcesses,
+    getDiskspace
 }

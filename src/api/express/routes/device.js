@@ -123,6 +123,48 @@
  *                      description: Array contains objects with detail information about a running task. Object structure depends on the operating system used.
  *                      items:
  *                          type: object
+ *          DiskspaceData:
+ *              type: object
+ *              properties:
+ *                  _status:
+ *                      type: string
+ *                      description: Status of the request
+ *                      example: ok
+ *                  info:
+ *                      type: string
+ *                      description: Readable info what was done.
+ *                      example: Diskspace from host system determined
+ *                  data:
+ *                      type: array
+ *                      description: Array contains objects with diskspace data.
+ *                      items:
+ *                          type: object
+ *                          properties:
+ *                              filesystem:
+ *                                  type: string
+ *                                  description: Filesystem
+ *                              type:
+ *                                  type: string
+ *                                  description: Type
+ *                              total:
+ *                                  type: number
+ *                                  description: 1M-blocks
+ *                              used:
+ *                                  type: number
+ *                                  description: Space used
+ *                              available:
+ *                                  type: number
+ *                                  description: Space available
+ *                              usedPercentage:
+ *                                  type: number
+ *                                  description: Usage in percent
+ *                              mounted:
+ *                                  type: string
+ *                                  description: Mounted on
+ *                  TEST_DATA:
+ *                      type: boolean
+ *                      description: Only exists, if the host system is using test data.
+ *                      example: true
  */
 
 /**
@@ -250,5 +292,27 @@ router.get('/temperature', Controller.getTemperature)
  *                  $ref: '#/components/responses/ErrorObject'
  */
 router.get('/processes', Controller.getProcesses)
+
+/**
+ * @swagger
+ *  /device/diskspace:
+ *      get:
+ *          tags:
+ *              - Device
+ *          summary: Get diskspace from host system
+ *          description: Returns an object with the diskspace from the host system.
+ *          security:
+ *              - bearerAuth: []
+ *          responses:
+ *              200:
+ *                  description: Object with diskspace from the host system.
+ *                  content:
+ *                      application/json:
+ *                          schema:
+ *                              $ref: '#/components/schemas/DiskspaceData'
+ *              500:
+ *                  $ref: '#/components/responses/ErrorObject'
+ */
+router.get('/diskspace', Controller.getDiskspace)
 
 export default router
