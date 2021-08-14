@@ -36,9 +36,6 @@ async function nonWindows() {
             }
         })
 
-        // DEBUG: DELETE ME
-        console.log('diskspace:', diskspace)
-
         return diskspace
     } catch (error) {
         console.error('[Controller] -> Error on executing shell script to get diskspace:', error)

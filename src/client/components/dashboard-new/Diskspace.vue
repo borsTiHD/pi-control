@@ -44,41 +44,28 @@
                     />
                 </v-col>
             </v-row>
-            <v-row v-else-if="!loading && data">
-                <v-col cols="12">
-                    <span class="font-weight-bold">{{ space.disk.mounted }}</span>
-                    <span>Used: <span class="font-weight-bold">{{ space.disk.used }}MB ({{ space.disk.usedPercentage }}%)</span></span>
-                    <span>Free: <span class="font-weight-bold">{{ space.disk.available }}MB</span></span>
-                    <span>Total: <span class="font-weight-bold">{{ space.disk.total }}MB</span></span>
-                </v-col>
-                <v-col cols="12">
-                    <v-progress-linear
-                        :value="space.disk.usedPercentage"
-                        :color="color(space.disk.usedPercentage)"
-                        height="25"
-                    >
-                        <strong>{{ space.disk.usedPercentage }}%</strong>
-                    </v-progress-linear>
-                </v-col>
+            <div v-else-if="!loading && data">
+                <v-row v-for="(space, i) in data" :key="i">
+                    <v-col cols="12">
+                        <span class="font-weight-bold">{{ space.mounted }}</span>
+                        <span>Used: <span class="font-weight-bold">{{ space.used }}MB ({{ space.usedPercentage }}%)</span></span>
+                        <span>Free: <span class="font-weight-bold">{{ space.available }}MB</span></span>
+                        <span>Total: <span class="font-weight-bold">{{ space.total }}MB</span></span>
+                    </v-col>
+                    <v-col cols="12">
+                        <v-progress-linear
+                            :value="space.usedPercentage"
+                            :color="color(space.usedPercentage)"
+                            height="25"
+                        >
+                            <strong>{{ space.usedPercentage }}%</strong>
+                        </v-progress-linear>
+                    </v-col>
 
-                <v-divider class="mx-4" />
-
-                <v-col cols="12">
-                    <span class="font-weight-bold">{{ space.boot.mounted }}</span>
-                    <span>Used: <span class="font-weight-bold">{{ space.boot.used }}MB ({{ space.boot.usedPercentage }}%)</span></span>
-                    <span>Free: <span class="font-weight-bold">{{ space.boot.available }}MB</span></span>
-                    <span>Total: <span class="font-weight-bold">{{ space.boot.total }}MB</span></span>
-                </v-col>
-                <v-col cols="12">
-                    <v-progress-linear
-                        :value="space.boot.usedPercentage"
-                        :color="color(space.boot.usedPercentage)"
-                        height="25"
-                    >
-                        <strong>{{ space.boot.usedPercentage }}%</strong>
-                    </v-progress-linear>
-                </v-col>
-            </v-row>
+                    <!-- Line on every Item, except the last one -->
+                    <v-divider v-if="data.length !== i+1" class="mx-4" />
+                </v-row>
+            </div>
             <v-row v-else>
                 <v-col cols="12">
                     <v-alert
@@ -104,6 +91,7 @@ export default {
         return {
             loading: false,
             testData: false,
+            diskData: null,
             textNoData: 'No data could be determined. Please rescan manually.',
             limits: { // Coloring of equal or greater values (from max to low)
                 low: { value: 0, color: 'primary' },
@@ -119,38 +107,8 @@ export default {
             getOutlined: 'settings/getOutlined'
         }),
         data() {
-            if (this.getDiskData) return this.getDiskData
-            return false
-        },
-        space() {
-            if (this.data) {
-                const types = this.crawlDiskData(this.data, 0)
-                const disk = this.crawlDiskData(this.data, 1)
-                const boot = this.crawlDiskData(this.data, 2)
-
-                // Returning Object for better use
-                return {
-                    types,
-                    disk: {
-                        filesystem: disk[0], // Filesystem
-                        type: disk[1], // Type
-                        total: disk[2], // 1M-blocks
-                        used: disk[3], // Used
-                        available: disk[4], // Available
-                        usedPercentage: this.returnPercentageNumber(disk[5]), // Use%
-                        mounted: disk[6] // Mounted on
-                    },
-                    boot: {
-                        filesystem: boot[0], // Filesystem
-                        type: boot[1], // Type
-                        total: boot[2], // 1M-blocks
-                        used: boot[3], // Used
-                        available: boot[4], // Available
-                        usedPercentage: this.returnPercentageNumber(boot[5]), // Use%
-                        mounted: boot[6] // Mounted on
-                    }
-                }
-            }
+            // TODO: Getting data from store/database
+            if (this.diskData) return this.diskData
             return false
         }
     },
@@ -168,8 +126,8 @@ export default {
                         this.testData = true
                     }
 
-                    const data = res?.data
-                    console.log('DATA:', data)
+                    this.diskData = res?.data?.data
+                    console.log('DATA:', this.diskData)
 
                     /*
                     // Replacing database with new data
@@ -183,20 +141,6 @@ export default {
                 }).finally(() => {
                     this.loading = false
                 })
-        },
-        crawlDiskData(data, index) {
-            // Crawls response from 'fdf -x tmpfs -x devtmpfs -m -Tree'
-            // Line 0: Disk types -> English: Filesystem, Type, 1M-blocks, Used, Available, Use%, Mounted on
-            // Line 0: Disk types -> German: Dateisystem, Typ, 1M-Blöcke, Benutzt, Verfügbar, Verw%, Eingehängt auf
-            // Every line after: Disk data, Boot data
-            const arr = data.split('\n')
-            if (Array.isArray(arr) && arr.length > 0) {
-                return arr[index].split(/\s+/)
-            }
-            return false
-        },
-        returnPercentageNumber(string) {
-            return parseInt(string.replace('%', ''))
         },
         color(val) {
             // Coloring of equal or greater values (from max to low)
