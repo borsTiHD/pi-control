@@ -25,17 +25,15 @@ async function nonWindows() {
         lines.shift() // deletes first line with headers
         const diskspace = lines.map((line, index) => {
             const split = line.split(/\s+/)
-            return split.map((value) => {
-                return {
-                    filesystem: value[0], // Filesystem
-                    type: value[1], // Type
-                    total: parseInt(value[2]), // 1M-blocks
-                    used: parseInt(value[3]), // Used
-                    available: parseInt(value[4]), // Available
-                    usedPercentage: parseInt(value[5].replace('%', '')), // Use%
-                    mounted: value[6] // Mounted on
-                }
-            })
+            return {
+                filesystem: split[0], // Filesystem
+                type: split[1], // Type
+                total: parseInt(split[2]), // 1M-blocks
+                used: parseInt(split[3]), // Used
+                available: parseInt(split[4]), // Available
+                usedPercentage: parseInt(split[5].replace('%', '')), // Use%
+                mounted: split[6] // Mounted on
+            }
         })
 
         // DEBUG: DELETE ME
@@ -43,7 +41,7 @@ async function nonWindows() {
 
         return diskspace
     } catch (error) {
-        console.error('[Controller] -> Error on executing shell script to get system information:', error)
+        console.error('[Controller] -> Error on executing shell script to get diskspace:', error)
         throw new Error(ERROR_MESSAGE_PARSING_FAILED)
     }
 }
