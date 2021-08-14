@@ -97,7 +97,7 @@ export default {
             loading: false,
             testData: false,
             itemsLocal: false,
-            textNoData: 'No data could be determined.'
+            textNoData: 'No data could be determined. Please rescan manually.'
         }
     },
     computed: {

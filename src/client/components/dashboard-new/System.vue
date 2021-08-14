@@ -97,7 +97,7 @@ export default {
         return {
             loading: false,
             testData: false,
-            textNoData: 'No data could be determined.'
+            textNoData: 'No data could be determined. Please rescan manually.'
         }
     },
     computed: {

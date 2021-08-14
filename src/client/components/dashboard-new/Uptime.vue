@@ -89,7 +89,7 @@ export default {
             loading: false,
             uptimeInterval: null,
             uptimeText: null,
-            textNoData: 'No data could be determined.'
+            textNoData: 'No data could be determined. Please rescan manually.'
         }
     },
     computed: {
