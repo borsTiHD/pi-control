@@ -12,17 +12,33 @@ const ERROR_MESSAGE_PARSING_FAILED = 'Error on parsing script output'
 // Getting Unix uptime
 async function nonWindows() {
     try {
-        // Command gets information from VideoCore GPU on the Raspberry Pi
-        const command = 'vcgencmd'
-        const args = ['measure_temp']
+        const command = 'free'
+        const args = ['-m']
 
         const { stdout } = await execFile(command, args, { maxBuffer: TEN_MEGABYTES })
 
         // Parsing
-        const data = stdout.trim().split('=')
-        return data[1]
+        const lines = stdout.trim().split('\n')
+        lines.shift() // deletes first line with headers
+        const data = lines.map((line, index) => {
+            return line
+            /*
+            const split = line.split(/\s+/)
+            return {
+                filesystem: split[0], // Filesystem
+                type: split[1], // Type
+                total: parseInt(split[2]), // 1M-blocks
+                used: parseInt(split[3]), // Used
+                available: parseInt(split[4]), // Available
+                usedPercentage: parseInt(split[5].replace('%', '')), // Use%
+                mounted: split[6] // Mounted on
+            }
+            */
+        })
+
+        return data
     } catch (error) {
-        console.error('[Controller] -> Error on executing shell script to get system temperature:', error)
+        console.error('[Controller] -> Error on executing shell script to get memory usage:', error)
         throw new Error(ERROR_MESSAGE_PARSING_FAILED)
     }
 }
