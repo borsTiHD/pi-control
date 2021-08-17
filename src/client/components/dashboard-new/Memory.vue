@@ -70,6 +70,7 @@ export default {
             testData: false,
             socketRoom: 'memory',
             textNoData: 'No data could be determined.',
+            memoryData: null,
             limits: { // Coloring of equal or greater values (from max to low)
                 low: { value: 0, color: 'primary' },
                 mid: { value: 50, color: 'yellow' },
@@ -84,7 +85,7 @@ export default {
             getOutlined: 'settings/getOutlined'
         }),
         data() {
-            return false
+            return false // this.memoryData
             /*
             const temperature = Temperature.query()
                 .orderBy('timestamp', 'asc')
@@ -132,13 +133,14 @@ export default {
             } else if (message._status === 'ok') {
                 // Saving socket data
                 console.log(`[Socket.io] -> Message from server '${this.socketRoom}':`, message)
-                // const data = message.data.memory
+                const data = message?.data?.memory
 
                 // TEST DATA - are not real
                 if (message?.data?.TEST_DATA) {
                     this.testData = true
                 }
 
+                this.memoryData = data
                 // Inserting data into database
                 /*
                 Temperature.insert({
