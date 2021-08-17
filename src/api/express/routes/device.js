@@ -165,6 +165,24 @@
  *                      type: boolean
  *                      description: Only exists, if the host system is using test data.
  *                      example: true
+ *          MemoryData:
+ *              type: object
+ *              properties:
+ *                  _status:
+ *                      type: string
+ *                      description: Status of the request
+ *                      example: ok
+ *                  info:
+ *                      type: string
+ *                      description: Readable info what was done.
+ *                      example: Diskspace from host system determined
+ *                  data:
+ *                      type: array
+ *                      description: Array contains objects with diskspace data.
+ *                  TEST_DATA:
+ *                      type: boolean
+ *                      description: Only exists, if the host system is using test data.
+ *                      example: true
  */
 
 /**
@@ -314,5 +332,27 @@ router.get('/processes', Controller.getProcesses)
  *                  $ref: '#/components/responses/ErrorObject'
  */
 router.get('/diskspace', Controller.getDiskspace)
+
+/**
+ * @swagger
+ *  /device/memory:
+ *      get:
+ *          tags:
+ *              - Device
+ *          summary: Get memory usage from host system
+ *          description: Returns an object with the memory usage from the host system.
+ *          security:
+ *              - bearerAuth: []
+ *          responses:
+ *              200:
+ *                  description: Object with memory usage from the host system.
+ *                  content:
+ *                      application/json:
+ *                          schema:
+ *                              $ref: '#/components/schemas/MemoryData'
+ *              500:
+ *                  $ref: '#/components/responses/ErrorObject'
+ */
+router.get('/memory', Controller.getMemory)
 
 export default router

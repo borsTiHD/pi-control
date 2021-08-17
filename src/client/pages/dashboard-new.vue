@@ -1,5 +1,9 @@
 <template>
     <v-row justify="center">
+        <v-col cols="12" sm="8" md="6" lg="5" class="d-flex flex-column">
+            <memory />
+            <!-- <swap /> -->
+        </v-col>
         <v-col cols="12" sm="8" md="3" lg="3" class="d-flex flex-column align-content-space-between">
             <temperature class="mb-2" />
             <uptime class="mt-2" />
@@ -17,6 +21,7 @@
 </template>
 
 <script>
+import Memory from '~/components/dashboard-new/Memory.vue'
 import Uptime from '~/components/dashboard-new/Uptime.vue'
 import Temperature from '~/components/dashboard-new/Temperature.vue'
 import Diskspace from '~/components/dashboard-new/Diskspace.vue'
@@ -26,6 +31,7 @@ import Hardware from '~/components/dashboard-new/Hardware.vue'
 export default {
     name: 'Dashboard',
     components: {
+        Memory,
         Uptime,
         Temperature,
         Diskspace,
