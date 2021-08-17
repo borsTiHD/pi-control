@@ -1,5 +1,5 @@
 <template>
-    <v-card :elevation="getElevation" :outlined="getOutlined" class="flex d-flex flex-column mb-2">
+    <v-card :elevation="getElevation" :outlined="getOutlined" class="flex d-flex flex-column">
         <v-card-title class="headline">
             <v-icon
                 large
@@ -9,6 +9,13 @@
                 {{ $icons.mdiMemory }}
             </v-icon>
             Memory
+
+            <v-badge
+                v-if="testData"
+                color="warning"
+                content="TEST DATA"
+                inline
+            />
         </v-card-title>
         <v-card-text>
             <v-row v-if="loading && !data">
@@ -125,7 +132,7 @@ export default {
             } else if (message._status === 'ok') {
                 // Saving socket data
                 console.log(`[Socket.io] -> Message from server '${this.socketRoom}':`, message)
-                // const data = message.data.xxx
+                // const data = message.data.memory
 
                 // TEST DATA - are not real
                 if (message?.data?.TEST_DATA) {

@@ -1,10 +1,10 @@
 <template>
     <v-row justify="center">
         <v-col cols="12" sm="8" md="6" lg="5" class="d-flex flex-column">
-            <memory />
+            <memory class="mb-2" />
             <!-- <swap /> -->
         </v-col>
-        <v-col cols="12" sm="8" md="3" lg="3" class="d-flex flex-column align-content-space-between">
+        <v-col cols="12" sm="8" md="3" lg="3" class="d-flex flex-column">
             <temperature class="mb-2" />
             <uptime class="mt-2" />
         </v-col>
