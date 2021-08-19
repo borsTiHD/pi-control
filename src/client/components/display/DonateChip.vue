@@ -36,8 +36,9 @@
                                     btn-color="#0070ba"
                                     btn-class="flex-grow-1"
                                     :icon="$icons.mdiCreditCardOutline"
+                                    :href="paypalMe"
+                                    target="_blank"
                                     outlined
-                                    @click="openPaypalMe"
                                 />
                                 <v-spacer />
                                 <span class="align-self-center">or</span>
@@ -47,8 +48,9 @@
                                     tooltip="Send via buymeacoffee.com"
                                     btn-color="#fd0"
                                     btn-class="flex-grow-1"
+                                    :href="buyMeACoffee"
+                                    target="_blank"
                                     outlined
-                                    @click="openBuyMeACoffee"
                                 />
                             </v-col>
                             <v-col class="d-flex justify-center">
@@ -56,8 +58,9 @@
                                     name="❤ Github Sponsor"
                                     tooltip="Support via Github"
                                     btn-color="primary"
+                                    :href="githubSponsor"
+                                    target="_blank"
                                     outlined
-                                    @click="openGithubSponsor"
                                 />
                             </v-col>
                         </v-row>
@@ -96,17 +99,6 @@ export default {
             paypalMe: 'https://paypal.me/borstihd',
             buyMeACoffee: 'https://www.buymeacoffee.com/borstihd',
             githubSponsor: 'https://github.com/sponsors/borsTiHD'
-        }
-    },
-    methods: {
-        openPaypalMe() {
-            window.open(this.paypalMe, '_blank')
-        },
-        openBuyMeACoffee() {
-            window.open(this.buyMeACoffee, '_blank')
-        },
-        openGithubSponsor() {
-            window.open(this.githubSponsor, '_blank')
         }
     }
 }
