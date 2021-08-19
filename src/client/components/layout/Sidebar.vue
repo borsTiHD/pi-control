@@ -45,7 +45,7 @@
                 </v-list-item>
             </v-list-item-group>
 
-            <!-- XXX -->
+            <!-- DEVMODE: Swagger Docs -->
             <div>
                 <v-list-item v-if="$config.dev" :href="swaggerUrl" target="_blank" class="mt-2">
                     <v-list-item-action>
