@@ -21,7 +21,7 @@
                 v-model="selectedItem"
             >
                 <!-- Pages -->
-                <v-list-item v-for="(item, i) in items" :key="i" :to="item.to" router exact>
+                <v-list-item v-for="(item, i) in items" :key="i" :to="item.to" router exact nuxt>
                     <v-list-item-action>
                         <v-icon>{{ item.icon }}</v-icon>
                     </v-list-item-action>
@@ -33,7 +33,7 @@
                 <v-divider class="pa-1" />
 
                 <!-- Hidden dev page -->
-                <v-list-item v-if="$config.dev" to="/dev" router exact>
+                <v-list-item v-if="$config.dev" to="/dev" router exact nuxt>
                     <v-list-item-action>
                         <v-icon>{{ $icons.mdiBottleTonicSkullOutline }}</v-icon>
                     </v-list-item-action>
@@ -44,6 +44,20 @@
                     </v-list-item-content>
                 </v-list-item>
             </v-list-item-group>
+
+            <!-- XXX -->
+            <div>
+                <v-list-item v-if="$config.dev" :href="swaggerUrl" target="_blank" class="mt-2">
+                    <v-list-item-action>
+                        <v-icon>{{ $icons.mdiApi }}</v-icon>
+                    </v-list-item-action>
+                    <v-list-item-content>
+                        <v-list-item-title>
+                            Swagger Docs
+                        </v-list-item-title>
+                    </v-list-item-content>
+                </v-list-item>
+            </div>
 
             <!-- Sidebar Quick Settings -->
             <div>
@@ -180,6 +194,11 @@ export default {
             set(value) {
                 this.setDrawer(value)
             }
+        },
+        swaggerUrl() {
+            // const swagger = `http://${this.$config.HOST_IP}:${this.$config.PORT_BACKEND}/api-docs/` // From Dev values
+            const swagger = this.$axios.defaults.baseURL.replace('/api/v1', '/api-docs') // Axios baseURL
+            return swagger
         }
     },
     created() {
