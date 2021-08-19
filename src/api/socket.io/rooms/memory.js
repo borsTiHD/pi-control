@@ -28,7 +28,7 @@ export default (io, roomName, config = {}) => {
         async function getData() {
             try {
                 const memory = await Memory({ DEV: config.DEV, TEST_DATA: config.TEST_DATA })
-                const result = { memory }
+                const result = { data: memory }
                 if (config.DEV && config.TEST_DATA) { result.TEST_DATA = true }
                 io.to(roomName).emit(eventName, { _status: 'ok', data: result })
             } catch (error) {

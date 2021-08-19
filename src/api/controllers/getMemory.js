@@ -18,23 +18,28 @@ async function nonWindows() {
         const { stdout } = await execFile(command, args, { maxBuffer: TEN_MEGABYTES })
 
         // Parsing
-        const lines = stdout.trim().split('\n')
-        lines.shift() // deletes first line with headers
-        const data = lines.map((line, index) => {
-            return line
-            /*
-            const split = line.split(/\s+/)
-            return {
-                filesystem: split[0], // Filesystem
-                type: split[1], // Type
-                total: parseInt(split[2]), // 1M-blocks
-                used: parseInt(split[3]), // Used
-                available: parseInt(split[4]), // Available
-                usedPercentage: parseInt(split[5].replace('%', '')), // Use%
-                mounted: split[6] // Mounted on
+        const psOutputRegex = /^.*Mem:\s+(?<total>\d+)[ \t]+(?<used>\d+)[ \t]+(?<free>\d+)[ \t]+(?<shared>\d+)[ \t]+(?<cache>\d+)[ \t]+(?<available>\d+).+Swap:\s+(?<swapTotal>\d+)[ \t]+(?<swapUsed>\d+)[ \t]+(?<swapFree>\d+)/gms
+        const match = psOutputRegex.exec(stdout.trim())
+        if (match === null) {
+            throw new Error(ERROR_MESSAGE_PARSING_FAILED)
+        }
+
+        const { total, used, free, shared, cache, available, swapTotal, swapUsed, swapFree } = match.groups
+        const data = {
+            memory: {
+                total: Number.parseInt(total, 10),
+                used: Number.parseInt(used, 10),
+                free: Number.parseInt(free, 10),
+                shared: Number.parseInt(shared, 10),
+                cache: Number.parseInt(cache, 10),
+                available: Number.parseInt(available, 10)
+            },
+            swap: {
+                swapTotal: Number.parseInt(swapTotal, 10),
+                swapUsed: Number.parseInt(swapUsed, 10),
+                swapFree: Number.parseInt(swapFree, 10)
             }
-            */
-        })
+        }
 
         return data
     } catch (error) {
@@ -46,10 +51,38 @@ async function nonWindows() {
 // Getting windows uptime
 async function isWindows(config) {
     if (config.DEV && config.TEST_DATA) {
-        const min = 20
-        const max = 60
-        const r = Math.floor(Math.random() * (max - min + 1) + min)
-        return `${r}'C`
+        // Generate random number
+        function getRandom(min = 0, max = 1000) {
+            const r = Math.floor(Math.random() * (max - min + 1) + min)
+            return r
+        }
+
+        // Building random test data
+        const total = 16000
+        const used = getRandom(600, 1000)
+        const free = getRandom(3000, 4500)
+        const shared = getRandom(100, 300)
+        const cache = getRandom(2500, 4000)
+        const available = total - used
+        const swapTotal = 100
+        const swapUsed = getRandom(20, 50)
+        const swapFree = swapTotal - swapUsed
+
+        return {
+            memory: {
+                total,
+                used,
+                free,
+                shared,
+                cache,
+                available
+            },
+            swap: {
+                swapTotal,
+                swapUsed,
+                swapFree
+            }
+        }
     }
     throw new Error('Windows is currently not supported')
 }

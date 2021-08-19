@@ -29,17 +29,17 @@
             </v-row>
             <v-row v-else-if="data">
                 <v-col cols="12">
-                    <span>Used: <span class="font-weight-bold">{{ memory.used }}MB ({{ memoryUsedPercentage(memory) }}%)</span></span>
-                    <span>Available: <span class="font-weight-bold">{{ memory.available }}MB</span></span>
-                    <span>Total: <span class="font-weight-bold">{{ memory.total }}MB</span></span>
+                    <span>Used: <span class="font-weight-bold">{{ data.used }}MB ({{ memoryUsedPercentage(data) }}%)</span></span>
+                    <span>Available: <span class="font-weight-bold">{{ data.available }}MB</span></span>
+                    <span>Total: <span class="font-weight-bold">{{ data.total }}MB</span></span>
                 </v-col>
                 <v-col cols="12">
                     <v-progress-linear
-                        :value="memoryUsedPercentage(memory)"
-                        :color="color(memoryUsedPercentage(memory))"
+                        :value="memoryUsedPercentage(data)"
+                        :color="color(memoryUsedPercentage(data))"
                         height="25"
                     >
-                        <strong>{{ memoryUsedPercentage(memory) }}%</strong>
+                        <strong>{{ memoryUsedPercentage(data) }}%</strong>
                     </v-progress-linear>
                 </v-col>
             </v-row>
@@ -85,33 +85,14 @@ export default {
             getOutlined: 'settings/getOutlined'
         }),
         data() {
-            return false // this.memoryData
+            if (this.memoryData) return this.memoryData
+            return false
             /*
             const temperature = Temperature.query()
                 .orderBy('timestamp', 'asc')
                 .last()
             return temperature?.temperature || false
             */
-        },
-        memory() {
-            if (this.data) {
-                const memoryTypes = this.crawlMemoryTypes(this.data)
-                const memoryData = this.crawlMemoryData(this.data)
-                const arrWithObj = memoryData.map((item, index) => {
-                    return {
-                        value: item,
-                        type: memoryTypes[index]
-                    }
-                })
-
-                // Building Object for better use
-                const result = {}
-                arrWithObj.forEach((obj) => {
-                    result[obj.type] = obj.value
-                })
-                return result
-            }
-            return false
         }
     },
     activated() {
@@ -132,15 +113,16 @@ export default {
                 return false
             } else if (message._status === 'ok') {
                 // Saving socket data
-                console.log(`[Socket.io] -> Message from server '${this.socketRoom}':`, message)
-                const data = message?.data?.memory
+                // console.log(`[Socket.io] -> Message from server '${this.socketRoom}':`, message)
+                const data = message?.data?.data
 
                 // TEST DATA - are not real
                 if (message?.data?.TEST_DATA) {
                     this.testData = true
                 }
 
-                this.memoryData = data
+                this.memoryData = data.memory
+                // TODO
                 // Inserting data into database
                 /*
                 Temperature.insert({
@@ -159,24 +141,6 @@ export default {
         }
     },
     methods: {
-        crawlMemoryTypes(data) {
-            // Crawls response from 'free'
-            // Filters memory types -> total, used, free, shared, buff/cache, available
-            const arr = data.split('\n')
-            if (Array.isArray(arr) && arr.length > 0) {
-                return arr[0].replace(/^\s+/gm, '').split(/\s+/)
-            }
-            return false
-        },
-        crawlMemoryData(data) {
-            // Crawls response from 'free'
-            // Filters memory data
-            const arr = data.split('\n')
-            if (Array.isArray(arr) && arr.length > 0) {
-                return arr[1].replace(/Mem:\s+/gm, '').split(/\s+/)
-            }
-            return false
-        },
         memoryUsedPercentage(memory) {
             const percentage = (memory.used / memory.total) * 100 // returns current load percentage
             return Math.round(percentage * 100) / 100 // Rounds last 2 digits
