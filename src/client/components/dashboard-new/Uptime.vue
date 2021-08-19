@@ -133,6 +133,7 @@ export default {
                     const uptime = res.data.data.uptime
                     // console.log('[Uptime] -> Host system uptime:', uptime)
 
+                    // TODO - needs to be in a relationship with DEVICE!!!:
                     // Replacing database with new data
                     const check = await Device.update({
                         where: this.getCurrentDeviceId,
