@@ -175,10 +175,45 @@
  *                  info:
  *                      type: string
  *                      description: Readable info what was done.
- *                      example: Diskspace from host system determined
+ *                      example: Memory usage from host system determined
  *                  data:
- *                      type: array
- *                      description: Array contains objects with diskspace data.
+ *                      type: object
+ *                      properties:
+ *                          memory:
+ *                              type: object
+ *                              description: Object contains memory usage.
+ *                              properties:
+ *                                  total:
+ *                                      type: number
+ *                                      description: Total existing memory
+ *                                  used:
+ *                                      type: number
+ *                                      description: Used is a calculation of the total system ram minus allocated free, shared, buffer, and cache memory
+ *                                  free:
+ *                                      type: number
+ *                                      description: Free is memory that is not being used for any purpose
+ *                                  shared:
+ *                                      type: number
+ *                                      description: Shared, Buffer, and Cache fields identify memory being used for kernel/operating system needs. The buffer and cache are added together and the sum is listed under buff/cache
+ *                                  cache:
+ *                                      type: number
+ *                                      description: Shared, Buffer, and Cache fields identify memory being used for kernel/operating system needs. The buffer and cache are added together and the sum is listed under buff/cache
+ *                                  available:
+ *                                      type: number
+ *                                      description: Available memory show how many memory resources are still open for use
+ *                          swap:
+ *                              type: object
+ *                              description: Object contains swap usage.
+ *                              properties:
+ *                                  total:
+ *                                      type: number
+ *                                      description: Total existing swap
+ *                                  used:
+ *                                      type: number
+ *                                      description: Used swap
+ *                                  free:
+ *                                      type: number
+ *                                      description: Free swap
  *                  TEST_DATA:
  *                      type: boolean
  *                      description: Only exists, if the host system is using test data.
