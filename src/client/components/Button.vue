@@ -3,7 +3,7 @@
         <template #activator="{ on }">
             <v-btn
                 :x-small="xSmall" :small="small" :large="large" :x-large="xLarge"
-                :disabled="disabled" :loading="loading" :class="btnClass" :color="btnColor"
+                :disabled="disabled" :loading="loading" :href="href" :target="target" :class="btnClass" :color="btnColor"
                 :block="block" :outlined="outlined" :text="text" :depressed="depressed" :dark="dark" :light="light"
                 @click="handleClick" v-on="on"
             >
@@ -37,6 +37,14 @@ export default {
         },
         disabled: {
             type: Boolean,
+            default: false
+        },
+        href: {
+            type: [String, Boolean],
+            default: false
+        },
+        target: {
+            type: [String, Boolean],
             default: false
         },
         icon: {
