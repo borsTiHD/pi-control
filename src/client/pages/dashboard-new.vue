@@ -1,5 +1,8 @@
 <template>
     <v-row justify="center">
+        <v-col cols="12" sm="8" md="6" lg="4" class="d-flex flex-column">
+            <cpu-info />
+        </v-col>
         <v-col cols="12" sm="8" md="6" lg="5" class="d-flex flex-column">
             <memory class="mb-2" />
             <swap class="mt-2" />
@@ -21,6 +24,7 @@
 </template>
 
 <script>
+import CpuInfo from '~/components/dashboard-new/CpuInfo.vue'
 import Memory from '~/components/dashboard-new/Memory.vue'
 import Swap from '~/components/dashboard-new/Swap.vue'
 import Uptime from '~/components/dashboard-new/Uptime.vue'
@@ -32,6 +36,7 @@ import Hardware from '~/components/dashboard-new/Hardware.vue'
 export default {
     name: 'Dashboard',
     components: {
+        CpuInfo,
         Memory,
         Swap,
         Uptime,

@@ -72,7 +72,6 @@ export default {
             testData: false,
             socketRoom: 'memory',
             textNoData: 'No data could be determined.',
-            memoryData: null,
             limits: { // Coloring of equal or greater values (from max to low)
                 low: { value: 0, color: 'primary' },
                 mid: { value: 50, color: 'yellow' },
