@@ -4,6 +4,7 @@ import Process from '@/models/Process'
 import Uptime from '@/models/Uptime'
 import Temperature from '@/models/Temperature'
 import System from '@/models/System'
+import Memory from '@/models/Memory'
 
 const database = new Database()
 
@@ -13,5 +14,6 @@ database.register(Process)
 database.register(Uptime)
 database.register(Temperature)
 database.register(System)
+database.register(Memory)
 
 export default database

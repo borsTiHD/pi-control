@@ -60,7 +60,9 @@
 </template>
 
 <script>
+import moment from 'moment'
 import { mapGetters } from 'vuex'
+import Memory from '@/models/Memory'
 
 export default {
     name: 'Memory',
@@ -85,14 +87,10 @@ export default {
             getOutlined: 'settings/getOutlined'
         }),
         data() {
-            if (this.memoryData) return this.memoryData
-            return false
-            /*
-            const temperature = Temperature.query()
+            const memory = Memory.query()
                 .orderBy('timestamp', 'asc')
                 .last()
-            return temperature?.temperature || false
-            */
+            return memory || false
         }
     },
     activated() {
@@ -121,17 +119,13 @@ export default {
                     this.testData = true
                 }
 
-                this.memoryData = data.memory
-                // TODO
                 // Inserting data into database
-                /*
-                Temperature.insert({
+                Memory.insert({
                     data: {
-                        temperature: data,
+                        ...data.memory,
                         timestamp: moment().unix()
                     }
                 })
-                */
             } else {
                 console.log(`[Socket.io] -> Message from server '${this.socketRoom}', without usable data:`, message)
             }
