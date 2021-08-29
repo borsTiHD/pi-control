@@ -2,7 +2,7 @@
     <v-row justify="center">
         <v-col cols="12" sm="8" md="6" lg="5" class="d-flex flex-column">
             <memory class="mb-2" />
-            <!-- <swap /> -->
+            <swap class="mt-2" />
         </v-col>
         <v-col cols="12" sm="8" md="3" lg="3" class="d-flex flex-column">
             <temperature class="mb-2" />
@@ -22,6 +22,7 @@
 
 <script>
 import Memory from '~/components/dashboard-new/Memory.vue'
+import Swap from '~/components/dashboard-new/Swap.vue'
 import Uptime from '~/components/dashboard-new/Uptime.vue'
 import Temperature from '~/components/dashboard-new/Temperature.vue'
 import Diskspace from '~/components/dashboard-new/Diskspace.vue'
@@ -32,6 +33,7 @@ export default {
     name: 'Dashboard',
     components: {
         Memory,
+        Swap,
         Uptime,
         Temperature,
         Diskspace,

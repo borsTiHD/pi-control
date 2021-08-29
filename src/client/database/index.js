@@ -5,6 +5,7 @@ import Uptime from '@/models/Uptime'
 import Temperature from '@/models/Temperature'
 import System from '@/models/System'
 import Memory from '@/models/Memory'
+import Swap from '@/models/Swap'
 
 const database = new Database()
 
@@ -15,5 +16,6 @@ database.register(Uptime)
 database.register(Temperature)
 database.register(System)
 database.register(Memory)
+database.register(Swap)
 
 export default database
