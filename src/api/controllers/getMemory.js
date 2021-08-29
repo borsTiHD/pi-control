@@ -35,9 +35,9 @@ async function nonWindows() {
                 available: Number.parseInt(available, 10)
             },
             swap: {
-                swapTotal: Number.parseInt(swapTotal, 10),
-                swapUsed: Number.parseInt(swapUsed, 10),
-                swapFree: Number.parseInt(swapFree, 10)
+                total: Number.parseInt(swapTotal, 10),
+                used: Number.parseInt(swapUsed, 10),
+                free: Number.parseInt(swapFree, 10)
             }
         }
 
@@ -78,9 +78,9 @@ async function isWindows(config) {
                 available
             },
             swap: {
-                swapTotal,
-                swapUsed,
-                swapFree
+                total: swapTotal,
+                used: swapUsed,
+                free: swapFree
             }
         }
     }
