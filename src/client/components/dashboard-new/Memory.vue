@@ -112,7 +112,7 @@ export default {
             } else if (message._status === 'ok') {
                 // Saving socket data
                 // console.log(`[Socket.io] -> Message from server '${this.socketRoom}':`, message)
-                const data = message?.data?.data
+                const memory = message?.data?.data?.memory
 
                 // TEST DATA - are not real
                 if (message?.data?.TEST_DATA) {
@@ -122,7 +122,7 @@ export default {
                 // Inserting data into database
                 Memory.insert({
                     data: {
-                        ...data.memory,
+                        ...memory,
                         timestamp: moment().unix()
                     }
                 })
