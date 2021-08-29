@@ -95,6 +95,11 @@ export default {
             getElevation: 'settings/getElevation',
             getOutlined: 'settings/getOutlined'
         }),
+        data() {
+            // TODO: Data collecting
+            // Using this command: top -bn1 | grep "Cpu(s)\|top -"
+            return false
+        },
         cpuLoad() {
             if (this.getTopData) {
                 const cpuLoad = this.crawlCpuLoad(this.getTopData)
