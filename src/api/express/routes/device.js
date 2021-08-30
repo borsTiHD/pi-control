@@ -218,6 +218,23 @@
  *                      type: boolean
  *                      description: Only exists, if the host system is using test data.
  *                      example: true
+ *          CpuData:
+ *              type: object
+ *              properties:
+ *                  _status:
+ *                      type: string
+ *                      description: Status of the request
+ *                      example: ok
+ *                  info:
+ *                      type: string
+ *                      description: Readable info what was done.
+ *                      example: CPU usage from host system determined
+ *                  data:
+ *                      type: object
+ *                  TEST_DATA:
+ *                      type: boolean
+ *                      description: Only exists, if the host system is using test data.
+ *                      example: true
  */
 
 /**
@@ -389,5 +406,27 @@ router.get('/diskspace', Controller.getDiskspace)
  *                  $ref: '#/components/responses/ErrorObject'
  */
 router.get('/memory', Controller.getMemory)
+
+/**
+ * @swagger
+ *  /device/cpu:
+ *      get:
+ *          tags:
+ *              - Device
+ *          summary: Get cpu usage from host system
+ *          description: Returns an object with the cpu usage from the host system.
+ *          security:
+ *              - bearerAuth: []
+ *          responses:
+ *              200:
+ *                  description: Object with cpu usage from the host system.
+ *                  content:
+ *                      application/json:
+ *                          schema:
+ *                              $ref: '#/components/schemas/CpuData'
+ *              500:
+ *                  $ref: '#/components/responses/ErrorObject'
+ */
+router.get('/cpu', Controller.getCpuLoad)
 
 export default router

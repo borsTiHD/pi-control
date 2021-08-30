@@ -9,6 +9,7 @@ import Temperature from '../../controllers/getTemperature.js'
 import Processes from '../../controllers/getProcesses.js'
 import Diskspace from '../../controllers/getDiskspace.js'
 import Memory from '../../controllers/getMemory.js'
+import CpuLoad from '../../controllers/getCpuLoad.js'
 
 /**
  * Route serving uptime from host
@@ -254,6 +255,44 @@ const getMemory = asyncHandler(async(req, res, next) => {
     }
 })
 
+/**
+ * Route serving cpu usage from host
+ * @name getCpuLoad
+ * @function
+ * @memberof module:routers/device
+ */
+const getCpuLoad = asyncHandler(async(req, res, next) => {
+    try {
+        // Config with 'dev' and 'TEST_DATA' check
+        const config = {
+            DEV: process.env.NODE_ENV === 'development',
+            TEST_DATA: process.env.TEST_DATA
+        }
+
+        // Getting data from controller
+        const data = await CpuLoad(config)
+        const result = {
+            _status: 'ok',
+            info: 'CPU usage from host system determined',
+            data
+        }
+
+        // If we're using test data, we append the information on our result object
+        if (config.DEV && config.TEST_DATA) { result.TEST_DATA = true }
+
+        // Return results
+        res.json(result)
+    } catch (error) {
+        console.error(error)
+        // REST return
+        res.status(500).json({
+            _status: 'error',
+            info: 'CPU usage could not be determined',
+            error: error.message
+        })
+    }
+})
+
 export default {
     getUptime,
     getSystem,
@@ -261,5 +300,6 @@ export default {
     getTemperature,
     getProcesses,
     getDiskspace,
-    getMemory
+    getMemory,
+    getCpuLoad
 }
