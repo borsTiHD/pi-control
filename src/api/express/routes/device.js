@@ -277,6 +277,24 @@
  *                      type: boolean
  *                      description: Only exists, if the host system is using test data.
  *                      example: true
+ *          CpuCoresData:
+ *              type: object
+ *              properties:
+ *                  _status:
+ *                      type: string
+ *                      description: Status of the request
+ *                      example: ok
+ *                  info:
+ *                      type: string
+ *                      description: Readable info what was done.
+ *                      example: CPU cores from host system determined
+ *                  data:
+ *                      type: number
+ *                      description: Show number of cpu cores from the host system
+ *                  TEST_DATA:
+ *                      type: boolean
+ *                      description: Only exists, if the host system is using test data.
+ *                      example: true
  */
 
 /**
@@ -470,5 +488,27 @@ router.get('/memory', Controller.getMemory)
  *                  $ref: '#/components/responses/ErrorObject'
  */
 router.get('/cpu', Controller.getCpuLoad)
+
+/**
+ * @swagger
+ *  /device/cores:
+ *      get:
+ *          tags:
+ *              - Device
+ *          summary: Get cpu cores from host system
+ *          description: Returns number of cpu cores from the host system.
+ *          security:
+ *              - bearerAuth: []
+ *          responses:
+ *              200:
+ *                  description: Object with cpu usage from the host system.
+ *                  content:
+ *                      application/json:
+ *                          schema:
+ *                              $ref: '#/components/schemas/CpuCoresData'
+ *              500:
+ *                  $ref: '#/components/responses/ErrorObject'
+ */
+router.get('/cores', Controller.getCpuCores)
 
 export default router

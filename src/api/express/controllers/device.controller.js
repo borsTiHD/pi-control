@@ -10,6 +10,7 @@ import Processes from '../../controllers/getProcesses.js'
 import Diskspace from '../../controllers/getDiskspace.js'
 import Memory from '../../controllers/getMemory.js'
 import CpuLoad from '../../controllers/getCpuLoad.js'
+import CpuCores from '../../controllers/getCpuCores.js'
 
 /**
  * Route serving uptime from host
@@ -293,6 +294,44 @@ const getCpuLoad = asyncHandler(async(req, res, next) => {
     }
 })
 
+/**
+ * Route getting cpu cores from host
+ * @name getCpuCores
+ * @function
+ * @memberof module:routers/device
+ */
+const getCpuCores = asyncHandler(async(req, res, next) => {
+    try {
+        // Config with 'dev' and 'TEST_DATA' check
+        const config = {
+            DEV: process.env.NODE_ENV === 'development',
+            TEST_DATA: process.env.TEST_DATA
+        }
+
+        // Getting data from controller
+        const data = await CpuCores(config)
+        const result = {
+            _status: 'ok',
+            info: 'CPU cores from host system determined',
+            data
+        }
+
+        // If we're using test data, we append the information on our result object
+        if (config.DEV && config.TEST_DATA) { result.TEST_DATA = true }
+
+        // Return results
+        res.json(result)
+    } catch (error) {
+        console.error(error)
+        // REST return
+        res.status(500).json({
+            _status: 'error',
+            info: 'CPU cores could not be determined',
+            error: error.message
+        })
+    }
+})
+
 export default {
     getUptime,
     getSystem,
@@ -301,5 +340,6 @@ export default {
     getProcesses,
     getDiskspace,
     getMemory,
-    getCpuLoad
+    getCpuLoad,
+    getCpuCores
 }
