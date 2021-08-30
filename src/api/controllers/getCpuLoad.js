@@ -50,7 +50,7 @@ async function nonWindows() {
 
         return data
     } catch (error) {
-        console.error('[Controller] -> Error on executing shell script to get memory usage:', error)
+        console.error('[Controller] -> Error on executing shell script to get cpu usage:', error)
         throw new Error(ERROR_MESSAGE_PARSING_FAILED)
     }
 }
