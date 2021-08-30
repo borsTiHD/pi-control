@@ -72,7 +72,9 @@
 </template>
 
 <script>
+import moment from 'moment'
 import { mapGetters } from 'vuex'
+import Cpu from '@/models/Cpu'
 
 export default {
     name: 'CpuInfo',
@@ -87,7 +89,9 @@ export default {
                 mid: { value: 20, color: 'yellow' },
                 high: { value: 50, color: 'orange' },
                 max: { value: 75, color: 'red' }
-            }
+            },
+            cpuCores: null,
+            loadData: null
         }
     },
     computed: {
@@ -96,22 +100,28 @@ export default {
             getOutlined: 'settings/getOutlined'
         }),
         data() {
-            // TODO: Data collecting
-            // Using this command: top -bn1 | grep "Cpu(s)\|top -"
-            return false
+            const cpu = Cpu.query()
+                .orderBy('timestamp', 'asc')
+                .last()
+            return cpu || false
         },
         cpuLoad() {
-            if (this.getTopData) {
-                const cpuLoad = this.crawlCpuLoad(this.getTopData)
-                const arrWithObj = cpuLoad.map((item, index) => {
-                    // Index determines which string is taken
-                    const time = index === 0 ? 1 : index === 1 ? 5 : 15 // '1 min', '5 min', '15 min'
-                    return {
-                        value: parseFloat(item.replace(',', '.')), // Input something like '0,33' -> parseFloat needs a '.' instead ','
-                        time
+            if (this.loadData) {
+                const cpuLoad = this.loadData
+                return [
+                    {
+                        value: cpuLoad.min1,
+                        time: 1
+                    },
+                    {
+                        value: cpuLoad.min5,
+                        time: 5
+                    },
+                    {
+                        value: cpuLoad.min15,
+                        time: 15
                     }
-                })
-                return arrWithObj
+                ]
             }
             return false
         },
@@ -128,43 +138,74 @@ export default {
                 return arrWithObj
             }
             return false
-        },
-        cpuCores() {
-            if (this.getCpuCores) return this.getCpuCores
-            return false
+        }
+    },
+    activated() {
+        // Socket.IO: Joining room
+        this.loading = true // Set loading to true after the app joins the room
+        this.socketListening(true, this.socketRoom)
+
+        // Checks whether core data are available, if not they are queried
+        if (!this.cpuCores) {
+            this.getCpuCores()
+        }
+    },
+    deactivated() {
+        // Socket.IO: Leaving room
+        this.socketListening(false, this.socketRoom)
+    },
+    sockets: {
+        cpu(message) {
+            if (message._status === 'error') {
+                console.error(`[Socket.io] -> Message from server '${this.socketRoom}':`, message)
+                // Set loading to 'false' after we get an error
+                this.loading = false
+                return false
+            } else if (message._status === 'ok') {
+                // Saving socket data
+                // console.log(`[Socket.io] -> Message from server '${this.socketRoom}':`, message)
+                const data = message?.data?.data
+
+                // TEST DATA - are not real
+                if (message?.data?.TEST_DATA) {
+                    this.testData = true
+                }
+
+                console.log('DATA:', data)
+
+                // Checks whether core data are available, if not they are queried
+                if (!this.cpuCores) {
+                    this.getCpuCores()
+                }
+
+                // Setting load data in component
+                this.loadData = data?.load
+
+                // Inserting data into database
+                Cpu.insert({
+                    data: {
+                        ...data.usage,
+                        timestamp: moment().unix()
+                    }
+                })
+            } else {
+                console.log(`[Socket.io] -> Message from server '${this.socketRoom}', without usable data:`, message)
+            }
+
+            // Set loading to 'false' after we get data
+            this.loading = false
         }
     },
     methods: {
-        crawlCpuLoad(data) {
-            // Crawls response from 'top -b -n1'
-            // Filters cpu load
-            // Returns array with 3 loads for 1min, 5min, 15min
-            const arr = data.split('\n')
-            if (Array.isArray(arr) && arr.length > 1) {
-                const loadAvgString = 'load average:'
-                const loadAvgRegexp = new RegExp(`${loadAvgString}.+$`, 'g')
-                return arr[0].match(loadAvgRegexp).map((item) => {
-                    const arr = item.replace(loadAvgString, '').replace(/^\s+/, '').split(', ')
-                    return arr
-                })[0]
-            }
-            return false
-        },
-        crawlCpuUsage(data) {
-            // Crawls response from 'top -b -n1'
-            // Filters cpu usage
-            const arr = data.split('\n')
-            if (Array.isArray(arr) && arr.length > 2) {
-                const regexp = /%Cpu\(s\):.+$/gm
-                const cpuUsage = arr[2].match(regexp)
-                if (Array.isArray(cpuUsage)) {
-                    return cpuUsage[0].replace(/%Cpu\(s\):\s+/gm, '').split(/\W\s/gm).map((val) => {
-                        return val.replace(/^\s+/, '')
-                    })
-                }
-                return false
-            }
-            return false
+        getCpuCores() {
+            const url = '/device/cores'
+            this.$axios.get(url)
+                .then(async(res) => {
+                    // Saving numbers of cores in component
+                    this.cpuCores = res?.data?.data
+                }).catch((error) => {
+                    console.error(error)
+                })
         },
         cpuLoadPercentage(cpuLoad) {
             const maxLoad = parseInt(this.cpuCores) // equals 100%
