@@ -231,6 +231,48 @@
  *                      example: CPU usage from host system determined
  *                  data:
  *                      type: object
+ *                      properties:
+ *                          load:
+ *                              type: object
+ *                              description: Object contains average cpu load.
+ *                              properties:
+ *                                  min1:
+ *                                      type: number
+ *                                      description: Average load for 1 min
+ *                                  min5:
+ *                                      type: number
+ *                                      description: Average load for 5 min
+ *                                  min15:
+ *                                      type: number
+ *                                      description: Average load for 15 min
+ *                          usage:
+ *                              type: object
+ *                              description: Object contains current cpu usage.
+ *                              properties:
+ *                                  us:
+ *                                      type: number
+ *                                      description: Processor spending x% of its time running user space processes (that doesn't belong to the kernel)
+ *                                  sy:
+ *                                      type: number
+ *                                      description: Amount of time that the CPU spent running the kernel
+ *                                  ni:
+ *                                      type: number
+ *                                      description: The ni stat shows how much time the CPU spent running user space processes that have been niced
+ *                                  id:
+ *                                      type: number
+ *                                      description: Idle percentage of the processor
+ *                                  wa:
+ *                                      type: number
+ *                                      description: This is idle while waiting for an I/O operation to complete
+ *                                  hi:
+ *                                      type: number
+ *                                      description: Show how much time the processor has spent servicing hardware interrupts
+ *                                  si:
+ *                                      type: number
+ *                                      description: Show how much time the processor has spent servicing software interrupts
+ *                                  st:
+ *                                      type: number
+ *                                      description: The st (short for stolen) statistic shows how long the virtual CPU has spent waiting for the hypervisor to service another virtual CPU running on a different virtual machine
  *                  TEST_DATA:
  *                      type: boolean
  *                      description: Only exists, if the host system is using test data.
