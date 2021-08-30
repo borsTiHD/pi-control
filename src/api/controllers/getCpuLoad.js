@@ -13,7 +13,8 @@ const ERROR_MESSAGE_PARSING_FAILED = 'Error on parsing script output'
 async function nonWindows() {
     try {
         const command = 'top'
-        const args = ['-bn1 | grep "Cpu(s)\\|top -"']
+        // eslint-disable-next-line no-useless-escape
+        const args = ['-bn1 | grep "Cpu(s)\|top -"']
 
         const { stdout } = await execFile(command, args, { maxBuffer: TEN_MEGABYTES })
 
