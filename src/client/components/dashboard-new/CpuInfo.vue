@@ -50,8 +50,8 @@
                 </v-col>
                 <v-col v-if="cpuUsage" cols="12" dense class="pt-0">
                     <span class="text-h6 mr-2">Usage:</span>
-                    <span v-for="(item, index) in cpuUsage" :key="index" class="mr-2">
-                        {{ cpuUsageMapping(item.type) }}: <span class="font-weight-bold">{{ item.value }}%</span>
+                    <span v-for="(value, name) in cpuUsage" :key="name" class="mr-2">
+                        {{ cpuUsageMapping(name) }}: <span class="font-weight-bold">{{ value }}%</span>
                     </span>
                 </v-col>
             </v-row>
@@ -99,11 +99,16 @@ export default {
             getElevation: 'settings/getElevation',
             getOutlined: 'settings/getOutlined'
         }),
-        data() {
+        cpuUsage() {
             const cpu = Cpu.query()
                 .orderBy('timestamp', 'asc')
                 .last()
-            return cpu || false
+            if (cpu) {
+                delete cpu.$id
+                delete cpu.timestamp
+                return cpu
+            }
+            return false
         },
         cpuLoad() {
             if (this.loadData) {
@@ -122,20 +127,6 @@ export default {
                         time: 15
                     }
                 ]
-            }
-            return false
-        },
-        cpuUsage() {
-            if (this.getTopData) {
-                const cpuUsage = this.crawlCpuUsage(this.getTopData)
-                const arrWithObj = cpuUsage.map((item) => {
-                    const arr = item.split(/\s+/) // Splitting value and text -> Idle: '92,7 id'
-                    return {
-                        value: parseFloat(arr[0].replace(',', '.')), // Input something like '7,3' -> parseFloat needs a '.' instead ','
-                        type: arr[1]
-                    }
-                })
-                return arrWithObj
             }
             return false
         }
