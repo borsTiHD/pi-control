@@ -12,32 +12,39 @@ const ERROR_MESSAGE_PARSING_FAILED = 'Error on parsing script output'
 // Getting Unix uptime
 async function nonWindows() {
     try {
-        const command = 'free'
-        const args = ['-m']
+        const command = 'top'
+        const args = ['-bn1 | grep "Cpu(s)\\|top -"']
 
         const { stdout } = await execFile(command, args, { maxBuffer: TEN_MEGABYTES })
 
         // Parsing
-        const psOutputRegex = /^.*Mem:\s+(?<total>\d+)[ \t]+(?<used>\d+)[ \t]+(?<free>\d+)[ \t]+(?<shared>\d+)[ \t]+(?<cache>\d+)[ \t]+(?<available>\d+).+Swap:\s+(?<swapTotal>\d+)[ \t]+(?<swapUsed>\d+)[ \t]+(?<swapFree>\d+)/gms
+        const psOutputRegex = /^.*load average:\s+(?<min1>\d+,\d+),[ \t]+(?<min5>\d+,\d+),[ \t]+(?<min15>\d+,\d+).+%Cpu\(s\):\s+(?<us>\d+,\d+)[ \t]+\D+(?<sy>\d+,\d+)[ \t]+\D+(?<ni>\d+,\d+)[ \t]+\D+(?<id>\d+,\d+)[ \t]+\D+(?<wa>\d+,\d+)[ \t]+\D+(?<hi>\d+,\d+)[ \t]+\D+(?<si>\d+,\d+)[ \t]+\D+(?<st>\d+,\d+)/gms
         const match = psOutputRegex.exec(stdout.trim())
         if (match === null) {
             throw new Error(ERROR_MESSAGE_PARSING_FAILED)
         }
 
-        const { total, used, free, shared, cache, available, swapTotal, swapUsed, swapFree } = match.groups
+        // Converts string with comma separated value to a float.
+        function returnFloat(string) {
+            return parseFloat(string.replace(',', '.')) // Input something like '7,3' -> parseFloat needs a '.' instead ','
+        }
+
+        const { min1, min5, min15, us, sy, ni, id, wa, hi, si, st } = match.groups
         const data = {
-            memory: {
-                total: Number.parseInt(total, 10),
-                used: Number.parseInt(used, 10),
-                free: Number.parseInt(free, 10),
-                shared: Number.parseInt(shared, 10),
-                cache: Number.parseInt(cache, 10),
-                available: Number.parseInt(available, 10)
+            load: {
+                min1: returnFloat(min1),
+                min5: returnFloat(min5),
+                min15: returnFloat(min15)
             },
-            swap: {
-                total: Number.parseInt(swapTotal, 10),
-                used: Number.parseInt(swapUsed, 10),
-                free: Number.parseInt(swapFree, 10)
+            usage: {
+                us: returnFloat(us),
+                sy: returnFloat(sy),
+                ni: returnFloat(ni),
+                id: returnFloat(id),
+                wa: returnFloat(wa),
+                hi: returnFloat(hi),
+                si: returnFloat(si),
+                st: returnFloat(st)
             }
         }
 
@@ -58,29 +65,33 @@ async function isWindows(config) {
         }
 
         // Building random test data
-        const total = 16000
-        const used = getRandom(600, 1000)
-        const free = getRandom(3000, 4500)
-        const shared = getRandom(100, 300)
-        const cache = getRandom(2500, 4000)
-        const available = total - used
-        const swapTotal = 100
-        const swapUsed = getRandom(20, 50)
-        const swapFree = swapTotal - swapUsed
+        const min1 = getRandom(1, 400) / 100
+        const min5 = getRandom(1, 200) / 100
+        const min15 = getRandom(1, 100) / 100
+        const us = getRandom(100, 140) / 100
+        const sy = getRandom(700, 800) / 100
+        const ni = getRandom(1, 10) / 100
+        const id = getRandom(8000, 9999) / 100
+        const wa = getRandom(1, 10) / 100
+        const hi = getRandom(1, 10) / 100
+        const si = getRandom(1, 10) / 100
+        const st = getRandom(1, 10) / 100
 
         return {
-            memory: {
-                total,
-                used,
-                free,
-                shared,
-                cache,
-                available
+            load: {
+                min1: parseFloat(min1),
+                min5: parseFloat(min5),
+                min15: parseFloat(min15)
             },
-            swap: {
-                total: swapTotal,
-                used: swapUsed,
-                free: swapFree
+            usage: {
+                us: parseFloat(us),
+                sy: parseFloat(sy),
+                ni: parseFloat(ni),
+                id: parseFloat(id),
+                wa: parseFloat(wa),
+                hi: parseFloat(hi),
+                si: parseFloat(si),
+                st: parseFloat(st)
             }
         }
     }
