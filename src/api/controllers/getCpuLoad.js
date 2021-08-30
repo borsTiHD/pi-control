@@ -12,8 +12,8 @@ const ERROR_MESSAGE_PARSING_FAILED = 'Error on parsing script output'
 // Getting Unix uptime
 async function nonWindows() {
     try {
-        const command = 'top'
-        const args = ['-bn1', '| grep "Cpu(s)\\|top -"']
+        const command = 'top -bn1 | grep "Cpu(s)\\|top -"'
+        const args = []
 
         const { stdout } = await execFile(command, args, { maxBuffer: TEN_MEGABYTES })
 
