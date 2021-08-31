@@ -126,7 +126,6 @@ export default {
 
                     // Replacing database with new data
                     const data = res?.data?.data
-                    console.log('TODO - DATA:', data)
                     Diskspace.create({
                         data
                     })
