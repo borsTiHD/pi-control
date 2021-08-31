@@ -7,6 +7,7 @@ import System from '@/models/System'
 import Memory from '@/models/Memory'
 import Swap from '@/models/Swap'
 import Cpu from '@/models/Cpu'
+import Diskspace from '@/models/Diskspace'
 
 const database = new Database()
 
@@ -19,5 +20,6 @@ database.register(System)
 database.register(Memory)
 database.register(Swap)
 database.register(Cpu)
+database.register(Diskspace)
 
 export default database

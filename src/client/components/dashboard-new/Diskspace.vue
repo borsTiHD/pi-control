@@ -84,6 +84,7 @@
 
 <script>
 import { mapGetters } from 'vuex'
+import Diskspace from '@/models/Diskspace'
 
 export default {
     name: 'Diskspace',
@@ -91,7 +92,6 @@ export default {
         return {
             loading: false,
             testData: false,
-            diskData: null,
             textNoData: 'No data could be determined. Please rescan manually.',
             limits: { // Coloring of equal or greater values (from max to low)
                 low: { value: 0, color: 'primary' },
@@ -107,9 +107,7 @@ export default {
             getOutlined: 'settings/getOutlined'
         }),
         data() {
-            // TODO: Getting data from store/database
-            if (this.diskData) return this.diskData
-            return false
+            return Diskspace.query().get() || false
         }
     },
     created() {
@@ -126,17 +124,12 @@ export default {
                         this.testData = true
                     }
 
-                    this.diskData = res?.data?.data
-                    console.log('TODO - DATA:', this.diskData)
-
-                    /*
-                    // TODO:
                     // Replacing database with new data
                     const data = res?.data?.data
-                    System.create({
+                    console.log('TODO - DATA:', data)
+                    Diskspace.create({
                         data
                     })
-                    */
                 }).catch((error) => {
                     console.error(error)
                 }).finally(() => {
