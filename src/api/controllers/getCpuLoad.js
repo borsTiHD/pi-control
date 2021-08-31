@@ -15,7 +15,7 @@ async function nonWindows() {
         const command = 'top -bn1 | grep "Cpu(s)\\|top -"'
         const args = []
 
-        const { stdout } = await execFile(command, args, { maxBuffer: TEN_MEGABYTES })
+        const { stdout } = await execFile(command, args, { shell: true, maxBuffer: TEN_MEGABYTES })
 
         // Parsing
         const psOutputRegex = /^.*load average:\s+(?<min1>\d+,\d+),[ \t]+(?<min5>\d+,\d+),[ \t]+(?<min15>\d+,\d+).+%Cpu\(s\):\s+(?<us>\d+,\d+)[ \t]+\D+(?<sy>\d+,\d+)[ \t]+\D+(?<ni>\d+,\d+)[ \t]+\D+(?<id>\d+,\d+)[ \t]+\D+(?<wa>\d+,\d+)[ \t]+\D+(?<hi>\d+,\d+)[ \t]+\D+(?<si>\d+,\d+)[ \t]+\D+(?<st>\d+,\d+)/gms
