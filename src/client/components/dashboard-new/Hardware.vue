@@ -88,6 +88,7 @@
 </template>
 
 <script>
+import Hardware from '@/models/Hardware'
 import { mapGetters } from 'vuex'
 
 export default {
@@ -96,7 +97,6 @@ export default {
         return {
             loading: false,
             testData: false,
-            itemsLocal: false,
             textNoData: 'No data could be determined. Please rescan manually.'
         }
     },
@@ -106,8 +106,7 @@ export default {
             getOutlined: 'settings/getOutlined'
         }),
         items() {
-            return this.itemsLocal
-            // return System.query().get()
+            return Hardware.query().get() || false
         }
     },
     created() {
@@ -123,16 +122,12 @@ export default {
                     if (res?.data?.TEST_DATA) {
                         this.testData = true
                     }
-                    this.itemsLocal = res?.data?.data
 
-                    /*
-                    // TODO:
                     // Replacing database with new data
                     const data = res?.data?.data
-                    System.create({
+                    Hardware.create({
                         data
                     })
-                    */
                 }).catch((error) => {
                     console.error(error)
                 }).finally(() => {
