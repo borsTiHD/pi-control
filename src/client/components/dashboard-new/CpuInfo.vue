@@ -162,8 +162,6 @@ export default {
                     this.testData = true
                 }
 
-                console.log('DATA:', data)
-
                 // Checks whether core data are available, if not they are queried
                 if (!this.cpuCores) {
                     this.getCpuCores()
