@@ -79,8 +79,9 @@
 
 <script>
 import moment from 'moment'
-import Device from '@/models/Device'
 import { mapGetters } from 'vuex'
+import Uptime from '@/models/Uptime'
+// import Device from '@/models/Device'
 
 export default {
     name: 'Uptime',
@@ -99,14 +100,11 @@ export default {
             getCurrentDeviceId: 'device/getCurrentDeviceId'
         }),
         systemStartTime() {
-            return false
-            /*
             const uptime = Uptime.query()
                 .orderBy('id', 'desc')
                 // .whereId(this.todoId)
                 .get()
             return uptime[0]?.uptime
-            */
         }
     },
     created() {
@@ -135,15 +133,13 @@ export default {
 
                     // TODO - needs to be in a relationship with DEVICE!!!:
                     // Replacing database with new data
-                    const check = await Device.update({
-                        where: this.getCurrentDeviceId,
+                    await Uptime.create({
+                        // where: this.getCurrentDeviceId,
                         data: {
-                            id: this.getCurrentDeviceId,
-                            uptime: { uptime }
+                            // id: this.getCurrentDeviceId,
+                            uptime
                         }
                     })
-
-                    console.log('check:', check)
 
                     this.durationHumanize()
                 }).catch((error) => {
