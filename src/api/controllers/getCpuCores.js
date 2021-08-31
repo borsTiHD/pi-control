@@ -12,11 +12,12 @@ const ERROR_MESSAGE_PARSING_FAILED = 'Error on parsing script output'
 // Getting Unix uptime
 async function nonWindows() {
     try {
-        const command = 'cat /proc/cpuinfo | grep processor | wc -l'
+        const command = 'cat /proc/cpuinfo | grep processor' // 'cat /proc/cpuinfo | grep processor | wc -l'
         const args = []
 
         const { stdout } = await execFile(command, args, { shell: true, maxBuffer: TEN_MEGABYTES })
-        const data = parseInt(stdout)
+        const splitted = stdout.split('\n') // Output gives one pine for every core
+        const data = splitted.length // Splitted lines into an array and sending the length (number of cores)
 
         return data
     } catch (error) {
