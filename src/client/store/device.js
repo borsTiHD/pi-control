@@ -15,7 +15,6 @@ export const state = () => ({
 // Sync functions for setting data
 export const mutations = {
     setCurrentDeviceId(state, payload) {
-        console.log('MUTATION:', payload)
         state.currentDeviceId = payload
     },
     setUptimeData(state, payload) {
@@ -50,7 +49,6 @@ export const mutations = {
 // Async functions for setting data and calling mutations
 export const actions = {
     setCurrentDeviceId({ commit }, payload) {
-        console.log('SET:', payload)
         commit('setCurrentDeviceId', payload)
     },
     setUptimeData({ commit }, payload) {

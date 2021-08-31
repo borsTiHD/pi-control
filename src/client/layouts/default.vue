@@ -51,10 +51,10 @@ export default {
         const deviceName = 'raspberry-pi' // eg. await getHostName()
         const device = await Device.create({ data: { name: deviceName } })
         const deviceId = device.devices[0].id
-        console.log('deviceId:', deviceId)
         this.setCurrentDeviceId(deviceId)
 
-        console.log(this.getCurrentDeviceId)
+        // console.log('deviceId:', deviceId)
+        // console.log(this.getCurrentDeviceId)
     },
     computed: {
         ...mapGetters({
