@@ -18,11 +18,16 @@ import Temperature from '@/models/Temperature'
 
 export default {
     name: 'TemperatureGraph',
+    data() {
+        return {
+            maxValues: 20
+        }
+    },
     computed: {
         data() {
             const temperature = Temperature.query()
                 .orderBy('timestamp', 'desc')
-                .limit(20).get().reverse()
+                .limit(this.maxValues).get().reverse()
             return temperature || false
         },
         chartData() {
@@ -35,6 +40,18 @@ export default {
                 const temperature = this.tempValue(tempObj.temperature)
                 data.push(temperature)
             })
+
+            // Fills missing data if not enough data is available
+            const length = this.data.length
+            if (length < this.maxValues) {
+                let missing = this.maxValues - length
+                if (missing > 0) {
+                    while (missing--) {
+                        data.unshift(0)
+                    }
+                }
+            }
+
             return data
         }
     },
