@@ -27,37 +27,41 @@
                     />
                 </v-col>
             </v-row>
-            <v-row v-else-if="cpuLoad || cpuCores">
-                <v-col v-if="cpuLoad" cols="auto">
-                    <v-progress-circular
-                        v-for="(item, index) in cpuLoad"
-                        :key="index"
-                        class="mr-2"
-                        :rotate="180"
-                        :size="100"
-                        :width="15"
-                        :value="cpuLoadPercentage(item.value)"
-                        :color="color(item.value)"
-                    >
-                        <div class="d-flex flex-column align-center">
-                            <span>{{ item.value }}</span>
-                            <span>{{ item.time }} min</span>
-                        </div>
-                    </v-progress-circular>
-                </v-col>
-                <v-col cols="12">
-                    <cpu-usage-graph />
-                </v-col>
-                <v-col v-if="cpuCores" cols="12" dense class="pb-0">
-                    <span class="text-h6 mr-2">Cores:</span><span class="font-weight-bold">{{ cpuCores }}</span>
-                </v-col>
-                <v-col v-if="cpuUsage" cols="12" dense class="pt-0">
-                    <span class="text-h6 mr-2">Usage:</span>
-                    <span v-for="(value, name) in cpuUsage" :key="name" class="mr-2">
-                        {{ cpuUsageMapping(name) }}: <span class="font-weight-bold">{{ value }}%</span>
-                    </span>
-                </v-col>
-            </v-row>
+            <div v-else-if="cpuLoad || cpuCores">
+                <v-row class="d-flex">
+                    <v-col v-if="cpuLoad" cols="auto" class="flex-grow-0 flex-shrink-1">
+                        <v-progress-circular
+                            v-for="(item, index) in cpuLoad"
+                            :key="index"
+                            class="mr-2"
+                            :rotate="180"
+                            :size="100"
+                            :width="15"
+                            :value="cpuLoadPercentage(item.value)"
+                            :color="color(item.value)"
+                        >
+                            <div class="d-flex flex-column align-center">
+                                <span>{{ item.value }}</span>
+                                <span>{{ item.time }} min</span>
+                            </div>
+                        </v-progress-circular>
+                    </v-col>
+                    <v-col class="flex-grow-1 flex-lg-shrink-1 flex-xl-shrink-1">
+                        <cpu-usage-vue-chart />
+                    </v-col>
+                </v-row>
+                <v-row>
+                    <v-col v-if="cpuCores" cols="12" dense class="pb-0">
+                        <span class="text-h6 mr-2">Cores:</span><span class="font-weight-bold">{{ cpuCores }}</span>
+                    </v-col>
+                    <v-col v-if="cpuUsage" cols="12" dense class="pt-0">
+                        <span class="text-h6 mr-2">Usage:</span>
+                        <span v-for="(value, name) in cpuUsage" :key="name" class="mr-2">
+                            {{ cpuUsageMapping(name) }}: <span class="font-weight-bold">{{ value }}%</span>
+                        </span>
+                    </v-col>
+                </v-row>
+            </div>
             <v-row v-else>
                 <v-col cols="12">
                     <v-alert
@@ -78,12 +82,12 @@
 import moment from 'moment'
 import { mapGetters } from 'vuex'
 import Cpu from '@/models/Cpu'
-import CpuUsageGraph from '~/components/graphs/CpuUsageGraph.vue'
+import CpuUsageVueChart from '~/components/graphs/CpuUsageVueChart.vue'
 
 export default {
     name: 'CpuInfo',
     components: {
-        CpuUsageGraph
+        CpuUsageVueChart
     },
     data() {
         return {

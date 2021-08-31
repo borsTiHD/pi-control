@@ -71,7 +71,7 @@ async function isWindows(config) {
         const us = getRandom(100, 140) / 100
         const sy = getRandom(700, 800) / 100
         const ni = getRandom(1, 10) / 100
-        const id = getRandom(8000, 9999) / 100
+        const id = getRandom(4000, 9999) / 100
         const wa = getRandom(1, 10) / 100
         const hi = getRandom(1, 10) / 100
         const si = getRandom(1, 10) / 100
