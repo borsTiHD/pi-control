@@ -28,7 +28,7 @@
                 </v-col>
             </v-row>
             <v-row v-else-if="cpuLoad || cpuCores">
-                <v-col v-if="cpuLoad" cols="12">
+                <v-col v-if="cpuLoad" cols="auto">
                     <v-progress-circular
                         v-for="(item, index) in cpuLoad"
                         :key="index"
@@ -44,6 +44,9 @@
                             <span>{{ item.time }} min</span>
                         </div>
                     </v-progress-circular>
+                </v-col>
+                <v-col cols="12">
+                    <cpu-usage-graph />
                 </v-col>
                 <v-col v-if="cpuCores" cols="12" dense class="pb-0">
                     <span class="text-h6 mr-2">Cores:</span><span class="font-weight-bold">{{ cpuCores }}</span>
@@ -75,9 +78,13 @@
 import moment from 'moment'
 import { mapGetters } from 'vuex'
 import Cpu from '@/models/Cpu'
+import CpuUsageGraph from '~/components/graphs/CpuUsageGraph.vue'
 
 export default {
     name: 'CpuInfo',
+    components: {
+        CpuUsageGraph
+    },
     data() {
         return {
             loading: false,
