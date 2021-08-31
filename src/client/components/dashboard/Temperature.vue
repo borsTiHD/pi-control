@@ -63,7 +63,7 @@
 import moment from 'moment'
 import { mapGetters } from 'vuex'
 import Temperature from '@/models/Temperature'
-import TemperatureGraph from '~/components/dashboard-new/TemperatureGraph.vue'
+import TemperatureGraph from '~/components/dashboard/TemperatureGraph.vue'
 
 export default {
     name: 'Temperature',

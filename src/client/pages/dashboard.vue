@@ -24,14 +24,14 @@
 </template>
 
 <script>
-import CpuInfo from '~/components/dashboard-new/CpuInfo.vue'
-import Memory from '~/components/dashboard-new/Memory.vue'
-import Swap from '~/components/dashboard-new/Swap.vue'
-import Uptime from '~/components/dashboard-new/Uptime.vue'
-import Temperature from '~/components/dashboard-new/Temperature.vue'
-import Diskspace from '~/components/dashboard-new/Diskspace.vue'
-import System from '~/components/dashboard-new/System.vue'
-import Hardware from '~/components/dashboard-new/Hardware.vue'
+import CpuInfo from '~/components/dashboard/CpuInfo.vue'
+import Memory from '~/components/dashboard/Memory.vue'
+import Swap from '~/components/dashboard/Swap.vue'
+import Uptime from '~/components/dashboard/Uptime.vue'
+import Temperature from '~/components/dashboard/Temperature.vue'
+import Diskspace from '~/components/dashboard/Diskspace.vue'
+import System from '~/components/dashboard/System.vue'
+import Hardware from '~/components/dashboard/Hardware.vue'
 
 export default {
     name: 'Dashboard',
