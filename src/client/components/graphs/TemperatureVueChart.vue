@@ -74,9 +74,9 @@ export default {
             const datasets = [
                 {
                     data: [],
-                    label: 'Usage in %',
-                    borderColor: false,
-                    backgroundColor: false,
+                    label: 'Temp in °C',
+                    borderColor: null,
+                    backgroundColor: null,
                     borderWidth: 2,
                     pointBackgroundColor: 'transparent',
                     pointBorderColor: 'transparent',

@@ -75,8 +75,8 @@ export default {
                 {
                     data: [],
                     label: 'Usage in %',
-                    borderColor: false,
-                    backgroundColor: false,
+                    borderColor: null,
+                    backgroundColor: null,
                     borderWidth: 2,
                     pointBackgroundColor: 'transparent',
                     pointBorderColor: 'transparent',
