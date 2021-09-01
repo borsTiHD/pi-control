@@ -83,7 +83,7 @@ export default {
                     fill: true
                 },
                 {
-                    data: Array(data.length).fill(this.usageLimits.mid.value),
+                    data: Array(this.maxValues).fill(this.usageLimits.mid.value),
                     label: 'mid',
                     borderColor: this.usageLimits.mid.color.bg,
                     borderWidth: 1,
@@ -93,7 +93,7 @@ export default {
                     fill: false
                 },
                 {
-                    data: Array(data.length).fill(this.usageLimits.max.value),
+                    data: Array(this.maxValues).fill(this.usageLimits.max.value),
                     label: 'max',
                     borderColor: this.usageLimits.max.color.bg,
                     borderWidth: 1,
@@ -103,6 +103,18 @@ export default {
                     fill: false
                 }
             ]
+
+            // Fills missing data if not enough data is available
+            const length = data.length
+            if (length < this.maxValues) {
+                let missing = this.maxValues - length
+                if (missing > 0) {
+                    while (missing--) {
+                        labels.push(0)
+                        datasets[0].data.push(0)
+                    }
+                }
+            }
 
             // Generating chart dataset
             data.forEach((cpuData) => {
@@ -127,11 +139,6 @@ export default {
         }
     },
     methods: {
-        tempValue(value) {
-            // Returns temperature value without any text
-            const temperature = value.replace('\'C', '') // Removes "'C" from value
-            return parseFloat(temperature) || false
-        },
         color(val) {
             // Coloring of equal or greater values (from max to low)
             const limit = this.usageLimits
