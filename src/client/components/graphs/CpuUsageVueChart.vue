@@ -17,7 +17,7 @@ export default {
     data() {
         return {
             maxValues: 20,
-            usageLimits: { // Coloring of equal or greater values (from max to low)
+            limits: { // Coloring of equal or greater values (from max to low)
                 low: { value: 0, color: { bg: 'rgba(29, 179, 35, 0.3)', line: 'rgba(29, 179, 35, 1)' } }, // #1db323
                 mid: { value: 50, color: { bg: 'rgba(255, 229, 0, 0.3)', line: 'rgba(255, 229, 0, 1)' } }, // #ffe500
                 high: { value: 60, color: { bg: 'rgba(255, 166, 0, 0.3)', line: 'rgba(255, 166, 0, 1)' } }, // #ffa500
@@ -83,9 +83,9 @@ export default {
                     fill: true
                 },
                 {
-                    data: Array(this.maxValues).fill(this.usageLimits.mid.value),
+                    data: Array(this.maxValues).fill(this.limits.mid.value),
                     label: 'mid',
-                    borderColor: this.usageLimits.mid.color.bg,
+                    borderColor: this.limits.mid.color.bg,
                     borderWidth: 1,
                     borderDash: [10, 5],
                     pointBackgroundColor: 'transparent',
@@ -93,9 +93,9 @@ export default {
                     fill: false
                 },
                 {
-                    data: Array(this.maxValues).fill(this.usageLimits.max.value),
+                    data: Array(this.maxValues).fill(this.limits.max.value),
                     label: 'max',
-                    borderColor: this.usageLimits.max.color.bg,
+                    borderColor: this.limits.max.color.bg,
                     borderWidth: 1,
                     borderDash: [10, 5],
                     pointBackgroundColor: 'transparent',
@@ -141,7 +141,7 @@ export default {
     methods: {
         color(val) {
             // Coloring of equal or greater values (from max to low)
-            const limit = this.usageLimits
+            const limit = this.limits
             if (val >= limit.max.value) {
                 return limit.max.color
             } else if (val >= limit.high.value) {
