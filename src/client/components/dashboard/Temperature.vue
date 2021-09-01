@@ -40,7 +40,7 @@
                     </v-progress-circular>
                 </v-col>
                 <v-col class="flex-grow-1 flex-shrink-0">
-                    <temperature-graph />
+                    <temperature-vue-chart />
                 </v-col>
             </v-row>
             <v-row v-else>
@@ -63,12 +63,12 @@
 import moment from 'moment'
 import { mapGetters } from 'vuex'
 import Temperature from '@/models/Temperature'
-import TemperatureGraph from '~/components/graphs/TemperatureGraph.vue'
+import TemperatureVueChart from '~/components/graphs/TemperatureVueChart.vue'
 
 export default {
     name: 'Temperature',
     components: {
-        TemperatureGraph
+        TemperatureVueChart
     },
     data() {
         return {
