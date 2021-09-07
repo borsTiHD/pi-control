@@ -113,14 +113,15 @@ export default {
 
     // Plugins to run before rendering page: https://go.nuxtjs.dev/config-plugins
     plugins: [
+        { src: '@/plugins/vuex-orm.js' },
         { mode: 'client', src: '@/plugins/vuetify-font.js' },
         { mode: 'client', src: '@/plugins/vuetify-icons.js' },
-        { src: '@/plugins/vuex-orm.js' },
         { mode: 'client', src: '@/plugins/persistedState.client.js' },
         { mode: 'client', src: '@/plugins/run-script.js' },
         { mode: 'client', src: '@/plugins/change-theme.js' },
         { mode: 'client', src: '@/plugins/pwa.client.js' },
-        { mode: 'client', src: '@/plugins/pwa-update.client.js' }
+        { mode: 'client', src: '@/plugins/pwa-update.client.js' },
+        { mode: 'client', src: '@/plugins/chart.js' }
     ],
 
     // Auto import components: https://go.nuxtjs.dev/config-components
@@ -128,7 +129,12 @@ export default {
 
     // Modules for dev and build (recommended): https://go.nuxtjs.dev/config-modules
     buildModules: [
-    // https://go.nuxtjs.dev/eslint
+        // Nuxt faster Buildtime: https://github.com/harlan-zw/nuxt-build-optimisations
+        'nuxt-build-optimisations',
+
+        // https://composition-api.nuxtjs.org/
+        '@nuxtjs/composition-api/module',
+        // https://go.nuxtjs.dev/eslint
         '@nuxtjs/eslint-module',
         // https://go.nuxtjs.dev/vuetify
         '@nuxtjs/vuetify',
@@ -172,6 +178,10 @@ export default {
         localStorage: true,
         strategies: {
             local: {
+                // https://auth.nuxtjs.org/schemes/refresh/#token
+                token: {
+                    maxAge: 1800 * 2 * 24 // In seconds: 1800s (30 min) default
+                },
                 endpoints: {
                     login: {
                         url: '/auth/login',
@@ -235,7 +245,14 @@ export default {
     },
 
     // Build Configuration: https://go.nuxtjs.dev/config-build
-    build: {},
+    build: {
+        /*
+        // Nuxt: Experimental features for speed up build time
+        parallel: true, // https://nuxtjs.org/docs/2.x/configuration-glossary/configuration-build#parallel
+        hardSource: true, // https://nuxtjs.org/docs/2.x/configuration-glossary/configuration-build#hardsource
+        cache: true // https://nuxtjs.org/docs/2.x/configuration-glossary/configuration-build#cache
+        */
+    },
 
     // https://nuxtjs.org/docs/2.x/configuration-glossary/configuration-telemetry
     telemetry: false

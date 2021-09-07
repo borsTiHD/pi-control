@@ -19,16 +19,19 @@
 
 <script>
 import Vue from 'vue'
-import { mapGetters } from 'vuex'
+import { mapGetters, mapActions } from 'vuex'
+import Device from '@/models/Device'
 
 import AppHeader from '~/components/layout/Header.vue'
 import AppSidebar from '~/components/layout/Sidebar.vue'
 import AppFooter from '~/components/layout/Footer.vue'
 import AppAlerts from '~/components/alerts/Alerts'
 
-// Import global mixin
+// Import global mixin's
 import titleMixin from '~/mixins/titleMixin.js'
+import socketListening from '~/mixins/socketListening.js'
 Vue.mixin(titleMixin)
+Vue.mixin(socketListening)
 
 export default {
     components: {
@@ -42,10 +45,22 @@ export default {
             containerHeight: 0
         }
     },
+    async fetch() {
+        // TODO: Getting real device name from host system
+        // For now, we'll invent a name, since only one device is currently in use anyway.
+        const deviceName = 'raspberry-pi' // eg. await getHostName()
+        const device = await Device.create({ data: { name: deviceName } })
+        const deviceId = device.devices[0].id
+        this.setCurrentDeviceId(deviceId)
+
+        // console.log('deviceId:', deviceId)
+        // console.log(this.getCurrentDeviceId)
+    },
     computed: {
         ...mapGetters({
             getActiveSkin: 'settings/getActiveSkin',
-            getDarkMode: 'settings/getDarkMode'
+            getDarkMode: 'settings/getDarkMode',
+            getCurrentDeviceId: 'device/getCurrentDeviceId'
         }),
         theme() {
             return (this.$vuetify.theme.dark) ? 'dark' : 'light'
@@ -65,6 +80,9 @@ export default {
         }
     },
     methods: {
+        ...mapActions({
+            setCurrentDeviceId: 'device/setCurrentDeviceId'
+        }),
         onResize() {
             // Setting container height for footer
             const container = document.getElementById('container')

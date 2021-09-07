@@ -9,23 +9,13 @@
                 {{ $icons.mdiChip }}
             </v-icon>
             CPU
-            <v-tooltip right>
-                <template #activator="{ on, attrs }">
-                    <div class="d-inline-block" v-bind="attrs" v-on="on">
-                        <v-btn
-                            icon
-                            color="primary"
-                            class="ml-2"
-                            :loading="loading"
-                            :disabled="loading || getAutoRefresh"
-                            @click="$emit('rescan')"
-                        >
-                            <v-icon>{{ $icons.mdiCached }}</v-icon>
-                        </v-btn>
-                    </div>
-                </template>
-                <span>{{ getAutoRefresh ? 'Autorefresh is activated' : 'Rescan' }}</span>
-            </v-tooltip>
+
+            <v-badge
+                v-if="testData"
+                color="warning"
+                content="TEST DATA"
+                inline
+            />
         </v-card-title>
         <v-card-text>
             <v-row v-if="loading && !cpuLoad && !cpuCores">
@@ -37,34 +27,41 @@
                     />
                 </v-col>
             </v-row>
-            <v-row v-else-if="cpuLoad || cpuCores">
-                <v-col v-if="cpuLoad" cols="12">
-                    <v-progress-circular
-                        v-for="(item, index) in cpuLoad"
-                        :key="index"
-                        class="mr-2"
-                        :rotate="180"
-                        :size="100"
-                        :width="15"
-                        :value="cpuLoadPercentage(item.value)"
-                        :color="color(item.value)"
-                    >
-                        <div class="d-flex flex-column align-center">
-                            <span>{{ item.value }}</span>
-                            <span>{{ item.time }} min</span>
-                        </div>
-                    </v-progress-circular>
-                </v-col>
-                <v-col v-if="cpuCores" cols="12" dense class="pb-0">
-                    <span class="text-h6 mr-2">Cores:</span><span class="font-weight-bold">{{ cpuCores }}</span>
-                </v-col>
-                <v-col v-if="cpuUsage" cols="12" dense class="pt-0">
-                    <span class="text-h6 mr-2">Usage:</span>
-                    <span v-for="(item, index) in cpuUsage" :key="index" class="mr-2">
-                        {{ cpuUsageMapping(item.type) }}: <span class="font-weight-bold">{{ item.value }}%</span>
-                    </span>
-                </v-col>
-            </v-row>
+            <div v-else-if="cpuLoad || cpuCores">
+                <v-row class="d-flex">
+                    <v-col v-if="cpuLoad" cols="auto" class="flex-grow-0 flex-shrink-1">
+                        <v-progress-circular
+                            v-for="(item, index) in cpuLoad"
+                            :key="index"
+                            class="mr-2"
+                            :rotate="180"
+                            :size="100"
+                            :width="15"
+                            :value="cpuLoadPercentage(item.value)"
+                            :color="color(item.value)"
+                        >
+                            <div class="d-flex flex-column align-center">
+                                <span>{{ item.value }}</span>
+                                <span>{{ item.time }} min</span>
+                            </div>
+                        </v-progress-circular>
+                    </v-col>
+                    <v-col class="flex-grow-1 flex-lg-shrink-1 flex-xl-shrink-1">
+                        <cpu-usage-vue-chart />
+                    </v-col>
+                </v-row>
+                <v-row>
+                    <v-col v-if="cpuCores" cols="12" dense class="pb-0">
+                        <span class="text-h6 mr-2">Cores:</span><span class="font-weight-bold">{{ cpuCores }}</span>
+                    </v-col>
+                    <v-col v-if="cpuUsage" cols="12" dense class="pt-0">
+                        <span class="text-h6 mr-2">Usage:</span>
+                        <span v-for="(value, name) in cpuUsage" :key="name" class="mr-2">
+                            {{ cpuUsageMapping(name) }}: <span class="font-weight-bold">{{ value }}%</span>
+                        </span>
+                    </v-col>
+                </v-row>
+            </div>
             <v-row v-else>
                 <v-col cols="12">
                     <v-alert
@@ -82,100 +79,133 @@
 </template>
 
 <script>
+import moment from 'moment'
 import { mapGetters } from 'vuex'
+import Cpu from '@/models/Cpu'
+import CpuUsageVueChart from '~/components/graphs/CpuUsageVueChart.vue'
 
 export default {
     name: 'CpuInfo',
-    props: {
-        loading: {
-            type: Boolean,
-            default: false
-        }
+    components: {
+        CpuUsageVueChart
     },
     data() {
         return {
-            textNoData: 'No data could be determined. Please rescan manually.',
+            loading: false,
+            testData: false,
+            socketRoom: 'cpu',
+            textNoData: 'No data could be determined.',
             cpuLimits: { // Coloring of equal or greater values (from max to low)
                 low: { value: 0, color: 'green' },
                 mid: { value: 20, color: 'yellow' },
                 high: { value: 50, color: 'orange' },
                 max: { value: 75, color: 'red' }
-            }
+            },
+            cpuCores: null,
+            loadData: null
         }
     },
     computed: {
         ...mapGetters({
             getElevation: 'settings/getElevation',
-            getOutlined: 'settings/getOutlined',
-            getAutoRefresh: 'settings/getAutoRefresh',
-            getCpuCores: 'device/getCpuCores',
-            getTopData: 'device/getTopData'
+            getOutlined: 'settings/getOutlined'
         }),
-        cpuLoad() {
-            if (this.getTopData) {
-                const cpuLoad = this.crawlCpuLoad(this.getTopData)
-                const arrWithObj = cpuLoad.map((item, index) => {
-                    // Index determines which string is taken
-                    const time = index === 0 ? 1 : index === 1 ? 5 : 15 // '1 min', '5 min', '15 min'
-                    return {
-                        value: parseFloat(item.replace(',', '.')), // Input something like '0,33' -> parseFloat needs a '.' instead ','
-                        time
-                    }
-                })
-                return arrWithObj
-            }
-            return false
-        },
         cpuUsage() {
-            if (this.getTopData) {
-                const cpuUsage = this.crawlCpuUsage(this.getTopData)
-                const arrWithObj = cpuUsage.map((item) => {
-                    const arr = item.split(/\s+/) // Splitting value and text -> Idle: '92,7 id'
-                    return {
-                        value: parseFloat(arr[0].replace(',', '.')), // Input something like '7,3' -> parseFloat needs a '.' instead ','
-                        type: arr[1]
-                    }
-                })
-                return arrWithObj
+            const cpu = Cpu.query()
+                .orderBy('timestamp', 'asc')
+                .last()
+            if (cpu) {
+                delete cpu.$id
+                delete cpu.timestamp
+                return cpu
             }
             return false
         },
-        cpuCores() {
-            if (this.getCpuCores) return this.getCpuCores
+        cpuLoad() {
+            if (this.loadData) {
+                const cpuLoad = this.loadData
+                return [
+                    {
+                        value: cpuLoad.min1,
+                        time: 1
+                    },
+                    {
+                        value: cpuLoad.min5,
+                        time: 5
+                    },
+                    {
+                        value: cpuLoad.min15,
+                        time: 15
+                    }
+                ]
+            }
             return false
         }
     },
-    methods: {
-        crawlCpuLoad(data) {
-            // Crawls response from 'top -b -n1'
-            // Filters cpu load
-            // Returns array with 3 loads for 1min, 5min, 15min
-            const arr = data.split('\n')
-            if (Array.isArray(arr) && arr.length > 1) {
-                const loadAvgString = 'load average:'
-                const loadAvgRegexp = new RegExp(`${loadAvgString}.+$`, 'g')
-                return arr[0].match(loadAvgRegexp).map((item) => {
-                    const arr = item.replace(loadAvgString, '').replace(/^\s+/, '').split(', ')
-                    return arr
-                })[0]
-            }
-            return false
-        },
-        crawlCpuUsage(data) {
-            // Crawls response from 'top -b -n1'
-            // Filters cpu usage
-            const arr = data.split('\n')
-            if (Array.isArray(arr) && arr.length > 2) {
-                const regexp = /%Cpu\(s\):.+$/gm
-                const cpuUsage = arr[2].match(regexp)
-                if (Array.isArray(cpuUsage)) {
-                    return cpuUsage[0].replace(/%Cpu\(s\):\s+/gm, '').split(/\W\s/gm).map((val) => {
-                        return val.replace(/^\s+/, '')
-                    })
-                }
+    activated() {
+        // Socket.IO: Joining room
+        this.loading = true // Set loading to true after the app joins the room
+        this.socketListening(true, this.socketRoom)
+
+        // Checks whether core data are available, if not they are queried
+        if (!this.cpuCores) {
+            this.getCpuCores()
+        }
+    },
+    deactivated() {
+        // Socket.IO: Leaving room
+        this.socketListening(false, this.socketRoom)
+    },
+    sockets: {
+        cpu(message) {
+            if (message._status === 'error') {
+                console.error(`[Socket.io] -> Message from server '${this.socketRoom}':`, message)
+                // Set loading to 'false' after we get an error
+                this.loading = false
                 return false
+            } else if (message._status === 'ok') {
+                // Saving socket data
+                // console.log(`[Socket.io] -> Message from server '${this.socketRoom}':`, message)
+                const data = message?.data?.data
+
+                // TEST DATA - are not real
+                if (message?.data?.TEST_DATA) {
+                    this.testData = true
+                }
+
+                // Checks whether core data are available, if not they are queried
+                if (!this.cpuCores) {
+                    this.getCpuCores()
+                }
+
+                // Setting load data in component
+                this.loadData = data?.load
+
+                // Inserting data into database
+                Cpu.insert({
+                    data: {
+                        ...data.usage,
+                        timestamp: moment().unix()
+                    }
+                })
+            } else {
+                console.log(`[Socket.io] -> Message from server '${this.socketRoom}', without usable data:`, message)
             }
-            return false
+
+            // Set loading to 'false' after we get data
+            this.loading = false
+        }
+    },
+    methods: {
+        getCpuCores() {
+            const url = '/device/cores'
+            this.$axios.get(url)
+                .then(async(res) => {
+                    // Saving numbers of cores in component
+                    this.cpuCores = res?.data?.data
+                }).catch((error) => {
+                    console.error(error)
+                })
         },
         cpuLoadPercentage(cpuLoad) {
             const maxLoad = parseInt(this.cpuCores) // equals 100%

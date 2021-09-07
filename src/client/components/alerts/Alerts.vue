@@ -11,7 +11,7 @@
 <script>
 import { mapGetters } from 'vuex'
 
-import appAlert from '@/components/alerts/Alert'
+import appAlert from '@/components/alerts/Alert.vue'
 
 export default {
     name: 'Alerts',

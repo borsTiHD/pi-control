@@ -19,13 +19,20 @@
                         :disabled="loading"
                         v-bind="attrs"
                         v-on="on"
-                        @click="$emit('rescan')"
+                        @click="getData"
                     >
                         <v-icon>{{ $icons.mdiCached }}</v-icon>
                     </v-btn>
                 </template>
                 <span>Rescan</span>
             </v-tooltip>
+
+            <v-badge
+                v-if="testData"
+                color="warning"
+                content="TEST DATA"
+                inline
+            />
         </v-card-title>
         <v-card-text>
             <v-row v-if="loading">
@@ -81,69 +88,51 @@
 </template>
 
 <script>
+import System from '@/models/System'
 import { mapGetters } from 'vuex'
 
 export default {
     name: 'System',
-    props: {
-        loading: {
-            type: Boolean,
-            default: false
-        }
-    },
     data() {
         return {
+            loading: false,
+            testData: false,
             textNoData: 'No data could be determined. Please rescan manually.'
         }
     },
     computed: {
         ...mapGetters({
             getElevation: 'settings/getElevation',
-            getOutlined: 'settings/getOutlined',
-            getKernelData: 'device/getKernelData',
-            getOperatingSystem: 'device/getOperatingSystem'
+            getOutlined: 'settings/getOutlined'
         }),
         items() {
-            // Result for return
-            const items = []
-
-            // Kernel Data
-            const kernelData = this.crawlKernelInfo(this.getKernelData)
-            if (kernelData) { kernelData.forEach((item) => { items.push(item) }) }
-
-            // Operating System Data
-            const operatingSystem = this.crawlOperatingSystem(this.getOperatingSystem)
-            if (operatingSystem) { items.push(operatingSystem) }
-
-            return items
+            return System.query().get()
         }
     },
+    created() {
+        this.getData()
+    },
     methods: {
-        crawlKernelInfo(data) {
-            if (!data) return false
-            // Crawls Kerlen infos -> exp. 'Linux hostname 5.10.17-v7l+ #1414 SMP Fri Apr 30 13:20:47 BST 2021 armv7l GNU/Linux'
-            const arr = data.split(' ')
-            return [
-                { name: 'System:', state: arr[0] },
-                { name: 'Hostname:', state: arr[1] },
-                { name: 'Kernel:', state: data.replace(arr[0], '').replace(arr[1], '').replace(/^\s+/, '') }
-            ]
-        },
-        crawlOperatingSystem(data) {
-            if (!data) return false
-            // Crawls OS infos -> searching for. 'Operating System: Raspbian GNU/Linux 10 (buster)'
-            const pattText = 'Operating System:'
-            const patt = new RegExp(`${pattText}.+$`, 'gm')
-            const matches = data.match(patt)
-            if (Array.isArray(matches)) {
-                return {
-                    name: pattText,
-                    state: matches.map((item) => {
-                        return item.replace(pattText, '').replace(/^ +/gm, '')
-                    })[0]
-                }
-            }
-            return [{ name: pattText, state: false }]
+        getData() {
+            const url = '/device/system'
+            this.loading = true
+            this.$axios.get(url)
+                .then((res) => {
+                    // TEST DATA - are not real
+                    if (res?.data?.TEST_DATA) {
+                        this.testData = true
+                    }
+
+                    // Replacing database with new data
+                    const data = res?.data?.data
+                    System.create({
+                        data
+                    })
+                }).catch((error) => {
+                    console.error(error)
+                }).finally(() => {
+                    this.loading = false
+                })
         }
     }
 }

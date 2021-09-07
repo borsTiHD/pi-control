@@ -19,13 +19,20 @@
                         :disabled="loading"
                         v-bind="attrs"
                         v-on="on"
-                        @click="$emit('rescan')"
+                        @click="getData"
                     >
                         <v-icon>{{ $icons.mdiCached }}</v-icon>
                     </v-btn>
                 </template>
                 <span>Rescan</span>
             </v-tooltip>
+
+            <v-badge
+                v-if="testData"
+                color="warning"
+                content="TEST DATA"
+                inline
+            />
         </v-card-title>
         <v-card-text>
             <v-row v-if="loading">
@@ -81,66 +88,51 @@
 </template>
 
 <script>
+import Hardware from '@/models/Hardware'
 import { mapGetters } from 'vuex'
 
 export default {
-    name: 'Device',
-    props: {
-        loading: {
-            type: Boolean,
-            default: false
-        }
-    },
+    name: 'Hardware',
     data() {
         return {
+            loading: false,
+            testData: false,
             textNoData: 'No data could be determined. Please rescan manually.'
         }
     },
     computed: {
         ...mapGetters({
             getElevation: 'settings/getElevation',
-            getOutlined: 'settings/getOutlined',
-            getHardwareData: 'device/getHardwareData'
+            getOutlined: 'settings/getOutlined'
         }),
         items() {
-            // Result for return
-            const items = []
-
-            // Kernel Data
-            const hardwareData = this.crawlHardware(this.getHardwareData)
-            if (hardwareData) { hardwareData.forEach((item) => { items.push(item) }) }
-
-            return items
+            return Hardware.query().get() || false
         }
     },
+    created() {
+        this.getData()
+    },
     methods: {
-        crawlHardware(data) {
-            if (!data) return false
-            // Collecting following stuff
-            /*
-            Hardware        : BCM2711
-            Revision        : d03114
-            Serial          : 100000000a21a527
-            Model           : Raspberry Pi 4 Model B Rev 1.4
-            */
-            function crawlingData(data, search) {
-                const patt = new RegExp(`${search}.+$`, 'gm')
-                const matches = data.match(patt)
-                if (Array.isArray(matches)) {
-                    return matches.map((item) => {
-                        return item.replace(search, '').replace(/^\s+:\s+/gm, '')
-                    })[0]
-                }
-                return false
-            }
+        getData() {
+            const url = '/device/hardware'
+            this.loading = true
+            this.$axios.get(url)
+                .then((res) => {
+                    // TEST DATA - are not real
+                    if (res?.data?.TEST_DATA) {
+                        this.testData = true
+                    }
 
-            // Return results
-            return [
-                { name: 'Hardware:', state: crawlingData(data, 'Hardware') },
-                { name: 'Revision:', state: crawlingData(data, 'Revision') },
-                { name: 'Serial:', state: crawlingData(data, 'Serial') },
-                { name: 'Model:', state: crawlingData(data, 'Model') }
-            ]
+                    // Replacing database with new data
+                    const data = res?.data?.data
+                    Hardware.create({
+                        data
+                    })
+                }).catch((error) => {
+                    console.error(error)
+                }).finally(() => {
+                    this.loading = false
+                })
         }
     }
 }

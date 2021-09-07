@@ -1,4 +1,5 @@
 import {
+    mdiApi,
     mdiConsole,
     mdiMonitorDashboard,
     mdiCarCruiseControl,
@@ -53,6 +54,7 @@ import {
 } from '@mdi/js'
 
 const MY_ICONS = {
+    mdiApi,
     mdiConsole,
     mdiMonitorDashboard,
     mdiCarCruiseControl,

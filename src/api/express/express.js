@@ -11,13 +11,13 @@ import baseRoutes from './router.js'
 import initSwaggerDoc from './swagger.js'
 
 // Exporting Express Setup
-export default function(isDev, config) {
+export default function(config) {
     // Config
     const DIST_DIR = path.join('dist', 'client')
 
     // Express Init
     const app = express()
-    if (isDev) app.use(cors()) // CORS policy only in dev
+    if (config.DEV) app.use(cors()) // CORS policy only in dev
     app.use(express.static(DIST_DIR))
     app.use(express.json())
     app.use(express.urlencoded({ extended: true })) // for form data

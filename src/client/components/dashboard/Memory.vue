@@ -1,5 +1,5 @@
 <template>
-    <v-card :elevation="getElevation" :outlined="getOutlined" class="flex d-flex flex-column mb-2">
+    <v-card :elevation="getElevation" :outlined="getOutlined" class="flex d-flex flex-column">
         <v-card-title class="headline">
             <v-icon
                 large
@@ -9,23 +9,13 @@
                 {{ $icons.mdiMemory }}
             </v-icon>
             Memory
-            <v-tooltip right>
-                <template #activator="{ on, attrs }">
-                    <div class="d-inline-block" v-bind="attrs" v-on="on">
-                        <v-btn
-                            icon
-                            color="primary"
-                            class="ml-2"
-                            :loading="loading"
-                            :disabled="loading || getAutoRefresh"
-                            @click="$emit('rescan')"
-                        >
-                            <v-icon>{{ $icons.mdiCached }}</v-icon>
-                        </v-btn>
-                    </div>
-                </template>
-                <span>{{ getAutoRefresh ? 'Autorefresh is activated' : 'Rescan' }}</span>
-            </v-tooltip>
+
+            <v-badge
+                v-if="testData"
+                color="warning"
+                content="TEST DATA"
+                inline
+            />
         </v-card-title>
         <v-card-text>
             <v-row v-if="loading && !data">
@@ -39,17 +29,17 @@
             </v-row>
             <v-row v-else-if="data">
                 <v-col cols="12">
-                    <span>Used: <span class="font-weight-bold">{{ memory.used }}MB ({{ memoryUsedPercentage(memory) }}%)</span></span>
-                    <span>Available: <span class="font-weight-bold">{{ memory.available }}MB</span></span>
-                    <span>Total: <span class="font-weight-bold">{{ memory.total }}MB</span></span>
+                    <span>Used: <span class="font-weight-bold">{{ data.used }}MB ({{ memoryUsedPercentage(data) }}%)</span></span>
+                    <span>Available: <span class="font-weight-bold">{{ data.available }}MB</span></span>
+                    <span>Total: <span class="font-weight-bold">{{ data.total }}MB</span></span>
                 </v-col>
                 <v-col cols="12">
                     <v-progress-linear
-                        :value="memoryUsedPercentage(memory)"
-                        :color="color(memoryUsedPercentage(memory))"
+                        :value="memoryUsedPercentage(data)"
+                        :color="color(memoryUsedPercentage(data))"
                         height="25"
                     >
-                        <strong>{{ memoryUsedPercentage(memory) }}%</strong>
+                        <strong>{{ memoryUsedPercentage(data) }}%</strong>
                     </v-progress-linear>
                 </v-col>
             </v-row>
@@ -70,19 +60,18 @@
 </template>
 
 <script>
+import moment from 'moment'
 import { mapGetters } from 'vuex'
+import Memory from '@/models/Memory'
 
 export default {
     name: 'Memory',
-    props: {
-        loading: {
-            type: Boolean,
-            default: false
-        }
-    },
     data() {
         return {
-            textNoData: 'No data could be determined. Please rescan manually.',
+            loading: false,
+            testData: false,
+            socketRoom: 'memory',
+            textNoData: 'No data could be determined.',
             limits: { // Coloring of equal or greater values (from max to low)
                 low: { value: 0, color: 'primary' },
                 mid: { value: 50, color: 'yellow' },
@@ -94,54 +83,57 @@ export default {
     computed: {
         ...mapGetters({
             getElevation: 'settings/getElevation',
-            getOutlined: 'settings/getOutlined',
-            getAutoRefresh: 'settings/getAutoRefresh',
-            getMemoryData: 'device/getMemoryData'
+            getOutlined: 'settings/getOutlined'
         }),
         data() {
-            if (this.getMemoryData) return this.getMemoryData
-            return false
-        },
-        memory() {
-            if (this.data) {
-                const memoryTypes = this.crawlMemoryTypes(this.data)
-                const memoryData = this.crawlMemoryData(this.data)
-                const arrWithObj = memoryData.map((item, index) => {
-                    return {
-                        value: item,
-                        type: memoryTypes[index]
+            const memory = Memory.query()
+                .orderBy('timestamp', 'asc')
+                .last()
+            return memory || false
+        }
+    },
+    activated() {
+        // Socket.IO: Joining room
+        this.loading = true // Set loading to true after the app joins the room
+        this.socketListening(true, this.socketRoom)
+    },
+    deactivated() {
+        // Socket.IO: Leaving room
+        this.socketListening(false, this.socketRoom)
+    },
+    sockets: {
+        memory(message) {
+            if (message._status === 'error') {
+                console.error(`[Socket.io] -> Message from server '${this.socketRoom}':`, message)
+                // Set loading to 'false' after we get an error
+                this.loading = false
+                return false
+            } else if (message._status === 'ok') {
+                // Saving socket data
+                // console.log(`[Socket.io] -> Message from server '${this.socketRoom}':`, message)
+                const memory = message?.data?.data?.memory
+
+                // TEST DATA - are not real
+                if (message?.data?.TEST_DATA) {
+                    this.testData = true
+                }
+
+                // Inserting data into database
+                Memory.insert({
+                    data: {
+                        ...memory,
+                        timestamp: moment().unix()
                     }
                 })
-
-                // Building Object for better use
-                const result = {}
-                arrWithObj.forEach((obj) => {
-                    result[obj.type] = obj.value
-                })
-                return result
+            } else {
+                console.log(`[Socket.io] -> Message from server '${this.socketRoom}', without usable data:`, message)
             }
-            return false
+
+            // Set loading to 'false' after we get data
+            this.loading = false
         }
     },
     methods: {
-        crawlMemoryTypes(data) {
-            // Crawls response from 'free'
-            // Filters memory types -> total, used, free, shared, buff/cache, available
-            const arr = data.split('\n')
-            if (Array.isArray(arr) && arr.length > 0) {
-                return arr[0].replace(/^\s+/gm, '').split(/\s+/)
-            }
-            return false
-        },
-        crawlMemoryData(data) {
-            // Crawls response from 'free'
-            // Filters memory data
-            const arr = data.split('\n')
-            if (Array.isArray(arr) && arr.length > 0) {
-                return arr[1].replace(/Mem:\s+/gm, '').split(/\s+/)
-            }
-            return false
-        },
         memoryUsedPercentage(memory) {
             const percentage = (memory.used / memory.total) * 100 // returns current load percentage
             return Math.round(percentage * 100) / 100 // Rounds last 2 digits

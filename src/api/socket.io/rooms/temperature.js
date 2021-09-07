@@ -1,11 +1,14 @@
 // Imports
 import initListener from '../controllers/roomEventListener.js' // Controller from socket.io folder
-import getProcesses from '../../controllers/getProcesses.js' // Root dir of API Folder
+import getTemperature from '../../controllers/getTemperature.js' // Root dir of API Folder
 
 // Room Event name
-const eventName = 'processes'
+const eventName = 'temperature'
 
-export default (io, roomName, duration = 2 * 1000) => {
+export default (io, roomName, config = {}) => {
+    // Setting duration from config, or default
+    const duration = config.duration || 5 * 1000 // Default 5 seconds
+
     // Interval
     let intervalId = null
 
@@ -25,10 +28,12 @@ export default (io, roomName, duration = 2 * 1000) => {
         async function getData() {
             try {
                 const isWin = process.platform === 'win32'
-                const psList = await getProcesses()
-                io.to(roomName).emit(eventName, { _status: 'ok', data: { processes: psList, isWin } })
+                const temperature = await getTemperature({ DEV: config.DEV, TEST_DATA: config.TEST_DATA })
+                const result = { temperature, isWin }
+                if (config.DEV && config.TEST_DATA) { result.TEST_DATA = true }
+                io.to(roomName).emit(eventName, { _status: 'ok', data: result })
             } catch (error) {
-                io.to(roomName).emit(eventName, { _status: 'error', error: error.message, info: 'Error on starting tasks' })
+                io.to(roomName).emit(eventName, { _status: 'error', error: error.message, info: 'Error on getting temperature' })
             }
         }
 
