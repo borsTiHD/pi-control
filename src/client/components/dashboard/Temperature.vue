@@ -28,7 +28,7 @@
                 </v-col>
             </v-row>
             <v-row v-else-if="data">
-                <v-col cols="auto" class="flex-grow-0 flex-shrink-0">
+                <v-col cols="auto" class="flex-grow-0 flex-shrink-1">
                     <v-progress-circular
                         :rotate="180"
                         :size="100"
@@ -39,7 +39,7 @@
                         {{ tempValue }} °C
                     </v-progress-circular>
                 </v-col>
-                <v-col class="flex-grow-1 flex-shrink-0">
+                <v-col class="flex-grow-1 flex-lg-shrink-1 flex-xl-shrink-1">
                     <temperature-vue-chart />
                 </v-col>
             </v-row>
