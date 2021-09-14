@@ -37,6 +37,9 @@ async function isWindows() {
         // Parsing into Lines
         const lines = stdout.trim().split('\n').slice(2)
 
+        // TODO
+        // Regex: /^(?<name>.*)[ \t]+(?<version>(\d+|\.+)+).+/gm
+
         const arr = []
         lines.forEach((line) => {
             const software = line.replace('\r', '').split()
