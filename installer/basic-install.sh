@@ -237,6 +237,7 @@ check_pi_control() {
         # Removing existing file with same name
         local path_file="${PI_CONTROL_DOWNLOAD_DIR}${filename}"
         if test -f "$path_file"; then
+            printf "${COL_NC}%s ${INFO}\n" "Deleting existing file before downloading..."
             sudo rm $path_file
         fi
 
