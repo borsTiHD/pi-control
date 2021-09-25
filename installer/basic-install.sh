@@ -151,7 +151,7 @@ check_node() {
 
 node_install() {
     # Asking user if he wants to install node
-    if do_you_want_to_install_node "Do you wish to install NodeJS?" ; then
+    if user_prompt "Do you wish to install NodeJS?" ; then
         # User wish to install node
         printf "${COL_NC}%s ${TICK}\n" "Installing NodeJS..."
     else
