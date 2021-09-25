@@ -48,6 +48,7 @@ readonly URL_LATEST_RELEASE="https://api.github.com/repos/${AUTHOR}/${APP_NAME}/
 
 # Const Paths
 readonly PI_CONTROL_INSTALL_DIR="/opt/${APP_NAME}/"
+readonly PI_CONTROL_DOWNLOAD_DIR="/tmp/"
 
 # Const Colors (pi-hole)
 readonly COL_NC='\e[0m' # No Color
@@ -238,6 +239,8 @@ check_pi_control() {
         local asset_download_url=$(node -pe "JSON.parse(process.argv[1]).assets.find((asset) => asset.name === '${filename}').browser_download_url" "${latest_release_json}")
         printf "\n${COL_NC}%s\n" "Download URL: ${asset_download_url}"
         printf "${COL_NC}%s ${INFO}\n" "Downloading... ${filename}"
+
+        wget --show-progress -P "$PI_CONTROL_DOWNLOAD_DIR" "$asset_download_url"
     fi
 }
 
