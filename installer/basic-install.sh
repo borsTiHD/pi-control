@@ -202,17 +202,20 @@ check_pi_control() {
     # If not installed, ask user if he installed in a different location and check this dir
     # Else download latest version and install
 
-    # Checks if install directory exists
-    if [ -d "${PI_CONTROL_INSTALL_DIR}" ]; then
-        local pi_control_installed="$(cd "${PI_CONTROL_INSTALL_DIR}" && node -p "require('./package.json').version")"
-        printf "${COL_NC}%s ${TICK}\n" "${APP_NAME} already installed: v${pi_control_installed}"
+    # Checks if install directory does not exists
+    if [ ! -d "${PI_CONTROL_INSTALL_DIR}" ]; then
+        # Creating folder
+        mkdir -p "${PI_CONTROL_INSTALL_DIR}"
+    fi
+
+    # Checking if package.json exists
+    local package_json="${PI_CONTROL_INSTALL_DIR}package.json"
+    if test -f "$package_json"; then
+        local pi_control_version="$(cd "${PI_CONTROL_INSTALL_DIR}" && node -p "require('./package.json').version")"
+        printf "${COL_NC}%s ${TICK}\n" "${APP_NAME} already installed: v${pi_control_version}"
     else
         # Pi-Control is not installed
         printf "${COL_NC}%s ${INFO}\n" "Downloading latest ${APP_NAME}..."
-
-        # Creating folder
-        mkdir -p "${PI_CONTROL_INSTALL_DIR}"
-
         # Parsing latest release
         
         # node -pe 'JSON.parse(process.argv[1]).foo' '{ "foo": "bar" }'
@@ -280,7 +283,7 @@ main() {
     check_yarn # Checking yarn
 
     printf "${COL_NC}%s\n" "Checking os packages..."
-    check_packages
+    check_packages # Checking required packages
 
     printf "\n${COL_NC}%s\n" "Checking ${APP_NAME}..."
     check_pi_control # Checking pi-control
