@@ -102,23 +102,14 @@ check_nodejs() {
 
     # Checks if nodejs is installed
     if is_command node ; then
-        local installed_node_version=$(node -v)
-
-        printf "NODE TEST: ${installed_node_version:1}\n"
-        version_greater_equal "${installed_node_version:1}" "${NEEDED_NODE_VERSION}" || die "need ${NEEDED_NODE_VERSION} or above"
-        printf "-----------------\n"
-
-        if [[ $installed_node_version == *"v${NEEDED_NODE_VERSION}"* ]]; then
+        local installed_node_version=$(node -v) # Showing string without "v" -> ${installed_node_version:1}
+        if [[ version_greater_equal "${installed_node_version:1}" "${NEEDED_NODE_VERSION}" ]]; then
             printf "${COL_NC}%s ${TICK}\n" "Installed NodeJS: ${installed_node_version}"
         else
-            # NodeJS is installed but wrong version
-            # Check if installed node is newer or older
-            if [[ "xxx" == "yyy" ]]; then
-                printf "${COL_NC}%s ${TICK}\n" "Installed NodeJS is newer: ${installed_node_version}"
-            else
-                printf "${COL_NC}%s ${CROSS}\n" "Installed NodeJS is too old. Need NodeJS v${NEEDED_NODE_VERSION} or newer."
-                exit 1
-            fi
+            # NodeJS is installed but too old
+            printf "${COL_NC}%s ${CROSS}\n" "Installed NodeJS is too old. Installed: ${installed_node_version}"
+            printf "${COL_NC}%s ${CROSS}\n" "Need NodeJS v${NEEDED_NODE_VERSION} or newer..."
+            exit 1
         fi
     else
         # Otherwise, tell the user they need to install nodejs
