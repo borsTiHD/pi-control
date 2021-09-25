@@ -77,11 +77,15 @@ check_root() {
 }
 
 check_installer_version() {
-    if [[ "$(curl -X GET -L -s "${URL_VERSION_CHECK}")" -le INSTALLER_VERSIONCODE ]]
+    # Checks if the used script is equal the current version hosted on github
+    local remote_version=$(curl -sL "${URL_VERSION_CHECK}")
+    if [[ remote_version == INSTALLER_VERSIONCODE ]]
     then
         printf "${COL_NC}%s ${TICK}\n" "Current install script is used."
     else
         printf "${COL_NC}%s ${CROSS}\n" "Outdated install script is used."
+        printf "${COL_NC}%s %s\n" "Used Version:" INSTALLER_VERSIONCODE
+        printf "${COL_NC}%s %s\n" "Current Version:" remote_version
         printf "${COL_NC}%s\n" "Try to run current script..."
         sleep 1
         curl -sSL "${URL_INSTALL_SCRIPT}" | sudo bash
