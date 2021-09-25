@@ -47,7 +47,7 @@ readonly COL_LIGHT_GREEN='\e[1;32m'
 readonly COL_LIGHT_RED='\e[1;31m'
 readonly TICK="[${COL_LIGHT_GREEN}✓${COL_NC}]"
 readonly CROSS="[${COL_LIGHT_RED}✗${COL_NC}]"
-readonly INFO="[[${COL_BLUE}i${COL_NC}]"
+readonly INFO="[${COL_BLUE}i${COL_NC}]"
 
 is_command() {
     # Checks to see if the given command (passed as a string argument) exists on the system.
@@ -157,6 +157,16 @@ node_install() {
     if user_prompt "Do you wish to install NodeJS?" ; then
         # User wish to install node
         printf "${COL_NC}%s ${INFO}\n" "Installing NodeJS..."
+
+        # Installing node
+        if is_command apt ; then
+            curl -sL https://deb.nodesource.com/setup_16.x | sudo bash -
+            sudo apt install nodejs
+        else
+            # User dont want to install node... script will stop
+            printf "${COL_NC}%s ${CROSS}\n" "Can't install NodeJS, because apt is not installed."
+            exit_with_error
+        fi
     else
         # User dont want to install node... script will stop
         printf "${COL_NC}%s ${INFO}\n" "Please install NodeJS manually."
