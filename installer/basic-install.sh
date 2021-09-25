@@ -221,15 +221,13 @@ check_pi_control() {
         eval assets=($assets_string)
 
         printf "\n"
-        printf "${assets}"
-        printf "\n"
-        printf '%s, ' "${PI_CONTROL_DEPS[@]}"
+        printf '%s, ' "${assets[@]}"
         printf "\n"
 
 
         # Pi-Control is not installed
         PS3="Select download file: "
-        select filename in assets; do break; done
+        select filename in $assets; do break; done
         echo "Downloading... $filename" 
 
         # printf "${COL_NC}%s ${INFO}\n" "Downloading latest ${APP_NAME}..."
