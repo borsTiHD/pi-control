@@ -162,6 +162,9 @@ node_install() {
         if is_command apt ; then
             curl -sL https://deb.nodesource.com/setup_16.x | sudo bash -
             sudo apt install nodejs
+
+            # Checking node again
+            check_node
         else
             # User dont want to install node... script will stop
             printf "${COL_NC}%s ${CROSS}\n" "Can't install NodeJS, because apt is not installed."
