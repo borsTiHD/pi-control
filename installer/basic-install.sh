@@ -183,7 +183,7 @@ check_yarn() {
 
 check_packages() {
     # Asking user if he wants to install required packages
-    printf "\n${COL_NC}%s ${INFO}\n" "The following packages are required:"
+    printf "${COL_NC}%s ${INFO}\n" "The following packages are required:"
     printf '%s, ' "${PI_CONTROL_DEPS[@]}"
     printf "\n"
     if user_prompt "Do you wish to install required packages?" ; then
