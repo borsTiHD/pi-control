@@ -33,13 +33,18 @@ readonly INSTALLER_VERSION=1 # Must be identical with online version
 readonly NODE_VERSION_NEEDED="16.0.0"
 readonly YARN_VERSION_NEEDED="1.22.0"
 
+# Const Github
+readonly AUTHOR="borsTiHD"
+readonly APP_NAME="pi-control"
+
 # Const URLs
-readonly URL_INSTALL_SCRIPT="https://raw.githubusercontent.com/borsTiHD/pi-control/feature/install-script/installer/basic-install.sh" # TODO!!! - Needs to set branch to main in url
-readonly URL_VERSION_CHECK="https://raw.githubusercontent.com/borsTiHD/pi-control/feature/install-script/installer/version.txt" # TODO!!! - Needs to set branch to main in url
-readonly GIT_REPO="https://github.com/borsTiHD/pi-control"
+readonly GIT_REPO="https://github.com/${AUTHOR}/${APP_NAME}"
+readonly URL_INSTALL_SCRIPT="https://raw.githubusercontent.com/${AUTHOR}/${APP_NAME}/feature/install-script/installer/basic-install.sh" # TODO!!! - Needs to set branch to main in url
+readonly URL_VERSION_CHECK="https://raw.githubusercontent.com/${AUTHOR}/${APP_NAME}/feature/install-script/installer/version.txt" # TODO!!! - Needs to set branch to main in url
+readonly URL_LATEST_RELEASE="https://api.github.com/repos/${AUTHOR}/${APP_NAME}/releases/latest"
 
 # Const Paths
-readonly PI_CONTROL_INSTALL_DIR="/opt/pi-control/"
+readonly PI_CONTROL_INSTALL_DIR="/opt/${APP_NAME}/"
 
 # Const Colors (pi-hole)
 readonly COL_NC='\e[0m' # No Color
@@ -68,7 +73,7 @@ welcome_message() {
     printf "${COL_BLUE}" # Blue text
     printf "+----------------------------------------------+\n"
     printf "|                                              |\n"
-    printf "| Welcome to install Pi-Control                |\n"
+    printf "| Welcome to install ${APP_NAME}                |\n"
     printf "|                                              |\n"
     printf "| Installer: v%s                                |\n" "${INSTALLER_VERSION}"
     printf "| More infos:                                  |\n"
@@ -182,10 +187,10 @@ check_pi_control() {
     # Checks if install directory exists
     if [ -d "${PI_CONTROL_INSTALL_DIR}" ]; then
         local pi_control_installed="$(cd "${PI_CONTROL_INSTALL_DIR}" && node -p "require('./package.json').version")"
-        printf "${COL_NC}%s ${TICK}\n" "Pi-Control already installed: v${pi_control_installed}"
+        printf "${COL_NC}%s ${TICK}\n" "${APP_NAME} already installed: v${pi_control_installed}"
     else
         # Pi-Control is not installed
-        printf "${COL_NC}%s ${INFO}\n" "Downloading latest Pi-Control..."
+        printf "${COL_NC}%s ${INFO}\n" "Downloading latest ${APP_NAME}..."
 
         # Creating folder
         mkdir -p "${PI_CONTROL_INSTALL_DIR}"
@@ -245,7 +250,7 @@ main() {
     check_node # Checking node
     check_yarn # Checking yarn
 
-    printf "\n${COL_NC}%s\n" "Checking pi-control..."
+    printf "\n${COL_NC}%s\n" "Checking ${APP_NAME}..."
     check_pi_control # Checking pi-control
 }
 
