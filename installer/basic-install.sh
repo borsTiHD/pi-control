@@ -94,11 +94,17 @@ check_installer_version() {
     fi
 }
 
+check_nodejs() {
+    # Checks if nodejs is installed
+    printf "checking nodejs..."
+}
+
 main() {
     clear # clears terminal
     welcome_message
     check_root
     check_installer_version
+    check_nodejs
 }
 
 # Starting...
