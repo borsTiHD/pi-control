@@ -39,7 +39,7 @@ readonly PI_CONTROL_INSTALL_DIR="/opt/pi-control/"
 
 # Const Colors (pi-hole)
 readonly COL_NC='\e[0m' # No Color
-readonly COL_BLUE='\033[33m'
+readonly COL_BLUE='\e[1;34m'
 readonly COL_LIGHT_GREEN='\e[1;32m'
 readonly COL_LIGHT_RED='\e[1;31m'
 readonly TICK="[${COL_LIGHT_GREEN}✓${COL_NC}]"
