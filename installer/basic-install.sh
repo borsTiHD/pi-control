@@ -234,13 +234,19 @@ check_pi_control() {
             fi
         done
 
+        # Removing existing file with same name
+        local path_file="${PI_CONTROL_DOWNLOAD_DIR}${filename}"
+        if test -f "$path_file"; then
+            sudo rm $path_file
+        fi
+
         # Parsing download url
         # Javascript will search array with selected filename and returns 'browser_download_url'
         local asset_download_url=$(node -pe "JSON.parse(process.argv[1]).assets.find((asset) => asset.name === '${filename}').browser_download_url" "${latest_release_json}")
         printf "\n${COL_NC}%s\n" "Download URL: ${asset_download_url}"
         printf "${COL_NC}%s ${INFO}\n" "Downloading... ${filename}"
 
-        wget --show-progress -P "$PI_CONTROL_DOWNLOAD_DIR" "$asset_download_url"
+        wget -q --show-progress -P "$PI_CONTROL_DOWNLOAD_DIR" "$asset_download_url"
     fi
 }
 
