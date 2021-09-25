@@ -221,16 +221,15 @@ check_pi_control() {
         local latest_release_json=$(curl -sSL "${URL_LATEST_RELEASE}")
         local js_parse="JSON.parse(process.argv[1]).assets.map((asset) => { return asset.name }).join(', ')" # Javascript parsing latest_release json and returning asset names as string, seperatet with ", "
         local assets_string=$(node -pe "${js_parse}" "$(curl -sSL "${URL_LATEST_RELEASE}")")
-        
-        test="test1, test2, test3, test4"
-        IFS=', ' read -r -a assets <<< "$test"
-        
-        # eval assets=($assets_string)
-        # eval assets=($t)
+        # test="test1, test2, test3, test4"
+        IFS=', ' read -r -a assets <<< "$assets_string" # Splitting string into array
 
-        # User select for downloading file
+        # User selecting file to download
         PS3="Select download file: "
         select filename in ${assets[@]}; do break; done
+
+        # TODO: If no file is selected print message, or try again!!!
+
         printf "${COL_NC}%s ${INFO}\n" "Downloading... ${filename}"
     fi
 }
