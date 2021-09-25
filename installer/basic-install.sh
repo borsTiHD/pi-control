@@ -214,27 +214,19 @@ check_pi_control() {
         local pi_control_version="$(cd "${PI_CONTROL_INSTALL_DIR}" && node -p "require('./package.json').version")"
         printf "${COL_NC}%s ${TICK}\n" "${APP_NAME} already installed: v${pi_control_version}"
     else
+        # Pi-Control is not installed
+        printf "${COL_NC}%s ${TICK}\n" "Getting latest release."
+
         # Parsing latest release
         local latest_release_json=$(curl -sSL "${URL_LATEST_RELEASE}")
-        local js_parse="JSON.parse(process.argv[1]).assets.map((asset) => { return asset.name }).join(', ')"
+        local js_parse="JSON.parse(process.argv[1]).assets.map((asset) => { return asset.name }).join(' ')" # Javascript parsing latest_release json and returning asset names as string, seperatet with " "
         local assets_string=$(node -pe "${js_parse}" "$(curl -sSL "${URL_LATEST_RELEASE}")")
         eval assets=($assets_string)
 
-        printf "\n"
-        printf '%s, ' "${assets[@]}"
-        printf "\n"
-
-
-        # Pi-Control is not installed
+        # User select for downloading file
         PS3="Select download file: "
         select filename in $assets; do break; done
-        echo "Downloading... $filename" 
-
-        # printf "${COL_NC}%s ${INFO}\n" "Downloading latest ${APP_NAME}..."
-        
-
-        # node -pe 'JSON.parse(process.argv[1]).assets' "${latest_release_json}"
-        # node -pe 'JSON.parse(process.argv[1]).assets.map((asset) => { return asset.name })' "$(curl -sSL "https://api.github.com/repos/borsTiHD/pi-control/releases/latest")"
+        printf "${COL_NC}%s ${INFO}\n" "Downloading... ${filename}"
     fi
 }
 
