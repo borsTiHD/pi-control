@@ -39,7 +39,7 @@ readonly URL_VERSION_CHECK="https://raw.githubusercontent.com/borsTiHD/pi-contro
 readonly GIT_REPO="https://github.com/borsTiHD/pi-control"
 
 # Const Paths
-readonly PI_CONTROL_INSTALL_DIR="~/pi-control/" # "/opt/pi-control/"
+readonly PI_CONTROL_INSTALL_DIR="/home/pi/pi-control/" # "/opt/pi-control/"
 
 # Const Colors (pi-hole)
 readonly COL_NC='\e[0m' # No Color
