@@ -107,6 +107,15 @@ version_greater_equal() {
     printf '%s\n%s\n' "$2" "$1" | sort --check=quiet --version-sort
 }
 
+remove_file() {
+    # Removing existing file
+    local path_file="$1"
+    if test -f "$path_file"; then
+        printf "${COL_NC}%s ${INFO}\n" "Deleting file: ${path_file}"
+        sudo rm $path_file
+    fi
+}
+
 check_root() {
     # Check if script executed with root permissions
     if [ "$(whoami)" != "root" ]; then
@@ -236,10 +245,7 @@ check_pi_control() {
 
         # Removing existing file with same name
         local path_file="${PI_CONTROL_DOWNLOAD_DIR}${filename}"
-        if test -f "$path_file"; then
-            printf "${COL_NC}%s ${INFO}\n" "Deleting existing file before downloading..."
-            sudo rm $path_file
-        fi
+        remove_file "${path_file}"
 
         # Parsing download url
         # Javascript will search array with selected filename and returns 'browser_download_url'
