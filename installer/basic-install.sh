@@ -153,10 +153,10 @@ check_yarn() {
     if is_command yarn ; then
         local installed_yarn_version=$(yarn -v)
         if version_greater_equal "${installed_yarn_version}" "${YARN_VERSION_NEEDED}"; then
-            printf "${COL_NC}%s ${TICK}\n" "Installed Yarn: ${installed_yarn_version}"
+            printf "${COL_NC}%s ${TICK}\n" "Installed Yarn: v${installed_yarn_version}"
         else
             # yarn is installed but too old
-            printf "${COL_NC}%s ${CROSS}\n" "Installed Yarn is too old. Installed: ${installed_yarn_version}"
+            printf "${COL_NC}%s ${CROSS}\n" "Installed Yarn is too old. Installed: v${installed_yarn_version}"
             printf "${COL_NC}%s ${CROSS}\n" "Need Yarn v${YARN_VERSION_NEEDED} or newer..."
 
             # Asking user if he wants to install yarn
