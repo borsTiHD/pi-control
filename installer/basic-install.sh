@@ -47,7 +47,7 @@ readonly COL_LIGHT_GREEN='\e[1;32m'
 readonly COL_LIGHT_RED='\e[1;31m'
 readonly TICK="[${COL_LIGHT_GREEN}✓${COL_NC}]"
 readonly CROSS="[${COL_LIGHT_RED}✗${COL_NC}]"
-readonly INFO="[i]"
+readonly INFO="[[${COL_BLUE}i${COL_NC}]"
 
 is_command() {
     # Checks to see if the given command (passed as a string argument) exists on the system.
@@ -156,10 +156,10 @@ node_install() {
     # Asking user if he wants to install node
     if user_prompt "Do you wish to install NodeJS?" ; then
         # User wish to install node
-        printf "${COL_NC}%s ${TICK}\n" "Installing NodeJS..."
+        printf "${COL_NC}%s ${INFO}\n" "Installing NodeJS..."
     else
         # User dont want to install node... script will stop
-        printf "${COL_NC}%s ${CROSS}\n" "Please install NodeJS manually."
+        printf "${COL_NC}%s ${INFO}\n" "Please install NodeJS manually."
         exit_with_error
     fi
 }
