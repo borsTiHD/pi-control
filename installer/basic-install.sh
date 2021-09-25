@@ -60,13 +60,12 @@ is_command() {
 exit_with_error() {
     # Exit script with error
     printf "${COL_LIGHT_RED}%s\n" "Script was terminated, please note the errors and try again."
-    exit_with_error
+    exit 1
 }
 
 welcome_message() {
     printf "${COL_BLUE}" # Blue text
     printf "+----------------------------------------------+\n"
-    printf "| PUT LOGO HERE                                |\n"
     printf "|                                              |\n"
     printf "| Welcome to install Pi-Control                |\n"
     printf "|                                              |\n"
@@ -77,7 +76,26 @@ welcome_message() {
     printf "+----------------------------------------------+\n\n"
 }
 
+user_prompt() {
+    # Asking user a question and returning true/false
+    # Param 1 is the question
+    printf "${COL_NC}%s\n" "$1"
+    select yn in "Yes" "No"; do
+        case $yn in
+            y|Y|yes|Yes ) true;;
+            n|N|no|No ) false;;
+        esac
+    done
+}
+
+version_greater_equal() {
+    # Comparing two versions
+    # e.p.: version_greater_equal "${installed_node_version:1}" "${NODE_VERSION_NEEDED}"
+    printf '%s\n%s\n' "$2" "$1" | sort --check=quiet --version-sort
+}
+
 check_root() {
+    # Check if script executed with root permissions
     if [ "$(whoami)" != "root" ]; then
         printf "${COL_NC}%s ${CROSS}\n${COL_NC}%s ${CROSS}\n" "You do not have sufficient permissions to proceed with the installation." "Please repeat the process with root (sudo) privileges!"
         exit_with_error
@@ -101,25 +119,44 @@ check_installer_version() {
     fi
 }
 
-check_nodejs() {
-    version_greater_equal() {
-        printf '%s\n%s\n' "$2" "$1" | sort --check=quiet --version-sort
-    }
-
+check_node() {
     # Checks if nodejs is installed
     if is_command node ; then
         local installed_node_version=$(node -v) # Showing string without "v" -> ${installed_node_version:1}
         if version_greater_equal "${installed_node_version:1}" "${NODE_VERSION_NEEDED}"; then
             printf "${COL_NC}%s ${TICK}\n" "Installed NodeJS: ${installed_node_version}"
+
+            # TODO !!! DELETE ME - JUST FOR TESTING HERE!!!
+            # Asking user if he wants to install node
+            # Stopping script if user answered no
+            node_install
         else
             # NodeJS is installed but too old
             printf "${COL_NC}%s ${CROSS}\n" "Installed NodeJS is too old. Installed: ${installed_node_version}"
             printf "${COL_NC}%s ${CROSS}\n" "Need NodeJS v${NODE_VERSION_NEEDED} or newer..."
-            exit_with_error
+
+            # Asking user if he wants to install node
+            # Stopping script if user answered no
+            node_install
         fi
     else
         # Otherwise, tell the user they need to install nodejs
         printf "${COL_NC}%s ${CROSS}\n" "NodeJS not installed. Needed at least NodeJS v${NODE_VERSION_NEEDED}"
+
+        # Asking user if he wants to install node
+        # Stopping script if user answered no
+        node_install
+    fi
+}
+
+node_install() {
+    # Asking user if he wants to install node
+    if do_you_want_to_install_node "Do you wish to install NodeJS?" ; then
+        # User wish to install node
+        printf "${COL_NC}%s ${TICK}\n" "Installing NodeJS..."
+    else
+        # User dont want to install node... script will stop
+        printf "${COL_NC}%s ${CROSS}\n" "Please install NodeJS manually."
         exit_with_error
     fi
 }
@@ -131,7 +168,7 @@ main() {
     printf "${COL_NC}%s\n" "Checking dependencies..."
     check_root
     check_installer_version
-    check_nodejs
+    check_node
 }
 
 # Starting...
