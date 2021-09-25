@@ -39,7 +39,7 @@ readonly URL_VERSION_CHECK="https://raw.githubusercontent.com/borsTiHD/pi-contro
 readonly GIT_REPO="https://github.com/borsTiHD/pi-control"
 
 # Const Paths
-readonly PI_CONTROL_INSTALL_DIR="/opt/pi-control/"
+readonly PI_CONTROL_INSTALL_DIR="~/pi-control/" # "/opt/pi-control/"
 
 # Const Colors (pi-hole)
 readonly COL_NC='\e[0m' # No Color
@@ -180,7 +180,9 @@ check_pi_control() {
 
     # Checks if install directory exists
     if [ -d "${PI_CONTROL_INSTALL_DIR}" ]; then
-        printf "${COL_NC}%s ${TICK}\n" "Pi-Control already installed: xxx"
+        local package_json=$(cat ${PI_CONTROL_INSTALL_DIR}package.json)
+        local pi_control_installed="$(node -p "JSON.parse(\`$package_json\`)['version']")"
+        printf "${COL_NC}%s ${TICK}\n" "Pi-Control already installed: ${pi_control_installed}"
     else
         printf "${COL_NC}%s ${CROSS}\n" "Pi-Control not installed."
     fi
