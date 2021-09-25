@@ -30,7 +30,7 @@ export PATH+=':/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin'
 readonly INSTALLER_VERSION=1 # Must be identical with online version
 
 # Const Required Dependencie Versions
-readonly NEEDED_NODE_VERSION="17.0.0"
+readonly NEEDED_NODE_VERSION="16.6.1"
 
 # Const URLs
 readonly URL_INSTALL_SCRIPT="https://raw.githubusercontent.com/borsTiHD/pi-control/feature/install-script/installer/basic-install.sh" # TODO!!! - Needs to set branch to main in url
