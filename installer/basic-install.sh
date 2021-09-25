@@ -27,7 +27,7 @@ export PATH+=':/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin'
 # Local variables will be in lowercase and will exist only within functions
 
 # Const Version
-readonly INSTALLER_VERSION=1 # Must be identical with online version
+readonly INSTALLER_VERSION="1" # Must be identical with online version
 
 # Const URLs
 readonly URL_INSTALL_SCRIPT="https://raw.githubusercontent.com/borsTiHD/pi-control/feature/install-script/installer/basic-install.sh" # TODO!!! - Needs to set branch to main in url
@@ -62,7 +62,7 @@ welcome_message() {
     printf "| Welcome to install Pi-Control                |\n"
     printf "|                                              |\n"
     printf "| Installer: v%s                                |\n" "${INSTALLER_VERSION}"
-    printf "| More Infos:                                  |\n"
+    printf "| More infos:                                  |\n"
     printf "| - ${GIT_REPO}     |\n"
     printf "|                                              |\n"
     printf "+----------------------------------------------+\n\n"
