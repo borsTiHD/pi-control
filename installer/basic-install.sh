@@ -61,9 +61,9 @@ welcome_message() {
     printf "|                                              |\n"
     printf "| Welcome to install Pi-Control                |\n"
     printf "|                                              |\n"
-    printf "| Installer: v%s                               |\n" "${INSTALLER_VERSION}"
+    printf "| Installer: v%s                                |\n" "${INSTALLER_VERSION}"
     printf "| More Infos:                                  |\n"
-    printf "| - ${GIT_REPO} |\n"
+    printf "| - ${GIT_REPO}     |\n"
     printf "|                                              |\n"
     printf "+----------------------------------------------+\n\n"
 }
