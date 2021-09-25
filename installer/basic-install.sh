@@ -214,14 +214,24 @@ check_pi_control() {
         local pi_control_version="$(cd "${PI_CONTROL_INSTALL_DIR}" && node -p "require('./package.json').version")"
         printf "${COL_NC}%s ${TICK}\n" "${APP_NAME} already installed: v${pi_control_version}"
     else
-        # Pi-Control is not installed
-        printf "${COL_NC}%s ${INFO}\n" "Downloading latest ${APP_NAME}..."
-        
         # Parsing latest release
         local latest_release_json=$(curl -sSL "${URL_LATEST_RELEASE}")
-        printf "\n\n${COL_NC}%s\n" "${latest_release_json}"
+        local js_parse="JSON.parse(process.argv[1]).assets.map((asset) => { return asset.name })"
+        local assets=$(node -pe "${js_parse}" "$(curl -sSL "${URL_LATEST_RELEASE}")")
 
-        # node -pe 'JSON.parse(process.argv[1]).foo' '{ "foo": "bar" }'
+        printf "${assets}"
+
+
+        # Pi-Control is not installed
+        PS3="Select download file: "
+        select filename in assets; do break; done
+        echo "Downloading... $filename" 
+
+        # printf "${COL_NC}%s ${INFO}\n" "Downloading latest ${APP_NAME}..."
+        
+
+        # node -pe 'JSON.parse(process.argv[1]).assets' "${latest_release_json}"
+        # node -pe 'JSON.parse(process.argv[1]).assets.map((asset) => { return asset.name })' "$(curl -sSL "https://api.github.com/repos/borsTiHD/pi-control/releases/latest")"
     fi
 }
 
