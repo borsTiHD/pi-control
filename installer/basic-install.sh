@@ -96,7 +96,13 @@ check_installer_version() {
 
 check_nodejs() {
     # Checks if nodejs is installed
-    printf "checking nodejs..."
+    if is_command node ; then
+        printf "${COL_NC}\n%s\n" "Checking NodeJS version."
+    else
+        # Otherwise, tell the user they need to install nodejs
+        printf "${COL_NC}%s ${CROSS}\n" "NodeJS not installed. Needed at least NodeJS v16.x"
+        exit 1
+    fi
 }
 
 main() {
