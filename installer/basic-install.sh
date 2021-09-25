@@ -218,7 +218,7 @@ check_pi_control() {
         printf "${COL_NC}%s ${INFO}\n" "Downloading latest ${APP_NAME}..."
         
         # Parsing latest release
-        local latest_release_json=$($(curl -sSL "${URL_LATEST_RELEASE}"))
+        local latest_release_json=$(curl -sSL "${URL_LATEST_RELEASE}")
         printf "\n\n${COL_NC}%s\n" "${latest_release_json}"
 
         # node -pe 'JSON.parse(process.argv[1]).foo' '{ "foo": "bar" }'
