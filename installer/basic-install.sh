@@ -106,7 +106,7 @@ check_nodejs() {
         else
             # NodeJS is installed but wrong version
             # Check if installed node is newer or older
-            if [[ "xxx" == "xxx" ]]; then
+            if [[ "xxx" == "yyy" ]]; then
                 printf "${COL_NC}%s ${TICK}\n" "Installed NodeJS is newer: ${installed_node_version}"
             else
                 printf "${COL_NC}%s ${CROSS}\n" "Installed NodeJS is too old. Need NodeJS v${NODE_VERSION}.x or later."
