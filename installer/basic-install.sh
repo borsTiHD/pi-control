@@ -254,6 +254,8 @@ check_pi_control() {
         printf "${COL_NC}%s ${INFO}\n" "Downloading... ${filename}"
 
         wget -q --show-progress -P "$PI_CONTROL_DOWNLOAD_DIR" "$asset_download_url"
+
+        # TODO!!! Downloaded file needs to be removed after unpacking / installing
     fi
 }
 
