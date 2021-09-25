@@ -220,7 +220,7 @@ check_pi_control() {
         # Parsing latest release
         local latest_release_json=$(curl -sSL "${URL_LATEST_RELEASE}")
         local js_parse="JSON.parse(process.argv[1]).assets.map((asset) => { return asset.name }).join(', ')" # Javascript parsing latest_release json and returning asset names as string, seperatet with ", "
-        local assets_string=$(node -pe "${js_parse}" "$(curl -sSL "${URL_LATEST_RELEASE}")")
+        local assets_string=$(node -pe "${js_parse}" "${latest_release_json}")
         # test="test1, test2, test3, test4"
         IFS=', ' read -r -a assets <<< "$assets_string" # Splitting string into array
 
@@ -234,6 +234,10 @@ check_pi_control() {
         done
 
         printf "${COL_NC}%s ${INFO}\n" "Downloading... ${filename}"
+
+        # Parsing download url
+        local asset_download_url=$(node -pe "JSON.parse('${latest_release_json}').assets.find((asset) => asset.name === '${filename}').browser_download_url")
+        printf "${COL_NC}%s\n" "Download URL: ${asset_download_url}"
     fi
 }
 
