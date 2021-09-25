@@ -104,7 +104,9 @@ check_nodejs() {
     if is_command node ; then
         local installed_node_version=$(node -v)
 
-        version_greater_equal "${installed_node_version}" "${NEEDED_NODE_VERSION}" || die "need ${NEEDED_NODE_VERSION} or above"
+        printf "NODE TEST: ${installed_node_version:1}\n"
+        version_greater_equal "${installed_node_version:1}" "${NEEDED_NODE_VERSION}" || die "need ${NEEDED_NODE_VERSION} or above"
+        printf "-----------------\n"
 
         if [[ $installed_node_version == *"v${NEEDED_NODE_VERSION}"* ]]; then
             printf "${COL_NC}%s ${TICK}\n" "Installed NodeJS: ${installed_node_version}"
