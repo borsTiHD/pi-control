@@ -33,6 +33,9 @@ readonly INSTALLER_VERSION=1 # Must be identical with online version
 readonly NODE_VERSION_NEEDED="16.0.0"
 readonly YARN_VERSION_NEEDED="1.22.0"
 
+# Const Package Dependencies stored as an array
+readonly PI_CONTROL_DEPS=(sudo apt-get curl jq git)
+
 # Const Github
 readonly AUTHOR="borsTiHD"
 readonly APP_NAME="pi-control"
@@ -178,6 +181,21 @@ check_yarn() {
     fi
 }
 
+check_packages() {
+    # Asking user if he wants to install required packages
+    printf "\n${COL_NC}%s ${INFO}\n" "The following packages are required:"
+    printf '%s\n' "${PI_CONTROL_DEPS[@]}"
+    if user_prompt "Do you wish to install required packages?" ; then
+        # User wish to install packages
+        printf "${COL_NC}%s ${INFO}\n" "Installing packages..."
+        # install_dependent_packages "${PI_CONTROL_DEPS[@]}" # TODO !! UNCOMMENT THIS !!!
+    else
+        # User dont want to install packages... script will stop
+        printf "${COL_NC}%s ${INFO}\n" "Please install packages manually."
+        exit_with_error
+    fi
+}
+
 check_pi_control() {
     # TODO -> Check if pi-control is already installed
     # If installed, check pi-control version with latest version
@@ -194,6 +212,10 @@ check_pi_control() {
 
         # Creating folder
         mkdir -p "${PI_CONTROL_INSTALL_DIR}"
+
+        # Parsing latest release
+        
+        # node -pe 'JSON.parse(process.argv[1]).foo' '{ "foo": "bar" }'
     fi
 }
 
@@ -204,15 +226,15 @@ node_install() {
         printf "${COL_NC}%s ${INFO}\n" "Installing NodeJS..."
 
         # Installing node
-        if is_command apt ; then
+        if is_command apt-get ; then
             curl -sL https://deb.nodesource.com/setup_16.x | sudo bash -
-            sudo apt install nodejs
+            sudo apt-get install nodejs
 
             # Checking node again
             check_node
         else
             # User dont want to install node... script will stop
-            printf "${COL_NC}%s ${CROSS}\n" "Can't install NodeJS, because apt is not installed."
+            printf "${COL_NC}%s ${CROSS}\n" "Can't install NodeJS, because apt-get is not installed."
             exit_with_error
         fi
     else
@@ -240,6 +262,66 @@ yarn_install() {
     fi
 }
 
+
+install_dependent_packages() {
+    # From pi-hole
+
+    # Install packages passed in via argument array
+    # No spinner - conflicts with set -e
+    declare -a installArray
+
+    # Debian based package install - debconf will download the entire package list
+    # so we just create an array of packages not currently installed to cut down on the
+    # amount of download traffic.
+    # NOTE: We may be able to use this installArray in the future to create a list of package that were
+    # installed by us, and remove only the installed packages, and not the entire list.
+    if is_command apt-get ; then
+        # For each package, check if it's already installed (and if so, don't add it to the installArray)
+        for i in "$@"; do
+            printf "  %b Checking for %s..." "${INFO}" "${i}"
+            if dpkg-query -W -f='${Status}' "${i}" 2>/dev/null | grep "ok installed" &> /dev/null; then
+                printf "%b  %b Checking for %s\\n" "${OVER}" "${TICK}" "${i}"
+            else
+                printf "%b  %b Checking for %s (will be installed)\\n" "${OVER}" "${INFO}" "${i}"
+                installArray+=("${i}")
+            fi
+        done
+        # If there's anything to install, install everything in the list.
+        if [[ "${#installArray[@]}" -gt 0 ]]; then
+            test_dpkg_lock
+            printf "  %b Processing %s install(s) for: %s, please wait...\\n" "${INFO}" "${PKG_MANAGER}" "${installArray[*]}"
+            printf '%*s\n' "$columns" '' | tr " " -;
+            "${PKG_INSTALL[@]}" "${installArray[@]}"
+            printf '%*s\n' "$columns" '' | tr " " -;
+            return
+        fi
+        printf "\\n"
+        return 0
+    fi
+
+    # Install Fedora/CentOS packages
+    for i in "$@"; do
+    # For each package, check if it's already installed (and if so, don't add it to the installArray)
+        printf "  %b Checking for %s..." "${INFO}" "${i}"
+        if "${PKG_MANAGER}" -q list installed "${i}" &> /dev/null; then
+            printf "%b  %b Checking for %s\\n" "${OVER}" "${TICK}" "${i}"
+        else
+            printf "%b  %b Checking for %s (will be installed)\\n" "${OVER}" "${INFO}" "${i}"
+            installArray+=("${i}")
+        fi
+    done
+    # If there's anything to install, install everything in the list.
+    if [[ "${#installArray[@]}" -gt 0 ]]; then
+        printf "  %b Processing %s install(s) for: %s, please wait...\\n" "${INFO}" "${PKG_MANAGER}" "${installArray[*]}"
+        printf '%*s\n' "$columns" '' | tr " " -;
+        "${PKG_INSTALL[@]}" "${installArray[@]}"
+        printf '%*s\n' "$columns" '' | tr " " -;
+        return
+    fi
+    printf "\\n"
+    return 0
+}
+
 main() {
     clear # clears terminal
     welcome_message
@@ -249,6 +331,9 @@ main() {
     check_installer_version # Checking installer script
     check_node # Checking node
     check_yarn # Checking yarn
+
+    printf "${COL_NC}%s\n" "Checking os packages..."
+    check_packages
 
     printf "\n${COL_NC}%s\n" "Checking ${APP_NAME}..."
     check_pi_control # Checking pi-control
