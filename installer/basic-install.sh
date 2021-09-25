@@ -282,7 +282,7 @@ main() {
     check_node # Checking node
     check_yarn # Checking yarn
 
-    printf "${COL_NC}%s\n" "Checking os packages..."
+    printf "\n${COL_NC}%s\n" "Checking os packages..."
     check_packages # Checking required packages
 
     printf "\n${COL_NC}%s\n" "Checking ${APP_NAME}..."
