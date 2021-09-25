@@ -31,6 +31,7 @@ readonly INSTALLER_VERSION=1 # Must be identical with online version
 
 # Const Required Dependencie Versions
 readonly NODE_VERSION_NEEDED="16.0.0"
+readonly YARN_VERSION_NEEDED="1.22.0"
 
 # Const URLs
 readonly URL_INSTALL_SCRIPT="https://raw.githubusercontent.com/borsTiHD/pi-control/feature/install-script/installer/basic-install.sh" # TODO!!! - Needs to set branch to main in url
@@ -128,11 +129,6 @@ check_node() {
         local installed_node_version=$(node -v) # Showing string without "v" -> ${installed_node_version:1}
         if version_greater_equal "${installed_node_version:1}" "${NODE_VERSION_NEEDED}"; then
             printf "${COL_NC}%s ${TICK}\n" "Installed NodeJS: ${installed_node_version}"
-
-            # TODO !!! DELETE ME - JUST FOR TESTING HERE!!!
-            # Asking user if he wants to install node
-            # Stopping script if user answered no
-            node_install
         else
             # NodeJS is installed but too old
             printf "${COL_NC}%s ${CROSS}\n" "Installed NodeJS is too old. Installed: ${installed_node_version}"
@@ -149,6 +145,31 @@ check_node() {
         # Asking user if he wants to install node
         # Stopping script if user answered no
         node_install
+    fi
+}
+
+check_yarn() {
+    # Checks if yarn is installed
+    if is_command yarn ; then
+        local installed_yarn_version=$(yarn -v)
+        if version_greater_equal "${installed_yarn_version:1}" "${YARN_VERSION_NEEDED}"; then
+            printf "${COL_NC}%s ${TICK}\n" "Installed Yarn: ${installed_yarn_version}"
+        else
+            # yarn is installed but too old
+            printf "${COL_NC}%s ${CROSS}\n" "Installed Yarn is too old. Installed: ${installed_yarn_version}"
+            printf "${COL_NC}%s ${CROSS}\n" "Need Yarn v${YARN_VERSION_NEEDED} or newer..."
+
+            # Asking user if he wants to install yarn
+            # Stopping script if user answered no
+            yarn_install
+        fi
+    else
+        # Otherwise, tell the user they need to install yarn
+        printf "${COL_NC}%s ${CROSS}\n" "Yarn not installed. Needed at least Yarn v${NODE_VERSION_NEEDED}"
+
+        # Asking user if he wants to install node
+        # Stopping script if user answered no
+        yarn_install
     fi
 }
 
@@ -177,14 +198,33 @@ node_install() {
     fi
 }
 
+yarn_install() {
+    # Asking user if he wants to install yarn
+    if user_prompt "Do you wish to install Yarn?" ; then
+        # User wish to install yarn
+        printf "${COL_NC}%s ${INFO}\n" "Installing Yarn..."
+
+        # Installing yarn
+        npm install --global yarn
+
+        # Checking yarn again
+        check_yarn
+    else
+        # User dont want to install yarn... script will stop
+        printf "${COL_NC}%s ${INFO}\n" "Please install Yarn manually."
+        exit_with_error
+    fi
+}
+
 main() {
     clear # clears terminal
     welcome_message
 
     printf "${COL_NC}%s\n" "Checking dependencies..."
-    check_root
-    check_installer_version
-    check_node
+    check_root # Checking permissions
+    check_installer_version # Checking installer script
+    check_node # Checking node
+    check_yarn # Checking yarn
 }
 
 # Starting...
