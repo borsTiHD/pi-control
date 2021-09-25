@@ -230,7 +230,7 @@ check_pi_control() {
 
         # User select for downloading file
         PS3="Select download file: "
-        select filename in $assets; do break; done
+        select filename in ${assets[@]}; do break; done
         printf "${COL_NC}%s ${INFO}\n" "Downloading... ${filename}"
     fi
 }
