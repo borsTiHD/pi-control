@@ -30,7 +30,7 @@ export PATH+=':/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin'
 readonly INSTALLER_VERSION=1 # Must be identical with online version
 
 # Const Required Dependencie Versions
-readonly NODE_VERSION="14"
+readonly NEEDED_NODE_VERSION="16.0.0"
 
 # Const URLs
 readonly URL_INSTALL_SCRIPT="https://raw.githubusercontent.com/borsTiHD/pi-control/feature/install-script/installer/basic-install.sh" # TODO!!! - Needs to set branch to main in url
@@ -72,8 +72,7 @@ welcome_message() {
 }
 
 check_root() {
-    if [ "$(whoami)" != "root" ]
-    then
+    if [ "$(whoami)" != "root" ]; then
         printf "${COL_NC}%s ${CROSS}\n${COL_NC}%s ${CROSS}\n" "You do not have sufficient permissions to proceed with the installation." "Please repeat the process with root (sudo) privileges!"
         exit 1
     fi
@@ -83,8 +82,7 @@ check_installer_version() {
     # Checks if the used script is equal to the current version hosted on github
     # If it is unequal, it tries to start the newest version from github with sudo rights
     local remote_version=$(curl -sL "${URL_VERSION_CHECK}")
-    if [[ "$remote_version" == "$INSTALLER_VERSION" ]]
-    then
+    if [[ "$remote_version" == "$INSTALLER_VERSION" ]]; then
         printf "${COL_NC}%s ${TICK}\n" "Current install script is used."
     else
         printf "${COL_NC}%s ${CROSS}\n" "Outdated install script is used."
@@ -98,10 +96,17 @@ check_installer_version() {
 }
 
 check_nodejs() {
+    version_greater_equal() {
+        printf '%s\n%s\n' "$2" "$1" | sort --check=quiet --version-sort
+    }
+
     # Checks if nodejs is installed
     if is_command node ; then
         local installed_node_version=$(node -v)
-        if [[ $installed_node_version == *"v${NODE_VERSION}"* ]]; then
+
+        version_greater_equal "${installed_node_version}" "${NEEDED_NODE_VERSION}" || die "need ${NEEDED_NODE_VERSION} or above"
+
+        if [[ $installed_node_version == *"v${NEEDED_NODE_VERSION}"* ]]; then
             printf "${COL_NC}%s ${TICK}\n" "Installed NodeJS: ${installed_node_version}"
         else
             # NodeJS is installed but wrong version
@@ -109,13 +114,13 @@ check_nodejs() {
             if [[ "xxx" == "yyy" ]]; then
                 printf "${COL_NC}%s ${TICK}\n" "Installed NodeJS is newer: ${installed_node_version}"
             else
-                printf "${COL_NC}%s ${CROSS}\n" "Installed NodeJS is too old. Need NodeJS v${NODE_VERSION}.x or later."
+                printf "${COL_NC}%s ${CROSS}\n" "Installed NodeJS is too old. Need NodeJS v${NEEDED_NODE_VERSION} or newer."
                 exit 1
             fi
         fi
     else
         # Otherwise, tell the user they need to install nodejs
-        printf "${COL_NC}%s ${CROSS}\n" "NodeJS not installed. Needed at least NodeJS v${NODE_VERSION}.x"
+        printf "${COL_NC}%s ${CROSS}\n" "NodeJS not installed. Needed at least NodeJS v${NEEDED_NODE_VERSION}"
         exit 1
     fi
 }
