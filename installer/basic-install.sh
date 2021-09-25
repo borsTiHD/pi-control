@@ -215,7 +215,7 @@ check_pi_control() {
         printf "${COL_NC}%s ${TICK}\n" "${APP_NAME} already installed: v${pi_control_version}"
     else
         # Pi-Control is not installed
-        printf "${COL_NC}%s ${TICK}\n" "Getting latest release."
+        printf "${COL_NC}%s ${INFO}\n" "Getting latest release."
 
         # Parsing latest release
         local latest_release_json=$(curl -sSL "${URL_LATEST_RELEASE}")
