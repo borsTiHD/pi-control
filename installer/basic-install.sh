@@ -188,7 +188,7 @@ check_pi_control() {
         printf "${COL_NC}%s ${INFO}\n" "Downloading latest Pi-Control..."
 
         # Creating folder
-        mkdir -p PI_CONTROL_INSTALL_DIR
+        mkdir -p "${PI_CONTROL_INSTALL_DIR}"
     fi
 }
 
