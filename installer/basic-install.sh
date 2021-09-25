@@ -84,7 +84,8 @@ check_installer_version() {
         printf "${COL_NC}%s ${CROSS}\n" "Outdated install script is used."
         printf "${COL_NC}%s\n" "Try to run current script..."
         sleep 1
-        curl -sSL "${URL_INSTALL_SCRIPT}" # | sudo bash
+        # curl -sSL "${URL_INSTALL_SCRIPT}" # | sudo bash
+        curl -sSL "https://raw.githubusercontent.com/borsTiHD/pi-control/feature/install-script/installer/basic-install.sh" # | sudo bash
         exit 1
     fi
 }
