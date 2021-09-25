@@ -216,10 +216,15 @@ check_pi_control() {
     else
         # Parsing latest release
         local latest_release_json=$(curl -sSL "${URL_LATEST_RELEASE}")
-        local js_parse="JSON.parse(process.argv[1]).assets.map((asset) => { return asset.name })"
-        local assets=$(node -pe "${js_parse}" "$(curl -sSL "${URL_LATEST_RELEASE}")")
+        local js_parse="JSON.parse(process.argv[1]).assets.map((asset) => { return asset.name }).join(', ')"
+        local assets_string=$(node -pe "${js_parse}" "$(curl -sSL "${URL_LATEST_RELEASE}")")
+        eval assets=($assets_string)
 
+        printf "\n"
         printf "${assets}"
+        printf "\n"
+        printf '%s, ' "${PI_CONTROL_DEPS[@]}"
+        printf "\n"
 
 
         # Pi-Control is not installed
