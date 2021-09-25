@@ -30,7 +30,7 @@ export PATH+=':/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin'
 readonly INSTALLER_VERSION=1 # Must be identical with online version
 
 # Const Required Dependencie Versions
-readonly NEEDED_NODE_VERSION="16.6.2"
+readonly NODE_VERSION_NEEDED="16.0.0"
 
 # Const URLs
 readonly URL_INSTALL_SCRIPT="https://raw.githubusercontent.com/borsTiHD/pi-control/feature/install-script/installer/basic-install.sh" # TODO!!! - Needs to set branch to main in url
@@ -103,17 +103,17 @@ check_nodejs() {
     # Checks if nodejs is installed
     if is_command node ; then
         local installed_node_version=$(node -v) # Showing string without "v" -> ${installed_node_version:1}
-        if version_greater_equal "${installed_node_version:1}" "${NEEDED_NODE_VERSION}"; then
+        if version_greater_equal "${installed_node_version:1}" "${NODE_VERSION_NEEDED}"; then
             printf "${COL_NC}%s ${TICK}\n" "Installed NodeJS: ${installed_node_version}"
         else
             # NodeJS is installed but too old
             printf "${COL_NC}%s ${CROSS}\n" "Installed NodeJS is too old. Installed: ${installed_node_version}"
-            printf "${COL_NC}%s ${CROSS}\n" "Need NodeJS v${NEEDED_NODE_VERSION} or newer..."
+            printf "${COL_NC}%s ${CROSS}\n" "Need NodeJS v${NODE_VERSION_NEEDED} or newer..."
             exit 1
         fi
     else
         # Otherwise, tell the user they need to install nodejs
-        printf "${COL_NC}%s ${CROSS}\n" "NodeJS not installed. Needed at least NodeJS v${NEEDED_NODE_VERSION}"
+        printf "${COL_NC}%s ${CROSS}\n" "NodeJS not installed. Needed at least NodeJS v${NODE_VERSION_NEEDED}"
         exit 1
     fi
 }
