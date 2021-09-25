@@ -79,7 +79,7 @@ check_root() {
 check_installer_version() {
     # Checks if the used script is equal the current version hosted on github
     local remote_version=$(curl -sL "${URL_VERSION_CHECK}")
-    if [[ remote_version == INSTALLER_VERSIONCODE ]]
+    if [[ remote_version == INSTALLER_VERSION ]]
     then
         printf "${COL_NC}%s ${TICK}\n" "Current install script is used."
     else
