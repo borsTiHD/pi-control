@@ -34,7 +34,7 @@ readonly NODE_VERSION_NEEDED="16.0.0"
 readonly YARN_VERSION_NEEDED="1.22.0"
 
 # Const Package Dependencies stored as an array
-readonly PI_CONTROL_DEPS=(sudo apt-get curl jq git)
+readonly PI_CONTROL_DEPS=(sudo apt-get curl git)
 
 # Const Github
 readonly AUTHOR="borsTiHD"
@@ -216,8 +216,11 @@ check_pi_control() {
     else
         # Pi-Control is not installed
         printf "${COL_NC}%s ${INFO}\n" "Downloading latest ${APP_NAME}..."
-        # Parsing latest release
         
+        # Parsing latest release
+        local latest_release_json=$($(curl -sSL "${URL_LATEST_RELEASE}"))
+        printf "\n\n${COL_NC}%s\n" "${latest_release_json}"
+
         # node -pe 'JSON.parse(process.argv[1]).foo' '{ "foo": "bar" }'
     fi
 }
