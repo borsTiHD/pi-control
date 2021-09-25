@@ -57,6 +57,12 @@ is_command() {
     command -v "${check_command}" >/dev/null 2>&1
 }
 
+exit_with_error() {
+    # Exit script with error
+    printf "${COL_LIGHT_RED}%s\n" "Script was terminated, please note the errors and try again."
+    exit_with_error
+}
+
 welcome_message() {
     printf "${COL_BLUE}" # Blue text
     printf "+----------------------------------------------+\n"
@@ -74,7 +80,7 @@ welcome_message() {
 check_root() {
     if [ "$(whoami)" != "root" ]; then
         printf "${COL_NC}%s ${CROSS}\n${COL_NC}%s ${CROSS}\n" "You do not have sufficient permissions to proceed with the installation." "Please repeat the process with root (sudo) privileges!"
-        exit 1
+        exit_with_error
     fi
 }
 
@@ -91,7 +97,7 @@ check_installer_version() {
         printf "${COL_NC}%s\n" "Try to run current script..."
         sleep 1
         curl -sSL "${URL_INSTALL_SCRIPT}" | sudo bash
-        exit 1
+        exit_with_error
     fi
 }
 
@@ -109,12 +115,12 @@ check_nodejs() {
             # NodeJS is installed but too old
             printf "${COL_NC}%s ${CROSS}\n" "Installed NodeJS is too old. Installed: ${installed_node_version}"
             printf "${COL_NC}%s ${CROSS}\n" "Need NodeJS v${NODE_VERSION_NEEDED} or newer..."
-            exit 1
+            exit_with_error
         fi
     else
         # Otherwise, tell the user they need to install nodejs
         printf "${COL_NC}%s ${CROSS}\n" "NodeJS not installed. Needed at least NodeJS v${NODE_VERSION_NEEDED}"
-        exit 1
+        exit_with_error
     fi
 }
 
