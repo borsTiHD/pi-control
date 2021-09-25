@@ -26,8 +26,11 @@ export PATH+=':/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin'
 # These variables should all be GLOBAL variables, written in CAPS
 # Local variables will be in lowercase and will exist only within functions
 
-# Const Version
+# Const Installer Version
 readonly INSTALLER_VERSION=1 # Must be identical with online version
+
+# Const Required Dependencie Versions
+readonly NODE_VERSION="v16"
 
 # Const URLs
 readonly URL_INSTALL_SCRIPT="https://raw.githubusercontent.com/borsTiHD/pi-control/feature/install-script/installer/basic-install.sh" # TODO!!! - Needs to set branch to main in url
@@ -97,7 +100,14 @@ check_installer_version() {
 check_nodejs() {
     # Checks if nodejs is installed
     if is_command node ; then
-        printf "${COL_NC}\n%s\n" "Checking NodeJS version."
+        local node_version=$(node -v)
+        if [[ $node_version == *"${NODE_VERSION}"* ]]; then
+            printf "${COL_NC}%s ${TICK}\n" "Installed NodeJS: ${node_version}"
+        else
+            # Otherwise, tell the user they need to install nodejs
+            printf "${COL_NC}%s ${CROSS}\n" "NodeJS not installed. Need NodeJS ${node_version}.x or later."
+            exit 1
+        fi
     else
         # Otherwise, tell the user they need to install nodejs
         printf "${COL_NC}%s ${CROSS}\n" "NodeJS not installed. Needed at least NodeJS v16.x"
