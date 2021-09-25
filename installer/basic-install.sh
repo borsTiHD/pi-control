@@ -77,7 +77,8 @@ check_root() {
 }
 
 check_installer_version() {
-    # Checks if the used script is equal the current version hosted on github
+    # Checks if the used script is equal to the current version hosted on github
+    # If it is unequal, it tries to start the newest version from github with sudo rights
     local remote_version=$(curl -sL "${URL_VERSION_CHECK}")
     if [[ "$remote_version" == "$INSTALLER_VERSION" ]]
     then
