@@ -103,7 +103,7 @@ check_nodejs() {
     # Checks if nodejs is installed
     if is_command node ; then
         local installed_node_version=$(node -v) # Showing string without "v" -> ${installed_node_version:1}
-        if [[ version_greater_equal "${installed_node_version:1}" "${NEEDED_NODE_VERSION}" ]]; then
+        if version_greater_equal "${installed_node_version:1}" "${NEEDED_NODE_VERSION}"; then
             printf "${COL_NC}%s ${TICK}\n" "Installed NodeJS: ${installed_node_version}"
         else
             # NodeJS is installed but too old
