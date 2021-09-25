@@ -9,7 +9,7 @@
 
 # Install with this command (from your Linux machine):
 #
-# curl -sSL xxx | bash
+# curl -sSL https://raw.githubusercontent.com/borsTiHD/pi-control/feature/install-script/installer/basic-install.sh | bash # TODO!!! - Needs to set branch to main in url
 
 # -e option instructs bash to immediately exit if any command [1] has a non-zero exit status
 # We do not want users to end up with a partially working install, so we exit the script
@@ -173,6 +173,19 @@ check_yarn() {
     fi
 }
 
+check_pi_control() {
+    # TODO -> Check if pi-control is already installed
+    # If installed, check pi-control version with latest version
+    # If not installed, download latest version and install
+
+    # Checks if install directory exists
+    if [ -d "${PI_CONTROL_INSTALL_DIR}" ]; then
+        printf "${COL_NC}%s ${TICK}\n" "Pi-Control already installed: xxx"
+    else
+        printf "${COL_NC}%s ${CROSS}\n" "Pi-Control not installed."
+    fi
+}
+
 node_install() {
     # Asking user if he wants to install node
     if user_prompt "Do you wish to install NodeJS?" ; then
@@ -225,6 +238,9 @@ main() {
     check_installer_version # Checking installer script
     check_node # Checking node
     check_yarn # Checking yarn
+
+    printf "\n${COL_NC}%s\n" "Checking pi-control..."
+    check_pi_control # Checking pi-control
 }
 
 # Starting...
