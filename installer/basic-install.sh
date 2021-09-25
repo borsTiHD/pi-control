@@ -236,7 +236,8 @@ check_pi_control() {
         printf "${COL_NC}%s ${INFO}\n" "Downloading... ${filename}"
 
         # Parsing download url
-        local asset_download_url=$(node -pe "JSON.parse('${latest_release_json}').assets.find((asset) => asset.name === '${filename}').browser_download_url")
+        # Javascript will search array with selected filename and returns 'browser_download_url'
+        local asset_download_url=$(node -pe "JSON.parse(process.argv[1]).assets.find((asset) => asset.name === '${filename}').browser_download_url" "${latest_release_json}")
         printf "${COL_NC}%s\n" "Download URL: ${asset_download_url}"
     fi
 }
