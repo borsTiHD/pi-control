@@ -215,7 +215,7 @@ check_pi_control() {
         printf "${COL_NC}%s ${TICK}\n" "${APP_NAME} already installed: v${pi_control_version}"
     else
         # Pi-Control is not installed
-        printf "${COL_NC}%s ${INFO}\n" "Getting latest release."
+        printf "${COL_NC}%s ${INFO}\n\n" "Getting latest release."
 
         # Parsing latest release
         local latest_release_json=$(curl -sSL "${URL_LATEST_RELEASE}")
@@ -226,9 +226,13 @@ check_pi_control() {
 
         # User selecting file to download
         PS3="Select download file: "
-        select filename in ${assets[@]}; do break; done
-
-        # TODO: If no file is selected print message, or try again!!!
+        select filename in ${assets[@]}; do
+            if [ -z "$filename" ]; then
+            else
+                # filename is selected, break loop
+                break;
+            fi
+        done
 
         printf "${COL_NC}%s ${INFO}\n" "Downloading... ${filename}"
     fi
