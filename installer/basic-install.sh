@@ -180,9 +180,8 @@ check_pi_control() {
 
     # Checks if install directory exists
     if [ -d "${PI_CONTROL_INSTALL_DIR}" ]; then
-        local package_json=$(cat ${PI_CONTROL_INSTALL_DIR}package.json)
-        local pi_control_installed="$(node -p "JSON.parse(\`$package_json\`)['version']")"
-        printf "${COL_NC}%s ${TICK}\n" "Pi-Control already installed: ${pi_control_installed}"
+        local pi_control_installed="$(cd "${PI_CONTROL_INSTALL_DIR}" && node -p "require('./package.json').version")"
+        printf "${COL_NC}%s ${TICK}\n" "Pi-Control already installed: v${pi_control_installed}"
     else
         printf "${COL_NC}%s ${CROSS}\n" "Pi-Control not installed."
     fi
