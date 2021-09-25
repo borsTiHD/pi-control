@@ -227,8 +227,7 @@ check_pi_control() {
         # User selecting file to download
         PS3="Select download file: "
         select filename in ${assets[@]}; do
-            if [ -z "$filename" ]; then
-            else
+            if [ ! -z "$filename" ]; then
                 # filename is selected, break loop
                 break;
             fi
