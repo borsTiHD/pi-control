@@ -27,7 +27,7 @@ export PATH+=':/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin'
 # Local variables will be in lowercase and will exist only within functions
 
 # Const Version
-readonly INSTALLER_VERSION="1" # Must be identical with online version
+readonly INSTALLER_VERSION=1 # Must be identical with online version
 
 # Const URLs
 readonly URL_INSTALL_SCRIPT="https://raw.githubusercontent.com/borsTiHD/pi-control/feature/install-script/installer/basic-install.sh" # TODO!!! - Needs to set branch to main in url
@@ -79,7 +79,7 @@ check_root() {
 check_installer_version() {
     # Checks if the used script is equal the current version hosted on github
     local remote_version=$(curl -sL "${URL_VERSION_CHECK}")
-    if [[ remote_version == INSTALLER_VERSION ]]
+    if [[ "$remote_version" == "$INSTALLER_VERSION" ]]
     then
         printf "${COL_NC}%s ${TICK}\n" "Current install script is used."
     else
