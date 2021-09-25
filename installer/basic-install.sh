@@ -79,13 +79,15 @@ welcome_message() {
 user_prompt() {
     # Asking user a question and returning true/false
     # Param 1 is the question
-    printf "${COL_NC}%s\n" "$1"
-    select yn in "Yes" "No"; do
-        case $yn in
-            y|Y|yes|Yes ) true;;
-            n|N|no|No ) false;;
-        esac
-    done
+    read -p "${COL_NC}$1 (y/n)? " answer
+    case ${answer:0:1} in
+        y|Y|yes|Yes )
+            true
+        ;;
+        * )
+            false
+        ;;
+    esac
 }
 
 version_greater_equal() {
