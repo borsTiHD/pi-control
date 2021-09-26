@@ -250,12 +250,8 @@ check_packages() {
     printf '%s, ' "${PI_CONTROL_DEPS[@]}"
     printf "\n\n"
 
-    # TODO!!! - Check every needed package if it is installed...
-    # If not go on with user prompt for installing
-    # Else go on with script
-
+    # Declare empty array and fill with every missing package
     declare -a list_of_needed_deps
-
     for i in "${PI_CONTROL_DEPS[@]}"
     do
         local required_pkg=$i
@@ -266,7 +262,7 @@ check_packages() {
         fi
     done
 
-    # Checking missing deps
+    # If deps are missing, ask user if he wishs to install them
     if [ ${#list_of_needed_deps[@]} -gt 0 ]; then
         # Deps are missing
         printf "\n${COL_NC}%s ${INFO}\n" "The following packages are missing:"
@@ -290,6 +286,7 @@ check_packages() {
 install_dependent_packages() {
     # TODO: Install every required package on the list 
     # printf "${COL_NC}%s ${INFO}\n" "Installing packages..."
+    local deps="$1" # Array with deps needs to be installed
     printf "${COL_NC}${TODO} - %s ${INFO}\n" "Installing packages not implemented right now! Please install packages manually."
 }
 
