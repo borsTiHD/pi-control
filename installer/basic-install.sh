@@ -401,8 +401,8 @@ extract_file_to_target() {
         mkdir -p "${target_path}" # Creating folder
     fi
 
-    printf "${COL_NC}%s ${INFO}\n\n" "Unpacking... ${file}"
-    sudo tar -zxvf "$file" --directory "$target_path"
+    printf "\n${COL_NC}%s ${INFO}\n\n" "Unpacking... ${file}"
+    sudo tar -zxf "$file" --directory "$target_path"
 }
 
 main() {
