@@ -48,7 +48,7 @@ readonly URL_LATEST_RELEASE="https://api.github.com/repos/${AUTHOR}/${APP_NAME}/
 
 # Const Paths
 readonly PI_CONTROL_INSTALL_DIR="/opt/${APP_NAME}/"
-readonly PI_CONTROL_DOWNLOAD_DIR="/tmp/"
+readonly PI_CONTROL_TMP_DIR="/tmp/${APP_NAME}/"
 
 # Const Colors (pi-hole)
 readonly COL_NC='\e[0m' # No Color
@@ -105,6 +105,15 @@ version_greater_equal() {
     # Comparing two versions
     # e.p.: version_greater_equal "${installed_node_version:1}" "${NODE_VERSION_NEEDED}"
     printf '%s\n%s\n' "$2" "$1" | sort --check=quiet --version-sort
+}
+
+remove_folder() {
+    # Removing existing folder
+    local path="$1"
+    if [ -d "${path}" ]; then
+        printf "${COL_NC}%s ${INFO}\n" "Deleting folder: ${path}"
+        sudo rm -r $path
+    fi
 }
 
 remove_file() {
@@ -225,37 +234,8 @@ check_pi_control() {
         printf "${COL_NC}%s ${TICK}\n" "${APP_NAME} already installed: v${pi_control_version}"
     else
         # Pi-Control is not installed
-        printf "${COL_NC}%s ${INFO}\n\n" "Getting latest release."
-
-        # Parsing latest release
-        local latest_release_json=$(curl -sSL "${URL_LATEST_RELEASE}")
-        local js_parse="JSON.parse(process.argv[1]).assets.map((asset) => { return asset.name }).join(', ')" # Javascript parsing latest_release json and returning asset names as string, seperatet with ", "
-        local assets_string=$(node -pe "${js_parse}" "${latest_release_json}")
-        # test="test1, test2, test3, test4"
-        IFS=', ' read -r -a assets <<< "$assets_string" # Splitting string into array
-
-        # User selecting file to download
-        PS3="Select download file: "
-        select filename in ${assets[@]}; do
-            if [ ! -z "$filename" ]; then
-                # filename is selected, break loop
-                break;
-            fi
-        done
-
-        # Removing existing file with same name
-        local path_file="${PI_CONTROL_DOWNLOAD_DIR}${filename}"
-        remove_file "${path_file}"
-
-        # Parsing download url
-        # Javascript will search array with selected filename and returns 'browser_download_url'
-        local asset_download_url=$(node -pe "JSON.parse(process.argv[1]).assets.find((asset) => asset.name === '${filename}').browser_download_url" "${latest_release_json}")
-        printf "\n${COL_NC}%s\n" "Download URL: ${asset_download_url}"
-        printf "${COL_NC}%s ${INFO}\n" "Downloading... ${filename}"
-
-        wget -q --show-progress -P "$PI_CONTROL_DOWNLOAD_DIR" "$asset_download_url"
-
-        # TODO!!! Downloaded file needs to be removed after unpacking / installing
+        # Install latest pi-control
+        install_pi_control
     fi
 }
 
@@ -302,11 +282,52 @@ yarn_install() {
     fi
 }
 
-
 install_dependent_packages() {
     # TODO: Install every required package on the list 
     # printf "${COL_NC}%s ${INFO}\n" "Installing packages..."
     printf "${COL_NC}%s ${INFO}\n" "Installing packages not implemented right now! Please install packages manually."
+}
+
+install_pi_control() {
+    # Installing latest pi-control
+    printf "${COL_NC}%s ${INFO}\n\n" "Getting latest release."
+
+    # Parsing latest release
+    local latest_release_json=$(curl -sSL "${URL_LATEST_RELEASE}")
+    local js_parse="JSON.parse(process.argv[1]).assets.map((asset) => { return asset.name }).join(', ')" # Javascript parsing latest_release json and returning asset names as string, seperatet with ", "
+    local assets_string=$(node -pe "${js_parse}" "${latest_release_json}")
+    # test="test1, test2, test3, test4"
+    IFS=', ' read -r -a assets <<< "$assets_string" # Splitting string into array
+
+    # User selecting file to download
+    PS3="Select download file: "
+    select filename in ${assets[@]}; do
+        if [ ! -z "$filename" ]; then
+            # filename is selected, break loop
+            break;
+        fi
+    done
+
+    # Removing existing tmp folder and create new one
+    remove_folder "${PI_CONTROL_TMP_DIR}"
+    mkdir -p "${PI_CONTROL_TMP_DIR}"
+
+    # Parsing download url
+    # Javascript will search array with selected filename and returns 'browser_download_url'
+    local asset_download_url=$(node -pe "JSON.parse(process.argv[1]).assets.find((asset) => asset.name === '${filename}').browser_download_url" "${latest_release_json}")
+    printf "\n${COL_NC}%s\n" "Download URL: ${asset_download_url}"
+    printf "${COL_NC}%s ${INFO}\n" "Downloading... ${filename}"
+
+    # Download asset
+    download_url "${asset_download_url}" "${PI_CONTROL_TMP_DIR}"
+    # TODO!!! Downloaded file needs to be removed after unpacking / installing
+}
+
+download_url() {
+    local url="$1"
+    local target_path="$2"
+    (cd "$target_path" && curl -L -O "$url")
+    # wget -q --show-progress -P "$target_path" "$url"
 }
 
 main() {
