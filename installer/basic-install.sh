@@ -260,9 +260,8 @@ check_packages() {
     do
         local required_pkg=$i
         local pkg_ok=$(dpkg-query -W --showformat='${Status}\n' $required_pkg|grep "install ok installed")
-        echo Checking for $required_pkg: $pkg_ok
         if [ "" = "$pkg_ok" ]; then
-            printf "${COL_NC}%s %s ${INFO}\n" "Package $required_pkg not installed."
+            printf "${COL_NC}%s ${CROSS}\n" "Package $required_pkg not installed."
             list_of_needed_deps+=($required_pkg) # Adding package name to list
         fi
     done
@@ -270,7 +269,7 @@ check_packages() {
     # Checking missing deps
     if [ ${#list_of_needed_deps[@]} -gt 0 ]; then
         # Deps are missing
-        printf "${COL_NC}%s ${INFO}\n" "The following packages are missing:"
+        printf "\n${COL_NC}%s ${INFO}\n" "The following packages are missing:"
         printf '%s, ' "${list_of_needed_deps[@]}"
         printf "\n\n"
 
