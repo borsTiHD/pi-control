@@ -368,14 +368,14 @@ pi_control_install() {
     # Javascript will search array with selected filename and returns 'browser_download_url'
     local asset_download_url=$(node -pe "JSON.parse(process.argv[1]).assets.find((asset) => asset.name === '${filename}').browser_download_url" "${latest_release_json}")
     printf "\n${COL_NC}%s\n" "Download URL: ${asset_download_url}"
-    printf "${COL_NC}%s ${INFO}\n" "Downloading... ${filename}"
+    printf "${COL_NC}%s ${INFO}\n\n" "Downloading... ${filename}"
 
     # Download asset
     download_url "${asset_download_url}" "${PI_CONTROL_TMP_DIR}"
 
     # TODO!!!
     # Need to unpackage download and install pi-control
-    printf "${TODO} - %s\n" "Need to unpackage download and install ${APP_NAME}..."
+    printf "\n${TODO} - %s\n" "Need to unpackage download and install ${APP_NAME}..."
 
     # Checks if install directory exists, if not lets create the folder
     #if [ ! -d "${target_path}" ]; then
