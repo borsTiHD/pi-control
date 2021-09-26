@@ -34,7 +34,7 @@ readonly NODE_VERSION_NEEDED="16.0.0"
 readonly YARN_VERSION_NEEDED="1.22.0"
 
 # Const Package Dependencies stored as an array
-readonly PI_CONTROL_DEPS=(sudo apt-get curl git)
+readonly PI_CONTROL_DEPS=(sudo apt-get curl tar)
 
 # Const Github
 readonly AUTHOR="borsTiHD"
@@ -262,11 +262,12 @@ check_packages() {
 install_dependent_packages() {
     # TODO: Install every required package on the list 
     # printf "${COL_NC}%s ${INFO}\n" "Installing packages..."
-    printf "${COL_NC}%s ${INFO}\n" "Installing packages not implemented right now! Please install packages manually."
+    printf "${COL_NC}${TODO} - %s ${INFO}\n" "Installing packages not implemented right now! Please install packages manually."
 }
 
 check_pi_control() {
     # TODO!!! Need to clean/remove TMP folder after everything
+    # TODO!!! Need to save existing data in TMP folder and restoring userdata: '.env' and 'db.json'
 
     # Check if pi-control is installed
     # If installed, check pi-control version with latest version and update if necessary
@@ -373,14 +374,13 @@ pi_control_install() {
     # Download asset
     download_url "${asset_download_url}" "${PI_CONTROL_TMP_DIR}"
 
+    # Unpacking file
+    extract_file_to_target "${target_file}" "${PI_CONTROL_INSTALL_DIR}"
+
     # TODO!!!
     # Need to unpackage download and install pi-control
     printf "\n${TODO} - %s\n" "Need to unpackage download and install ${APP_NAME}..."
 
-    # Checks if install directory exists, if not lets create the folder
-    #if [ ! -d "${target_path}" ]; then
-    #    mkdir -p "${target_path}" # Creating folder
-    #fi
 
     # TODO!!! Downloaded file needs to be removed after unpacking / installing
 }
@@ -390,6 +390,19 @@ download_url() {
     local target_path="$2"
     # Downloading file with curl
     (cd "$target_path" && curl -L -O "$url") # wget -q --show-progress -P "$target_path" "$url"
+}
+
+extract_file_to_target() {
+    local file="$1"
+    local target_path="$2"
+
+    # Checks if install directory exists, if not lets create the folder
+    if [ ! -d "${target_path}" ]; then
+        mkdir -p "${target_path}" # Creating folder
+    fi
+
+    printf "${COL_NC}%s ${INFO}\n\n" "Unpacking... ${file}"
+    sudo tar -zxvf "$file" --directory "$target_path"
 }
 
 main() {
