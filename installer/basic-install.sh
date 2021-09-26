@@ -58,6 +58,7 @@ readonly COL_LIGHT_RED='\e[1;31m'
 readonly TICK="[${COL_LIGHT_GREEN}✓${COL_NC}]"
 readonly CROSS="[${COL_LIGHT_RED}✗${COL_NC}]"
 readonly INFO="[${COL_BLUE}i${COL_NC}]"
+readonly TODO="[${COL_BLUE}TODO${COL_NC}]"
 
 is_command() {
     # Checks to see if the given command (passed as a string argument) exists on the system.
@@ -175,70 +176,6 @@ check_node() {
     fi
 }
 
-check_yarn() {
-    # Checks if yarn is installed
-    if is_command yarn ; then
-        local installed_yarn_version=$(yarn -v)
-        if version_greater_equal "${installed_yarn_version}" "${YARN_VERSION_NEEDED}"; then
-            printf "${COL_NC}%s ${TICK}\n" "Installed Yarn: v${installed_yarn_version}"
-        else
-            # yarn is installed but too old
-            printf "${COL_NC}%s ${CROSS}\n" "Installed Yarn is too old. Installed: v${installed_yarn_version}"
-            printf "${COL_NC}%s ${CROSS}\n" "Need Yarn v${YARN_VERSION_NEEDED} or newer..."
-
-            # Asking user if he wants to install yarn
-            # Stopping script if user answered no
-            yarn_install
-        fi
-    else
-        # Otherwise, tell the user they need to install yarn
-        printf "${COL_NC}%s ${CROSS}\n" "Yarn not installed. Needed at least Yarn v${NODE_VERSION_NEEDED}"
-
-        # Asking user if he wants to install node
-        # Stopping script if user answered no
-        yarn_install
-    fi
-}
-
-check_packages() {
-    # Asking user if he wants to install required packages
-    printf "${COL_NC}%s ${INFO}\n" "The following packages are required:"
-    printf '%s, ' "${PI_CONTROL_DEPS[@]}"
-    printf "\n"
-    if user_prompt "Do you wish to install required packages?" ; then
-        # User wish to install packages
-        install_dependent_packages "${PI_CONTROL_DEPS[@]}"
-    else
-        # User dont want to install packages... script will stop
-        printf "${COL_NC}%s ${INFO}\n" "Please install packages manually."
-        exit_with_error
-    fi
-}
-
-check_pi_control() {
-    # TODO -> Check if pi-control is already installed
-    # If installed, check pi-control version with latest version
-    # If not installed, ask user if he installed in a different location and check this dir
-    # Else download latest version and install
-
-    # Checks if install directory does not exists
-    if [ ! -d "${PI_CONTROL_INSTALL_DIR}" ]; then
-        # Creating folder
-        mkdir -p "${PI_CONTROL_INSTALL_DIR}"
-    fi
-
-    # Checking if package.json exists
-    local package_json="${PI_CONTROL_INSTALL_DIR}package.json"
-    if test -f "$package_json"; then
-        local pi_control_version="$(cd "${PI_CONTROL_INSTALL_DIR}" && node -p "require('./package.json').version")"
-        printf "${COL_NC}%s ${TICK}\n" "${APP_NAME} already installed: v${pi_control_version}"
-    else
-        # Pi-Control is not installed
-        # Install latest pi-control
-        install_pi_control
-    fi
-}
-
 node_install() {
     # Asking user if he wants to install node
     if user_prompt "Do you wish to install NodeJS?" ; then
@@ -264,6 +201,31 @@ node_install() {
     fi
 }
 
+check_yarn() {
+    # Checks if yarn is installed
+    if is_command yarn ; then
+        local installed_yarn_version=$(yarn -v)
+        if version_greater_equal "${installed_yarn_version}" "${YARN_VERSION_NEEDED}"; then
+            printf "${COL_NC}%s ${TICK}\n" "Installed Yarn: v${installed_yarn_version}"
+        else
+            # yarn is installed but too old
+            printf "${COL_NC}%s ${CROSS}\n" "Installed Yarn is too old. Installed: v${installed_yarn_version}"
+            printf "${COL_NC}%s ${CROSS}\n" "Need Yarn v${YARN_VERSION_NEEDED} or newer..."
+
+            # Asking user if he wants to install yarn
+            # Stopping script if user answered no
+            yarn_install
+        fi
+    else
+        # Otherwise, tell the user they need to install yarn
+        printf "${COL_NC}%s ${CROSS}\n" "Yarn not installed. Needed at least Yarn v${NODE_VERSION_NEEDED}"
+
+        # Asking user if he wants to install node
+        # Stopping script if user answered no
+        yarn_install
+    fi
+}
+
 yarn_install() {
     # Asking user if he wants to install yarn
     if user_prompt "Do you wish to install Yarn?" ; then
@@ -282,13 +244,103 @@ yarn_install() {
     fi
 }
 
+check_packages() {
+    # Asking user if he wants to install required packages
+    printf "${COL_NC}%s ${INFO}\n" "The following packages are required:"
+    printf '%s, ' "${PI_CONTROL_DEPS[@]}"
+    printf "\n"
+    if user_prompt "Do you wish to install required packages?" ; then
+        # User wish to install packages
+        install_dependent_packages "${PI_CONTROL_DEPS[@]}"
+    else
+        # User dont want to install packages... script will stop
+        printf "${COL_NC}%s ${INFO}\n" "Please install packages manually."
+        exit_with_error
+    fi
+}
+
 install_dependent_packages() {
     # TODO: Install every required package on the list 
     # printf "${COL_NC}%s ${INFO}\n" "Installing packages..."
     printf "${COL_NC}%s ${INFO}\n" "Installing packages not implemented right now! Please install packages manually."
 }
 
-install_pi_control() {
+check_pi_control() {
+    # TODO!!! Need to clean/remove TMP folder after everything
+
+    # Check if pi-control is installed
+    # If installed, check pi-control version with latest version and update if necessary
+    # If not, do a fresh install
+
+    local target_path="${PI_CONTROL_INSTALL_DIR}"
+
+    # Checks if pi-control is installed
+    if is_pi_control_installed "${target_path}"; then
+        # Pi-control is already installed
+        # Need to compare version with latest release
+        # And update if necessary
+
+        local pi_control_installed_version=$(installed_pi_control_version ${target_path})
+        local latest_version="${latest_pi_control_version:1}" # Get latest version from tag_name and removing "v" -> e.p.: 'v0.3.0' to '0.3.0'
+        printf "${COL_NC}%s ${INFO}\n" "${APP_NAME} installed: v${pi_control_installed_version}"
+        printf "${COL_NC}%s ${INFO}\n" "Latest release: v${latest_version}"
+
+        # TODO!!! Pi-Control is installed. Need versions comparison.
+        printf "${TODO} - %s\n" "Need versions comparison..."
+    else
+        # Pi-Control is not installed. Installing...
+        pi_control_install
+    fi
+}
+
+is_pi_control_installed() {
+    # Checks if pi-control is installed
+    local target="$1"
+    # Checks if install directory exists
+    if [ ! -d "${target}" ]; then
+        false # No pi-control installed
+    else
+        # Checking if package.json exists
+        local package_json="${target}package.json"
+        if test -f "$package_json"; then
+            true # Folder exists and package.json installed
+        else
+            # Folder exists, but no package.json installed
+            false # No pi-control installed
+        fi
+    fi
+}
+
+installed_pi_control_version() {
+    # Returning installed version if pi-control is installed
+    local target="$1"
+
+    # Checks if install directory exists
+    if [ ! -d "${target}" ]; then
+        false # No pi-control installed
+    else
+        # Checking if package.json exists
+        local package_json="${target}package.json"
+        if test -f "$package_json"; then
+            # Folder exists and package.json installed
+            local pi_control_installed_version="$(cd "${target_path}" && node -p "require('./package.json').version")"
+            echo "${pi_control_installed_version}"
+        else
+            # Folder exists, but no package.json installed
+            false # No pi-control installed
+        fi
+    fi
+}
+
+latest_pi_control_version() {
+    # Parsing latest release and get latest version
+    local latest_release_json=$(curl -sSL "${URL_LATEST_RELEASE}")
+    local js_parse="JSON.parse(process.argv[1]).tag_name" # Javascript parsing latest_release json and returning tag_name with latest version
+    local latest_version=$(node -pe "${js_parse}" "${latest_release_json}")
+    echo "${latest_version}"
+}
+
+pi_control_install() {
     # Installing latest pi-control
     printf "${COL_NC}%s ${INFO}\n\n" "Getting latest release."
 
@@ -308,9 +360,9 @@ install_pi_control() {
         fi
     done
 
-    # Removing existing tmp folder and create new one
-    remove_folder "${PI_CONTROL_TMP_DIR}"
-    mkdir -p "${PI_CONTROL_TMP_DIR}"
+    # Removing existing file
+    local target_file="${PI_CONTROL_TMP_DIR}${filename}"
+    remove_file "${target_file}"
 
     # Parsing download url
     # Javascript will search array with selected filename and returns 'browser_download_url'
@@ -320,14 +372,24 @@ install_pi_control() {
 
     # Download asset
     download_url "${asset_download_url}" "${PI_CONTROL_TMP_DIR}"
+
+    # TODO!!!
+    # Need to unpackage download and install pi-control
+    printf "${TODO} - %s\n" "Need to unpackage download and install ${APP_NAME}..."
+
+    # Checks if install directory exists, if not lets create the folder
+    #if [ ! -d "${target_path}" ]; then
+    #    mkdir -p "${target_path}" # Creating folder
+    #fi
+
     # TODO!!! Downloaded file needs to be removed after unpacking / installing
 }
 
 download_url() {
     local url="$1"
     local target_path="$2"
-    (cd "$target_path" && curl -L -O "$url")
-    # wget -q --show-progress -P "$target_path" "$url"
+    # Downloading file with curl
+    (cd "$target_path" && curl -L -O "$url") # wget -q --show-progress -P "$target_path" "$url"
 }
 
 main() {
