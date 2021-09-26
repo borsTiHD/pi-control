@@ -317,7 +317,8 @@ check_pi_control() {
             printf "${COL_NC}%s ${TICK}\n" "Latest version installed..."
         else
             # Old version is installed... starting upgrade process
-            printf "${COL_NC}%s ${CROSS}\n" "Upgrade ${APP_NAME} to latest version..."
+            printf "${COL_NC}%s ${CROSS}\n" "Older version is installed."
+            printf "${COL_NC}%s ${TICK}\n" "Upgrade ${APP_NAME} to latest version..."
 
             # TODO!!! Saving existing userdata in TMP folder...
             printf "${TODO} - %s\n" "Need to saving userdata..."
