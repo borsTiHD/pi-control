@@ -249,6 +249,16 @@ check_packages() {
     printf "${COL_NC}%s ${INFO}\n" "The following packages are required:"
     printf '%s, ' "${PI_CONTROL_DEPS[@]}"
     printf "\n"
+
+    # TODO!!! - Check every needed package if it is installed...
+    # If not go on with user prompt for installing
+    # Else go on with script
+
+    for i in "${PI_CONTROL_DEPS[@]}"
+    do
+        printf "${COL_NC}%s %s ${INFO}\n" "Checking:" $i
+    done
+
     if user_prompt "Do you wish to install required packages?" ; then
         # User wish to install packages
         install_dependent_packages "${PI_CONTROL_DEPS[@]}"
@@ -437,6 +447,9 @@ main() {
 
     # TODO!!! - Checking, or installing service
     printf "\n${TODO} - %s\n" "The service still needs to be checked and set up."
+
+    # TODO!!! - Closing message and info how the user can access pi-control
+    printf "\n${TODO} - %s\n" "Need closing message and info how the user can access pi-control."
 }
 
 # Starting...
