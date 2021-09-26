@@ -284,10 +284,25 @@ check_pi_control() {
         local pi_control_installed_version=$(installed_pi_control_version ${target_path})
         local latest_version=$(latest_pi_control_version) # Get latest version from tag_name eg.: 'v0.3.0' to '0.3.0'
         printf "${COL_NC}%s ${INFO}\n" "Installed ${APP_NAME}: v${pi_control_installed_version}"
-        printf "${COL_NC}%s ${INFO}\n" "Latest release: v${latest_version}"
+        printf "${COL_NC}%s ${INFO}\n" "Latest release: ${latest_version}"
 
-        # TODO!!! Pi-Control is installed. Need versions comparison.
-        printf "${TODO} - %s\n" "Need versions comparison..."
+        # Comparing versions
+        if version_greater_equal "${pi_control_installed_version}" "${latest_version:1}"; then
+            # Latest version installed... do nothing ;)
+            printf "${COL_NC}%s ${TICK}\n" "Latest version installed..."
+        else
+            # Old version is installed... starting upgrade process
+            printf "${COL_NC}%s ${CROSS}\n" "Upgrade ${APP_NAME} to latest version..."
+
+            # TODO!!! Saving existing userdata in TMP folder...
+            printf "${TODO} - %s\n" "Need to saving userdata..."
+
+            # TODO!!! Upgrading version...
+            printf "${TODO} - %s\n" "Need to upgrade ${APP_NAME}..."
+
+            # TODO!!! Restoring userdata...
+            printf "${TODO} - %s\n" "Need to restore userdata..."
+        fi
     else
         # Pi-Control is not installed. Installing...
         pi_control_install
@@ -377,12 +392,11 @@ pi_control_install() {
     # Unpacking file
     extract_file_to_target "${target_file}" "${PI_CONTROL_INSTALL_DIR}"
 
-    # TODO!!!
-    # Need to unpackage download and install pi-control
-    printf "\n${TODO} - %s\n" "Need to unpackage download and install ${APP_NAME}..."
-
+    # TODO!!! Restore userdata, if saved...
+    printf "${TODO} - %s\n" "Need to restore userdata..."
 
     # TODO!!! Downloaded file needs to be removed after unpacking / installing
+    printf "${TODO} - %s\n" "Need to remove old tmp files..."
 }
 
 download_url() {
@@ -420,6 +434,9 @@ main() {
 
     printf "\n${COL_NC}%s\n" "Checking ${APP_NAME}..."
     check_pi_control # Checking pi-control
+
+    # TODO!!! - Checking, or installing service
+    printf "\n${TODO} - %s\n" "The service still needs to be checked and set up."
 }
 
 # Starting...
