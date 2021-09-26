@@ -277,6 +277,7 @@ check_packages() {
         if user_prompt "Do you wish to install missing packages?" ; then
             # User wish to install packages
             # install_dependent_packages "${PI_CONTROL_DEPS[@]}"
+            echo hello
         else
             # User dont want to install packages... script will stop
             printf "${COL_NC}%s ${INFO}\n" "Please install packages manually."
