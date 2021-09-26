@@ -34,7 +34,7 @@ readonly NODE_VERSION_NEEDED="16.0.0"
 readonly YARN_VERSION_NEEDED="1.22.0"
 
 # Const Package Dependencies stored as an array
-readonly PI_CONTROL_DEPS=(sudo apt dpkg curl tar apt-get blub test)
+readonly PI_CONTROL_DEPS=(sudo apt dpkg curl tar)
 
 # Const Github
 readonly AUTHOR="borsTiHD"
@@ -271,7 +271,7 @@ check_packages() {
         # Deps are missing
         printf "\n${COL_NC}%s ${INFO}\n" "The following packages are missing:"
         printf '%s, ' "${list_of_needed_deps[@]}"
-        printf "\n\n"
+        printf "\n"
 
         if user_prompt "Do you wish to install missing packages?" ; then
             # User wish to install packages
