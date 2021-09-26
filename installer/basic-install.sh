@@ -104,7 +104,7 @@ user_prompt() {
 
 version_greater_equal() {
     # Comparing two versions
-    # e.p.: version_greater_equal "${installed_node_version:1}" "${NODE_VERSION_NEEDED}"
+    # eg.: version_greater_equal "${installed_node_version:1}" "${NODE_VERSION_NEEDED}"
     printf '%s\n%s\n' "$2" "$1" | sort --check=quiet --version-sort
 }
 
@@ -282,8 +282,8 @@ check_pi_control() {
         # And update if necessary
 
         local pi_control_installed_version=$(installed_pi_control_version ${target_path})
-        local latest_version="${latest_pi_control_version:1}" # Get latest version from tag_name and removing "v" -> e.p.: 'v0.3.0' to '0.3.0'
-        printf "${COL_NC}%s ${INFO}\n" "${APP_NAME} installed: v${pi_control_installed_version}"
+        local latest_version=$(latest_pi_control_version) # Get latest version from tag_name eg.: 'v0.3.0' to '0.3.0'
+        printf "${COL_NC}%s ${INFO}\n" "Installed ${APP_NAME}: v${pi_control_installed_version}"
         printf "${COL_NC}%s ${INFO}\n" "Latest release: v${latest_version}"
 
         # TODO!!! Pi-Control is installed. Need versions comparison.
