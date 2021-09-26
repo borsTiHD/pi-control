@@ -34,7 +34,7 @@ readonly NODE_VERSION_NEEDED="16.0.0"
 readonly YARN_VERSION_NEEDED="1.22.0"
 
 # Const Package Dependencies stored as an array
-readonly PI_CONTROL_DEPS=(sudo apt-get curl tar)
+readonly PI_CONTROL_DEPS=(sudo apt-get dpkg curl tar)
 
 # Const Github
 readonly AUTHOR="borsTiHD"
@@ -248,7 +248,7 @@ check_packages() {
     # Asking user if he wants to install required packages
     printf "${COL_NC}%s ${INFO}\n" "The following packages are required:"
     printf '%s, ' "${PI_CONTROL_DEPS[@]}"
-    printf "\n"
+    printf "\n\n"
 
     # TODO!!! - Check every needed package if it is installed...
     # If not go on with user prompt for installing
@@ -257,6 +257,13 @@ check_packages() {
     for i in "${PI_CONTROL_DEPS[@]}"
     do
         printf "${COL_NC}%s %s ${INFO}\n" "Checking:" $i
+        local required_pkg=$i
+        local pkg_ok=$(dpkg-query -W --showformat='${Status}\n' $required_pkg|grep "install ok installed")
+        echo Checking for $required_pkg: $pkg_ok
+        if [ "" = "$pkg_ok" ]; then
+            echo "No $required_pkg. Setting up $required_pkg."
+            # sudo apt-get --yes install $required_pkg
+        fi
     done
 
     if user_prompt "Do you wish to install required packages?" ; then
