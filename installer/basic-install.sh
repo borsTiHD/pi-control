@@ -321,7 +321,7 @@ check_pi_control() {
             printf "${COL_NC}%s ${TICK}\n" "Upgrade ${APP_NAME} to latest version..."
 
             # TODO!!! Saving existing userdata in TMP folder...
-            printf "${TODO} - %s\n" "Need to saving userdata..."
+            printf "${TODO} - %s\n" "Need to save userdata..."
 
             # TODO!!! Upgrading version...
             printf "${TODO} - %s\n" "Need to upgrade ${APP_NAME}..."
