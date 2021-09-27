@@ -307,7 +307,7 @@ check_pi_control() {
         # And update if necessary
 
         local pi_control_installed_version=$(installed_pi_control_version ${target_path})
-        local latest_version=$(latest_pi_control_version) # Get latest version from tag_name eg.: 'v0.3.0' to '0.3.0'
+        local latest_version=$(latest_pi_control_version) # Get latest version from name eg.: 'v0.3.0' to '0.3.0'
         printf "${COL_NC}%s ${INFO}\n" "Installed ${APP_NAME}: v${pi_control_installed_version}"
         printf "${COL_NC}%s ${INFO}\n" "Latest release: ${latest_version}"
 
@@ -377,7 +377,7 @@ installed_pi_control_version() {
 latest_pi_control_version() {
     # Parsing latest release and get latest version
     local latest_release_json=$(curl -sSL "${URL_LATEST_RELEASE}")
-    local js_parse="JSON.parse(process.argv[1]).tag_name" # Javascript parsing latest_release json and returning tag_name with latest version
+    local js_parse="JSON.parse(process.argv[1]).name" # Javascript parsing latest_release json and returning name with latest version
     local latest_version=$(node -pe "${js_parse}" "${latest_release_json}")
     echo "${latest_version}"
 }
@@ -421,8 +421,15 @@ pi_control_install() {
     # TODO!!! Restore userdata, if saved...
     printf "${TODO} - %s\n" "Need to restore userdata..."
 
+    # TODO!!! Yarn install
+    printf "${TODO} - %s\n" "Need yarn install for node deps..."
+
     # TODO!!! Downloaded file needs to be removed after unpacking / installing
     printf "${TODO} - %s\n" "Need to remove old tmp files..."
+}
+
+pi_control_backup_userdata() {
+    
 }
 
 download_url() {
