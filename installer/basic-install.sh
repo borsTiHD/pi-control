@@ -320,8 +320,7 @@ check_pi_control() {
             printf "${COL_NC}%s ${CROSS}\n" "Older version is installed."
             printf "${COL_NC}%s ${TICK}\n" "Upgrade ${APP_NAME} to latest version..."
 
-            # TODO!!! Saving existing userdata in TMP folder...
-            printf "${TODO} - %s\n" "Need to save userdata..."
+            pi_control_backup_userdata
 
             # TODO!!! Upgrading version...
             printf "${TODO} - %s\n" "Need to upgrade ${APP_NAME}..."
@@ -429,7 +428,8 @@ pi_control_install() {
 }
 
 pi_control_backup_userdata() {
-    
+    # TODO!!! Saving existing userdata in TMP folder...
+    printf "${TODO} - %s\n" "Need to save userdata..."
 }
 
 download_url() {
