@@ -72,7 +72,7 @@
     "vue-chart-3": "^0.5.8",
     "vue-socket.io": "^3.0.10",
     "vue-toastification": "^1.7.11",
-    "vuex-persistedstate": "^4.0.0",
+    "vuex-persistedstate": "^4.1.0",
     "webpack": "^5.53.0",
     "webpack-cli": "^4.8.0",
     "webpack-node-externals": "^3.0.0",
