@@ -299,15 +299,16 @@ check_pi_control() {
     # If installed, check pi-control version with latest version and update if necessary
     # If not, do a fresh install
 
-    local target_path="${PI_CONTROL_INSTALL_DIR}"
+    local install_dir="${PI_CONTROL_INSTALL_DIR}"
+    local backup_dir="${PI_CONTROL_BACKUP_DIR}"
 
     # Checks if pi-control is installed
-    if is_pi_control_installed "${target_path}"; then
+    if is_pi_control_installed "${install_dir}"; then
         # Pi-control is already installed
         # Need to compare version with latest release
         # And update if necessary
 
-        local pi_control_installed_version=$(installed_pi_control_version ${target_path})
+        local pi_control_installed_version=$(installed_pi_control_version ${install_dir})
         local latest_version=$(latest_pi_control_version) # Get latest version from name eg.: 'v0.3.0' to '0.3.0'
         printf "${COL_NC}%s ${INFO}\n" "Installed ${APP_NAME}: v${pi_control_installed_version}"
         printf "${COL_NC}%s ${INFO}\n" "Latest release: ${latest_version}"
@@ -319,21 +320,24 @@ check_pi_control() {
         else
             # Old version is installed... starting upgrade process
             printf "${COL_NC}%s ${CROSS}\n" "Older version is installed."
-            printf "${COL_NC}%s ${TICK}\n" "Upgrade ${APP_NAME} to latest version..."
+            printf "${COL_NC}%s ${INFO}\n" "Upgrade ${APP_NAME} to latest version..."
 
             # Backup existing userdata
-            pi_control_copy_userdata "$PI_CONTROL_INSTALL_DIR" "$PI_CONTROL_BACKUP_DIR" "Backup"
+            pi_control_copy_userdata "$install_dir" "$backup_dir" "Backup"
 
             # TODO!!! Upgrading version...
             printf "${TODO} - %s\n" "Need to upgrade ${APP_NAME}..."
 
             # Restoring existing userdata
-            pi_control_copy_userdata "$PI_CONTROL_BACKUP_DIR" "$PI_CONTROL_INSTALL_DIR" "Restoring"
+            pi_control_copy_userdata "$backup_dir" "$install_dir" "Restoring"
         fi
     else
         # Pi-Control is not installed. Installing...
         pi_control_install
     fi
+
+    # TODO!!! Downloaded file needs to be removed after unpacking / installing
+    printf "${TODO} - %s\n" "Need to remove old tmp files..."
 }
 
 is_pi_control_installed() {
@@ -403,7 +407,7 @@ pi_control_install() {
         fi
     done
 
-    # Removing existing file
+    # Removing existing downloadfile
     local target_file="${PI_CONTROL_TMP_DIR}${filename}"
     remove_file "${target_file}"
 
@@ -419,14 +423,8 @@ pi_control_install() {
     # Unpacking file
     extract_file_to_target "${target_file}" "${PI_CONTROL_INSTALL_DIR}"
 
-    # TODO!!! Restore userdata, if saved...
-    printf "${TODO} - %s\n" "Need to restore userdata..."
-
     # TODO!!! Yarn install
     printf "${TODO} - %s\n" "Need yarn install for node deps..."
-
-    # TODO!!! Downloaded file needs to be removed after unpacking / installing
-    printf "${TODO} - %s\n" "Need to remove old tmp files..."
 }
 
 pi_control_copy_userdata() {
