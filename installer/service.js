@@ -10,19 +10,30 @@ const PROJECT_ROOT = process.cwd()
 const APP_DIR = path.join(PROJECT_ROOT, 'dist', 'server')
 const APP_FILE = path.join(APP_DIR, 'app.cjs')
 
+console.log('APP_FILE:', APP_FILE)
+
+/*
+// Create a new service object
+const svc = new Service({
+    name: pkg.name,
+    description: pkg.description,
+    script: APP_FILE
+})
+
+// Listen for the "install" event, which indicates the
+// process is available as a service.
+svc.on('install', function() {
+    svc.start()
+})
+
+svc.install()
+*/
+
 // Installing, or deinstalling service
 if (argv[0] === '--install') {
     console.log('INSTALLING')
-    console.log('APP_FILE:', APP_FILE)
 
     /*
-    // Create a new service object
-    const svc = new Service({
-        name: pkg.name,
-        description: pkg.description,
-        script: APP_FILE
-    })
-
     // Listen for the "install" event, which indicates the
     // process is available as a service.
     svc.on('install', function() {
@@ -33,4 +44,14 @@ if (argv[0] === '--install') {
     */
 } else if (argv[0] === '--deinstall') {
     console.log('DEINSTALL')
+    /*
+    // Listen for the "uninstall" event so we know when it's done.
+    svc.on('uninstall',function(){
+        console.log('Uninstall complete.');
+        console.log('The service exists: ',svc.exists());
+    });
+
+    // Uninstall the service.
+    svc.uninstall();
+    */
 }
