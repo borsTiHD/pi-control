@@ -246,6 +246,7 @@ async function archiveProject() {
             // .directory(DIST_DIR, path.join(pkg.name, 'dist')) // Adding 'pkg.name,' on every file, will result in an subfolder with 'app-name' in the tar archive
             .directory(DIST_DIR, path.join('dist')) // Compiled app
             .directory(SCRIPTS_DIR, path.join('scripts', 'server')) // Server scripts
+            .directory(path.join(PROJECT_ROOT, 'installer'), path.join('installer')) // Installer with service script
             // .append(fs.createReadStream(PKG_FILE), { name: path.join(pkg.name, 'package.json') }) // Original Package.json
             .append(JSON.stringify(newPkg), { name: path.join('package.json') }) // Modified Package.json
             .append(fs.createReadStream(path.join(PROJECT_ROOT, 'ecosystem.json')), { name: path.join('ecosystem.json') }) // pm2 script
