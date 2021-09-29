@@ -1,5 +1,4 @@
 import path from 'path'
-import { fileURLToPath } from 'url'
 import fs from 'fs-extra'
 import archiver from 'archiver'
 import webpack from 'webpack'
@@ -16,11 +15,8 @@ import colors from './colors.js'
 // Loading '.env' for 'GITHUB_TOKEN'
 dotenv.config()
 
-// we need to change up how __dirname is used for ES6 purposes
-const __dirname = path.dirname(fileURLToPath(import.meta.url))
-
 // Path CONST
-const PROJECT_ROOT = path.join(__dirname, '..')
+const PROJECT_ROOT = process.cwd()
 const DIST_DIR = path.join(PROJECT_ROOT, 'dist')
 const NUXT_DIR = path.join(PROJECT_ROOT, 'src', 'client')
 const BUILD_DIR = path.join(PROJECT_ROOT, 'build')
