@@ -114,7 +114,7 @@ remove_folder() {
     local path="$1"
     if [ -d "${path}" ]; then
         printf "${COL_NC}%s ${INFO}\n" "Deleting folder: ${path}"
-        sudo rm -r $path
+        rm -r $path
     fi
 }
 
@@ -123,7 +123,7 @@ remove_file() {
     local path_file="$1"
     if test -f "$path_file"; then
         printf "${COL_NC}%s ${INFO}\n" "Deleting file: ${path_file}"
-        sudo rm $path_file
+        rm $path_file
     fi
 }
 
@@ -186,7 +186,7 @@ node_install() {
         # Installing node
         if is_command apt-get ; then
             curl -sL https://deb.nodesource.com/setup_16.x | sudo bash -
-            sudo apt-get install nodejs
+            apt-get install nodejs
 
             # Checking node again
             check_node
@@ -324,6 +324,7 @@ check_pi_control() {
 
             # Backup existing userdata
             pi_control_copy_userdata "$install_dir" "$backup_dir" "Backup"
+
 
             # TODO!!! Upgrading version...
             printf "${TODO} - %s\n" "Need to upgrade ${APP_NAME}..."
@@ -469,7 +470,7 @@ extract_file_to_target() {
     fi
 
     printf "\n${COL_NC}%s ${INFO}\n\n" "Unpacking... ${file}"
-    sudo tar -zxf "$file" --directory "$target_path"
+    tar -zxf "$file" --directory "$target_path"
 }
 
 main() {
