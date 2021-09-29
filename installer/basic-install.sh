@@ -49,6 +49,7 @@ readonly URL_LATEST_RELEASE="https://api.github.com/repos/${AUTHOR}/${APP_NAME}/
 # Const Paths
 readonly PI_CONTROL_INSTALL_DIR="/opt/${APP_NAME}/"
 readonly PI_CONTROL_TMP_DIR="/tmp/${APP_NAME}/"
+readonly PI_CONTROL_BACKUP_DIR="${PI_CONTROL_TMP_DIR}backup/"
 
 # Const Colors (pi-hole)
 readonly COL_NC='\e[0m' # No Color
@@ -315,13 +316,12 @@ check_pi_control() {
         if version_greater_equal "${pi_control_installed_version}" "${latest_version:1}"; then
             # Latest version installed... do nothing ;)
             printf "${COL_NC}%s ${TICK}\n" "Latest version installed..."
-            pi_control_backup_userdata # TODO ONLY FOR TESTING... DELETE ME!!!
         else
             # Old version is installed... starting upgrade process
             printf "${COL_NC}%s ${CROSS}\n" "Older version is installed."
             printf "${COL_NC}%s ${TICK}\n" "Upgrade ${APP_NAME} to latest version..."
 
-            pi_control_backup_userdata
+            pi_control_backup_userdata "$PI_CONTROL_INSTALL_DIR" "$PI_CONTROL_BACKUP_DIR"
 
             # TODO!!! Upgrading version...
             printf "${TODO} - %s\n" "Need to upgrade ${APP_NAME}..."
@@ -436,15 +436,28 @@ pi_control_backup_create_file_arr() {
 }
 
 pi_control_backup_userdata() {
+    # Arguments
+    local source_path="$1"
+    local target_path="$2"
+
     # Get file array and save data to temp folder
     local files_arr
     pi_control_backup_create_file_arr files_arr
-    declare -p files_arr
+
+    # Checks if backup directory exists, if not lets create the folder
+    if [ ! -d "${target_path}" ]; then
+        mkdir -p "${target_path}" # Creating folder
+    fi
+
+    cd "$source_path" # switching to source folder
+    for file in "${files_arr[@]}"
+    do
+        cp -p "$file" "$PI_CONTROL_BACKUP_DIR"
+    done
+    cd - # switching back to working folder
 
     # TODO!!! Saving existing userdata in TMP folder...
     printf "${TODO} - %s\n" "Need to save userdata..."
-
-    # cp -p xxx xxx
 }
 
 download_url() {
