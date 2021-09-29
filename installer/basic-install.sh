@@ -391,7 +391,7 @@ pi_control_get_installed_version() {
         local package_json="${target}package.json"
         if test -f "$package_json"; then
             # Folder exists and package.json installed
-            local pi_control_installed_version="$(cd "${target_path}" && node -p "require('./package.json').version")"
+            local pi_control_installed_version="$(cd "${target}" && node -p "require('./package.json').version")"
             echo "${pi_control_installed_version}"
         else
             # Folder exists, but no package.json installed
