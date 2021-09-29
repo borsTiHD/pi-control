@@ -434,6 +434,7 @@ pi_control_install() {
     # Installing node dependencies with yarn
     printf "${COL_NC}%s ${INFO}\n\n" "Installing node dependencies with yarn..."
     (cd "$install_dir" && yarn install)
+    printf "\n"
 }
 
 pi_control_deinstall() {
