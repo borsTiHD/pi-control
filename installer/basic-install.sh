@@ -451,7 +451,7 @@ pi_control_copy_userdata() {
         mkdir -p "${target_path}" # Creating folder
     fi
 
-    printf "${COL_NC}%s ${TICK}\n" "${mode_info} userdata..."
+    printf "${COL_NC}%s ${INFO}\n" "${mode_info} userdata..."
 
     # Switching to sourcefolder and copy every file/folder from backup array
     for file in "${files_arr[@]}"
