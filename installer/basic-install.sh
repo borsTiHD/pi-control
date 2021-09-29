@@ -292,17 +292,18 @@ install_dependent_packages() {
 }
 
 check_service() {
-    printf "\n${TODO} - %s\n" "Service still needs to be checked and set up."
+    # Asking user if he wants to install app as an service
+    if user_prompt "Do you wish to install ${APP_NAME} as an service?" ; then
+        # User wish to install service
+        printf "${COL_NC}%s ${INFO}\n\n" "Installing 'node-linux'..."
+        npm install --global node-linux # 'node-linux' is the module to install services on linux
 
-    # TODO!!! - Ask user if he wants to create a service
-    # prompt user with yes or no
-
-    # TODO!!! - Need to install node-linux (package for creating the service)
-    # npm install node-linux
-
-    # TODO!!! - Run service script with param "--install" / "--deinstall"
-    (cd "$install_dir" && node service.js --install)
-    (cd "$install_dir" && node service.js --deinstall)
+        printf "${COL_NC}%s ${INFO}\n\n" "Installing 'node-linux'service..."
+        (cd "$install_dir" && node service.js --install)
+    else
+        # User dont want to install service...
+        printf "${COL_NC}%s ${INFO}\n" "You need to run ${APP_NAME} manually."
+    fi
 }
 
 check_pi_control() {
@@ -454,12 +455,13 @@ pi_control_install() {
 pi_control_deinstall() {
     local install_dir="${PI_CONTROL_INSTALL_DIR}"
 
+    # Removing service
+    printf "${COL_NC}%s ${INFO}\n" "Removing service..."
+    (cd "$install_dir" && node service.js --deinstall)
+
     # Removing old installation
     printf "${COL_NC}%s ${INFO}\n" "Removing pi-control..."
     remove_folder "${install_dir}"
-
-    # TODO!!! - Check if service is installed and remove service
-    printf "\n${TODO} - %s\n" "Check service and delete it."
 }
 
 pi_control_copy_userdata() {
