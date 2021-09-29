@@ -292,6 +292,9 @@ install_dependent_packages() {
 }
 
 check_service() {
+    # Checking service for pi-control
+    local install_dir="${PI_CONTROL_INSTALL_DIR}"
+
     # Asking user if he wants to install app as an service
     if user_prompt "Do you wish to install ${APP_NAME} as an service?" ; then
         # User wish to install service
