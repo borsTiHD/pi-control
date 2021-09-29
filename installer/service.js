@@ -3,6 +3,12 @@
 const argv = process.argv.slice(2)
 console.log(argv)
 
+if (argv[0] === '--install') {
+    console.log('INSTALLING')
+} else if (argv[0] === '--deinstall') {
+    console.log('DEINSTALL')
+}
+
 /*
 // Create a new service object
 const svc = new Service({
