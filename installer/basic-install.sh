@@ -429,22 +429,16 @@ pi_control_install() {
     printf "${TODO} - %s\n" "Need to remove old tmp files..."
 }
 
-pi_control_backup_create_file_arr() {
-    local -n arr=$1 # use nameref for indirection
-    arr=(".env")
-    arr+=("db.json")
-    arr+=("scripts")
-}
-
 pi_control_copy_userdata() {
     # Arguments
     local source_path="$1"
     local target_path="$2"
     local mode_info="$3"
 
-    # Get file array and save data to temp folder
-    local files_arr
-    pi_control_backup_create_file_arr files_arr
+    # Create file array to be saved/restored
+    local files_arr=(".env")
+    files_arr+=("db.json")
+    files_arr+=("scripts")
 
     # Checks if backup directory exists, if not lets create the folder
     if [ ! -d "${target_path}" ]; then
