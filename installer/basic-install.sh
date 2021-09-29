@@ -475,6 +475,12 @@ pi_control_copy_userdata() {
 download_url() {
     local url="$1"
     local target_path="$2"
+
+    # Checks if target directory exists, if not lets create the folder
+    if [ ! -d "${target_path}" ]; then
+        mkdir -p "${target_path}" # Creating folder
+    fi
+
     # Downloading file with curl
     (cd "$target_path" && curl -L -O "$url") # wget -q --show-progress -P "$target_path" "$url"
 }
