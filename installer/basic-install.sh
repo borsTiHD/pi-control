@@ -334,6 +334,7 @@ check_pi_control() {
         fi
     else
         # Pi-Control is not installed. Installing...
+        printf "${COL_NC}%s ${INFO}\n" "No installation found. Launch a fresh installation."
         pi_control_install
     fi
 
@@ -394,6 +395,7 @@ pi_control_install() {
     local tmp_dir="${PI_CONTROL_TMP_DIR}"
 
     # Installing latest pi-control
+    printf "${COL_NC}%s ${INFO}\n\n" "Installing ${APP_NAME}."
     printf "${COL_NC}%s ${INFO}\n\n" "Getting latest release."
 
     # Parsing latest release
