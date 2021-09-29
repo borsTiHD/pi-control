@@ -291,6 +291,20 @@ install_dependent_packages() {
     printf "${COL_NC}${TODO} - %s ${INFO}\n" "Installing packages not implemented right now! Please install packages manually."
 }
 
+check_service() {
+    printf "\n${TODO} - %s\n" "Service still needs to be checked and set up."
+
+    # TODO!!! - Ask user if he wants to create a service
+    # prompt user with yes or no
+
+    # TODO!!! - Need to install node-linux (package for creating the service)
+    # npm install node-linux
+
+    # TODO!!! - Run service script with param "--install" / "--deinstall"
+    (cd "$install_dir" && node service.js --install)
+    (cd "$install_dir" && node service.js --deinstall)
+}
+
 check_pi_control() {
     # Check if pi-control is installed
     # If installed, check pi-control version with latest version and update if necessary
@@ -514,8 +528,8 @@ main() {
     printf "\n${COL_NC}%s\n" "Checking ${APP_NAME}..."
     check_pi_control # Checking pi-control
 
-    # TODO!!! - Checking, or installing service
-    printf "\n${TODO} - %s\n" "Service still needs to be checked and set up."
+    printf "\n${COL_NC}%s\n" "Checking service..."
+    check_service # Checking pi-control
 
     # TODO!!! - Run pi-control
     printf "\n${TODO} - %s\n" "Need to run pi-control."
