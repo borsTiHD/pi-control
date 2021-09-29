@@ -113,7 +113,6 @@ remove_folder() {
     # Removing existing folder
     local path="$1"
     if [ -d "${path}" ]; then
-        printf "${COL_NC}%s ${INFO}\n" "Deleting folder: ${path}"
         rm -r $path
     fi
 }
@@ -122,7 +121,6 @@ remove_file() {
     # Removing existing file
     local path_file="$1"
     if test -f "$path_file"; then
-        printf "${COL_NC}%s ${INFO}\n" "Deleting file: ${path_file}"
         rm $path_file
     fi
 }
@@ -292,15 +290,13 @@ install_dependent_packages() {
 }
 
 check_pi_control() {
-    # TODO!!! Need to clean/remove TMP folder after everything
-    # TODO!!! Need to save existing data in TMP folder and restoring userdata: '.env' and 'db.json'
-
     # Check if pi-control is installed
     # If installed, check pi-control version with latest version and update if necessary
     # If not, do a fresh install
 
     local install_dir="${PI_CONTROL_INSTALL_DIR}"
     local backup_dir="${PI_CONTROL_BACKUP_DIR}"
+    local tmp_dir="${PI_CONTROL_TMP_DIR}"
 
     # Checks if pi-control is installed
     if is_pi_control_installed "${install_dir}"; then
@@ -308,8 +304,8 @@ check_pi_control() {
         # Need to compare version with latest release
         # And update if necessary
 
-        local pi_control_installed_version=$(installed_pi_control_version ${install_dir})
-        local latest_version=$(latest_pi_control_version) # Get latest version from name eg.: 'v0.3.0' to '0.3.0'
+        local pi_control_installed_version=$(pi_control_get_installed_version ${install_dir})
+        local latest_version=$(pi_control_get_latest_version) # Get latest version from name eg.: 'v0.3.0' to '0.3.0'
         printf "${COL_NC}%s ${INFO}\n" "Installed ${APP_NAME}: v${pi_control_installed_version}"
         printf "${COL_NC}%s ${INFO}\n" "Latest release: ${latest_version}"
 
@@ -325,9 +321,11 @@ check_pi_control() {
             # Backup existing userdata
             pi_control_copy_userdata "$install_dir" "$backup_dir" "Backup"
 
+            # Removing old installation
+            pi_control_deinstall
 
-            # TODO!!! Upgrading version...
-            printf "${TODO} - %s\n" "Need to upgrade ${APP_NAME}..."
+            # Installing new...
+            pi_control_install
 
             # Restoring existing userdata
             pi_control_copy_userdata "$backup_dir" "$install_dir" "Restoring"
@@ -337,8 +335,12 @@ check_pi_control() {
         pi_control_install
     fi
 
-    # TODO!!! Downloaded file needs to be removed after unpacking / installing
-    printf "${TODO} - %s\n" "Need to remove old tmp files..."
+    # TODO!!! - Checking, or installing service
+    printf "\n${TODO} - %s\n" "The service still needs to be checked and set up."
+
+    # Removing temporary files
+    printf "${COL_NC}%s ${INFO}\n" "Removing temporary files and folder..."
+    remove_folder "${tmp_dir}"
 }
 
 is_pi_control_installed() {
@@ -359,7 +361,7 @@ is_pi_control_installed() {
     fi
 }
 
-installed_pi_control_version() {
+pi_control_get_installed_version() {
     # Returning installed version if pi-control is installed
     local target="$1"
 
@@ -380,7 +382,7 @@ installed_pi_control_version() {
     fi
 }
 
-latest_pi_control_version() {
+pi_control_get_latest_version() {
     # Parsing latest release and get latest version
     local latest_release_json=$(curl -sSL "${URL_LATEST_RELEASE}")
     local js_parse="JSON.parse(process.argv[1]).name" # Javascript parsing latest_release json and returning name with latest version
@@ -426,6 +428,17 @@ pi_control_install() {
 
     # TODO!!! Yarn install
     printf "${TODO} - %s\n" "Need yarn install for node deps..."
+}
+
+pi_control_deinstall() {
+    local install_dir="${PI_CONTROL_INSTALL_DIR}"
+
+    # Removing old installation
+    printf "${COL_NC}%s ${INFO}\n" "Removing pi-control..."
+    remove_folder "${install_dir}"
+
+    # TODO!!! - Check if service is installed and remove service
+    printf "\n${TODO} - %s\n" "Check service and delete it."
 }
 
 pi_control_copy_userdata() {
@@ -489,8 +502,8 @@ main() {
     printf "\n${COL_NC}%s\n" "Checking ${APP_NAME}..."
     check_pi_control # Checking pi-control
 
-    # TODO!!! - Checking, or installing service
-    printf "\n${TODO} - %s\n" "The service still needs to be checked and set up."
+    # TODO!!! - Run pi-control
+    printf "\n${TODO} - %s\n" "Need to run pi-control."
 
     # TODO!!! - Closing message and info how the user can access pi-control
     printf "\n${TODO} - %s\n" "Need closing message and info how the user can access pi-control."
