@@ -302,7 +302,7 @@ check_service() {
         npm install --global node-linux # 'node-linux' is the module to install services on linux
 
         printf "${COL_NC}%s ${INFO}\n\n" "Installing 'node-linux'service..."
-        (cd "$install_dir" && node service.js --install)
+        (cd "$install_dir" && node installer/service.js --install)
     else
         # User dont want to install service...
         printf "${COL_NC}%s ${INFO}\n" "You need to run ${APP_NAME} manually."
