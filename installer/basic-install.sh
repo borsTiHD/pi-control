@@ -452,7 +452,7 @@ pi_control_backup_userdata() {
     cd "$source_path" # switching to source folder
     for file in "${files_arr[@]}"
     do
-        cp -p "$file" "$PI_CONTROL_BACKUP_DIR"
+        cp -rp "$file" "$PI_CONTROL_BACKUP_DIR"
     done
     cd - # switching back to working folder
 
