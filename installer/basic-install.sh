@@ -64,7 +64,7 @@ readonly TODO="[${COL_BLUE}TODO${COL_NC}]"
 is_command() {
     # Checks to see if the given command (passed as a string argument) exists on the system.
     # The function returns 0 (success) if the command exists, and 1 if it doesn't.
-    # source: pi-hole
+    # Source: pi-hole
     local check_command="$1"
     command -v "${check_command}" >/dev/null 2>&1
 }
@@ -106,6 +106,7 @@ user_prompt() {
 version_greater_equal() {
     # Comparing two versions
     # eg.: version_greater_equal "${installed_node_version:1}" "${NODE_VERSION_NEEDED}"
+    # Source: https://unix.stackexchange.com/a/567537
     printf '%s\n%s\n' "$2" "$1" | sort --check=quiet --version-sort
 }
 
@@ -391,6 +392,9 @@ pi_control_get_latest_version() {
 }
 
 pi_control_install() {
+    local install_dir="${PI_CONTROL_INSTALL_DIR}"
+    local tmp_dir="${PI_CONTROL_TMP_DIR}"
+
     # Installing latest pi-control
     printf "${COL_NC}%s ${INFO}\n\n" "Getting latest release."
 
@@ -411,23 +415,25 @@ pi_control_install() {
     done
 
     # Removing existing downloadfile
-    local target_file="${PI_CONTROL_TMP_DIR}${filename}"
+    local target_file="${tmp_dir}${filename}"
     remove_file "${target_file}"
 
     # Parsing download url
     # Javascript will search array with selected filename and returns 'browser_download_url'
     local asset_download_url=$(node -pe "JSON.parse(process.argv[1]).assets.find((asset) => asset.name === '${filename}').browser_download_url" "${latest_release_json}")
     printf "\n${COL_NC}%s\n" "Download URL: ${asset_download_url}"
-    printf "${COL_NC}%s ${INFO}\n\n" "Downloading... ${filename}"
 
     # Download asset
-    download_url "${asset_download_url}" "${PI_CONTROL_TMP_DIR}"
+    printf "${COL_NC}%s ${INFO}\n\n" "Downloading... ${filename}"
+    download_url "${asset_download_url}" "${tmp_dir}"
 
     # Unpacking file
-    extract_file_to_target "${target_file}" "${PI_CONTROL_INSTALL_DIR}"
+    printf "\n${COL_NC}%s ${INFO}\n\n" "Unpacking... ${file}"
+    extract_file_to_target "${target_file}" "${install_dir}"
 
-    # TODO!!! Yarn install
-    printf "${TODO} - %s\n" "Need yarn install for node deps..."
+    # Installing node dependencies with yarn
+    printf "${COL_NC}%s ${INFO}\n\n" "Installing node dependencies with yarn..."
+    (cd "$install_dir" && yarn install)
 }
 
 pi_control_deinstall() {
@@ -482,7 +488,6 @@ extract_file_to_target() {
         mkdir -p "${target_path}" # Creating folder
     fi
 
-    printf "\n${COL_NC}%s ${INFO}\n\n" "Unpacking... ${file}"
     tar -zxf "$file" --directory "$target_path"
 }
 
