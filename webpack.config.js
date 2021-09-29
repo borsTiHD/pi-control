@@ -1,9 +1,8 @@
 import path from 'path'
-import { fileURLToPath } from 'url'
 // import nodeExternals from 'webpack-node-externals'
 
-// we need to change up how __dirname is used for ES6 purposes
-const __dirname = path.dirname(fileURLToPath(import.meta.url))
+// Path CONST
+const PROJECT_ROOT = process.cwd()
 
 const { NODE_ENV = 'production' } = process.env
 
@@ -17,7 +16,7 @@ export default {
         __dirname: false
     },
     output: {
-        path: path.resolve(__dirname, 'dist', 'server'),
+        path: path.resolve(PROJECT_ROOT, 'dist', 'server'),
         filename: 'app.cjs'
     },
     resolve: {
