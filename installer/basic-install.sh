@@ -449,12 +449,11 @@ pi_control_backup_userdata() {
         mkdir -p "${target_path}" # Creating folder
     fi
 
-    cd "$source_path" # switching to source folder
+    # Switching to sourcefolder and copy every file/folder from backup array
     for file in "${files_arr[@]}"
     do
-        cp -rp "$file" "$PI_CONTROL_BACKUP_DIR"
+        (cd "$source_path" && cp -rp "$file" "$PI_CONTROL_BACKUP_DIR")
     done
-    cd - # switching back to working folder
 
     # TODO!!! Saving existing userdata in TMP folder...
     printf "${TODO} - %s\n" "Need to save userdata..."
