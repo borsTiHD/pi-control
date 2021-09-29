@@ -337,9 +337,6 @@ check_pi_control() {
         pi_control_install
     fi
 
-    # TODO!!! - Checking, or installing service
-    printf "\n${TODO} - %s\n" "The service still needs to be checked and set up."
-
     # Removing temporary files
     printf "${COL_NC}%s ${INFO}\n" "Removing temporary files and folder..."
     remove_folder "${tmp_dir}"
@@ -507,6 +504,9 @@ main() {
 
     printf "\n${COL_NC}%s\n" "Checking ${APP_NAME}..."
     check_pi_control # Checking pi-control
+
+    # TODO!!! - Checking, or installing service
+    printf "\n${TODO} - %s\n" "Service still needs to be checked and set up."
 
     # TODO!!! - Run pi-control
     printf "\n${TODO} - %s\n" "Need to run pi-control."
