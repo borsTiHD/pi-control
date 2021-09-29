@@ -9,7 +9,7 @@
 
 # Install with this command (from your Linux machine):
 #
-# curl -sSL https://raw.githubusercontent.com/borsTiHD/pi-control/feature/install-script/installer/basic-install.sh | bash # TODO!!! - Needs to set branch to main in url
+# curl -sSL https://raw.githubusercontent.com/borsTiHD/pi-control/main/installer/basic-install.sh | bash
 
 # -e option instructs bash to immediately exit if any command [1] has a non-zero exit status
 # We do not want users to end up with a partially working install, so we exit the script
@@ -42,8 +42,9 @@ readonly APP_NAME="pi-control"
 
 # Const URLs
 readonly GIT_REPO="https://github.com/${AUTHOR}/${APP_NAME}"
-readonly URL_INSTALL_SCRIPT="https://raw.githubusercontent.com/${AUTHOR}/${APP_NAME}/feature/install-script/installer/basic-install.sh" # TODO!!! - Needs to set branch to main in url
-readonly URL_VERSION_CHECK="https://raw.githubusercontent.com/${AUTHOR}/${APP_NAME}/feature/install-script/installer/version.txt" # TODO!!! - Needs to set branch to main in url
+readonly GIT_BRANCH="feature/install-script" # Branch name for URLs, should be "main" # TODO!!! - Needs to set branch to main in url
+readonly URL_INSTALL_SCRIPT="https://raw.githubusercontent.com/${AUTHOR}/${APP_NAME}/${GIT_BRANCH}/installer/basic-install.sh"
+readonly URL_VERSION_CHECK="https://raw.githubusercontent.com/${AUTHOR}/${APP_NAME}/${GIT_BRANCH}/installer/version.txt"
 readonly URL_LATEST_RELEASE="https://api.github.com/repos/${AUTHOR}/${APP_NAME}/releases/latest"
 
 # Const Paths
