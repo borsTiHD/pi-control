@@ -488,7 +488,15 @@ pi_control_copy_userdata() {
     # Switching to sourcefolder and copy every file/folder from backup array
     for file in "${files_arr[@]}"
     do
-        (cd "$source_path" && cp -rp "$file" "$target_path")
+        # Checking if directory exists
+        if [ -d "${source_path}${file}" ]; then
+            (cd "$source_path" && cp -rp "$file" "$target_path")
+        fi
+
+        # Checking if file exists
+        if test -f "${source_path}${file}"; then
+            (cd "$source_path" && cp -rp "$file" "$target_path")
+        fi
     done
 }
 
