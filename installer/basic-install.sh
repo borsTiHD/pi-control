@@ -315,6 +315,7 @@ check_pi_control() {
         if version_greater_equal "${pi_control_installed_version}" "${latest_version:1}"; then
             # Latest version installed... do nothing ;)
             printf "${COL_NC}%s ${TICK}\n" "Latest version installed..."
+            pi_control_backup_userdata # TODO ONLY FOR TESTING... DELETE ME!!!
         else
             # Old version is installed... starting upgrade process
             printf "${COL_NC}%s ${CROSS}\n" "Older version is installed."
@@ -427,9 +428,23 @@ pi_control_install() {
     printf "${TODO} - %s\n" "Need to remove old tmp files..."
 }
 
+pi_control_backup_create_file_arr() {
+    local -n arr=$1 # use nameref for indirection
+    arr=(".env")
+    arr+=("db.json")
+    arr+=("scripts")
+}
+
 pi_control_backup_userdata() {
+    # Get file array and save data to temp folder
+    local files_arr
+    pi_control_backup_create_file_arr files_arr
+    declare -p files_arr
+
     # TODO!!! Saving existing userdata in TMP folder...
     printf "${TODO} - %s\n" "Need to save userdata..."
+
+    # cp -p xxx xxx
 }
 
 download_url() {
