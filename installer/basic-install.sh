@@ -321,13 +321,14 @@ check_pi_control() {
             printf "${COL_NC}%s ${CROSS}\n" "Older version is installed."
             printf "${COL_NC}%s ${TICK}\n" "Upgrade ${APP_NAME} to latest version..."
 
-            pi_control_backup_userdata "$PI_CONTROL_INSTALL_DIR" "$PI_CONTROL_BACKUP_DIR"
+            # Backup existing userdata
+            pi_control_copy_userdata "$PI_CONTROL_INSTALL_DIR" "$PI_CONTROL_BACKUP_DIR" "Backup"
 
             # TODO!!! Upgrading version...
             printf "${TODO} - %s\n" "Need to upgrade ${APP_NAME}..."
 
-            # TODO!!! Restoring userdata...
-            printf "${TODO} - %s\n" "Need to restore userdata..."
+            # Restoring existing userdata
+            pi_control_copy_userdata "$PI_CONTROL_BACKUP_DIR" "$PI_CONTROL_INSTALL_DIR" "Restoring"
         fi
     else
         # Pi-Control is not installed. Installing...
@@ -435,10 +436,11 @@ pi_control_backup_create_file_arr() {
     arr+=("scripts")
 }
 
-pi_control_backup_userdata() {
+pi_control_copy_userdata() {
     # Arguments
     local source_path="$1"
     local target_path="$2"
+    local mode_info="$3"
 
     # Get file array and save data to temp folder
     local files_arr
@@ -449,14 +451,13 @@ pi_control_backup_userdata() {
         mkdir -p "${target_path}" # Creating folder
     fi
 
+    printf "${COL_NC}%s ${TICK}\n" "${mode_info} userdata..."
+
     # Switching to sourcefolder and copy every file/folder from backup array
     for file in "${files_arr[@]}"
     do
-        (cd "$source_path" && cp -rp "$file" "$PI_CONTROL_BACKUP_DIR")
+        (cd "$source_path" && cp -rp "$file" "$target_path")
     done
-
-    # TODO!!! Saving existing userdata in TMP folder...
-    printf "${TODO} - %s\n" "Need to save userdata..."
 }
 
 download_url() {
