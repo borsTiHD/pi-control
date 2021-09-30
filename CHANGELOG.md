@@ -6,6 +6,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.4.0] - 2021-09-30
+
+
 ## [0.3.0] - 2021-09-13
 ### Added
 - App: New user menu displaying users gravatar, if it exists. For that, a hashed email address will be send to [gravatar.com](https://gravatar.com)
@@ -58,7 +61,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 - First official release of pi-control 🥳
 
-[Unreleased]: https://github.com/borsTiHD/pi-control/compare/v0.3.0...HEAD
+[Unreleased]: https://github.com/borsTiHD/pi-control/compare/v0.4.0...HEAD
+[0.4.0]: https://github.com/borsTiHD/pi-control/releases/tag/v0.4.0
 [0.3.0]: https://github.com/borsTiHD/pi-control/releases/tag/v0.3.0
 [0.2.0]: https://github.com/borsTiHD/pi-control/releases/tag/v0.2.0
 [0.1.0]: https://github.com/borsTiHD/pi-control/releases/tag/v0.1.0

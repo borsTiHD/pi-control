@@ -7,50 +7,40 @@ It was designed to help with information gathering, as well as to simplify contr
 - **NodeJS**: `16.x`
 - **Yarn**: `1.22.x`
 - **Npm**: _not testet (optional)_
+  
+# Installation
 
-## Install & running the app
+## One-Step Automated Install
+
+Those who want to get started quickly and conveniently may install Pi-Control 🐱‍👤 using the following command:
+
+### `curl -sSL https://raw.githubusercontent.com/borsTiHD/pi-control/main/installer/basic-install.sh | bash`
+
+The script checks all needed dependencies and will ask you if you want to install an additional service.  
+With the service you can control the app with the following commands: ```sudo picontrol (start|stop|status)```  
+
+## Alternative Install Method
 Download the latest version from releases: [Release / Download](https://github.com/borsTiHD/pi-control/releases)  
-Extract the archive, change to the subdirectory, install dependencies and start the app:  
+Create and change to the subdirectory ```/opt/pi-control```.  
+Extract the archive and install dependencies with ```yarn install```.  
 ```bash
-$ cd pi-control
-$ yarn install # npm install
-$ sudo yarn start # sudo npm start
+$ cd /opt/pi-control
+$ yarn install # or npm install
+$ sudo yarn start # or sudo npm start
 ```
 
-# Deploy with [pm2](https://pm2.keymetrics.io/) (run as a service with start on reboot, or crash)
-If you want to run the app in the background, or do you want to open the app automatically on restart, you can use pm2.
-```bash
-# maybe you need to add 'sudo' for every command, even to start 'pm2' service so it can edit files for example
+This way you need to manually start the app with the ```sudo yarn start``` command.  
+You can also take care of your own way of running the app in the background, etc.  
+Examples: pm2 ('ecosystem.json' included), node-linux (you can use the script in ```./installer/service.cjs```), etc.  
 
-# yarn pm2 install
-$ yarn global add pm2
+-----
 
-# or npm pm2 install
-$ npm install pm2 -g
+## Update the app
 
-# start app (localhost:8800) - without 'sudo' the process has not enough rights for writing files
-$ sudo pm2 start ecosystem.json
-```
-
-### Additional pm2 commands
-```bash
-# check status by
-$ sudo pm2 ls
-
-# make pm2 auto-boot at server restart:
-$ sudo pm2 startup
-
-# remove auto-boot service
-$ sudo pm2 unstartup systemd
-
-# stopping service
-$ sudo pm2 stop pi-control
-
-# adding instances in ecosystem.config.js by setting the number to 'max' for instances on every cpu core
-# after a change in the setting file, you need to 'delete' saved apps in pm2
-$ sudo pm2 delete all
-```
-
+For updating you can use the same installation script.  
+It also takes care of transferring your data to the new version.  
+For a manual update, the old app must be deleted and reinstalled.  
+  
 # Contribution
 If you want to contribute to this project, please take a look into the wiki:  
 - https://github.com/borsTiHD/pi-control/wiki

@@ -1,5 +1,4 @@
 import path from 'path'
-import { fileURLToPath } from 'url'
 import fs from 'fs-extra'
 import archiver from 'archiver'
 import webpack from 'webpack'
@@ -16,11 +15,8 @@ import colors from './colors.js'
 // Loading '.env' for 'GITHUB_TOKEN'
 dotenv.config()
 
-// we need to change up how __dirname is used for ES6 purposes
-const __dirname = path.dirname(fileURLToPath(import.meta.url))
-
 // Path CONST
-const PROJECT_ROOT = path.join(__dirname, '..')
+const PROJECT_ROOT = process.cwd()
 const DIST_DIR = path.join(PROJECT_ROOT, 'dist')
 const NUXT_DIR = path.join(PROJECT_ROOT, 'src', 'client')
 const BUILD_DIR = path.join(PROJECT_ROOT, 'build')
@@ -247,13 +243,15 @@ async function archiveProject() {
     return new Promise((resolve, reject) => {
         // Adding files & folders
         archive
-            .directory(DIST_DIR, path.join(pkg.name, 'dist')) // Compiled app
-            .directory(SCRIPTS_DIR, path.join(pkg.name, 'scripts', 'server')) // Server scripts
+            // .directory(DIST_DIR, path.join(pkg.name, 'dist')) // Adding 'pkg.name,' on every file, will result in an subfolder with 'app-name' in the tar archive
+            .directory(DIST_DIR, path.join('dist')) // Compiled app
+            .directory(SCRIPTS_DIR, path.join('scripts', 'server')) // Server scripts
+            .directory(path.join(PROJECT_ROOT, 'installer'), path.join('installer')) // Installer with service script
             // .append(fs.createReadStream(PKG_FILE), { name: path.join(pkg.name, 'package.json') }) // Original Package.json
-            .append(JSON.stringify(newPkg), { name: path.join(pkg.name, 'package.json') }) // Modified Package.json
-            .append(fs.createReadStream(path.join(PROJECT_ROOT, 'ecosystem.json')), { name: path.join(pkg.name, 'ecosystem.json') }) // pm2 script
-            .append(fs.createReadStream(path.join(PROJECT_ROOT, 'README.md')), { name: path.join(pkg.name, 'README.md') }) // Readme
-            .append(fs.createReadStream(path.join(PROJECT_ROOT, 'CHANGELOG.md')), { name: path.join(pkg.name, 'CHANGELOG.md') }) // Changelog
+            .append(JSON.stringify(newPkg), { name: path.join('package.json') }) // Modified Package.json
+            .append(fs.createReadStream(path.join(PROJECT_ROOT, 'ecosystem.json')), { name: path.join('ecosystem.json') }) // pm2 script
+            .append(fs.createReadStream(path.join(PROJECT_ROOT, 'README.md')), { name: path.join('README.md') }) // Readme
+            .append(fs.createReadStream(path.join(PROJECT_ROOT, 'CHANGELOG.md')), { name: path.join('CHANGELOG.md') }) // Changelog
 
         // Archive events
         archive.on('error', (err) => reject(err))
