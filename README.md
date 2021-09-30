@@ -17,7 +17,7 @@ Those who want to get started quickly and conveniently may install Pi-Control ðŸ
 ### `curl -sSL https://raw.githubusercontent.com/borsTiHD/pi-control/main/installer/basic-install.sh | sudo bash`
 
 The script checks all needed dependencies and will ask you if you want to install an additional service.  
-With the service you can control the app with the following commands: ```sudo picontrol (start|stop|status)```  
+With the service you can control the app with the following commands: ```sudo service picontrol (start|stop|status)```  
 
 ## Alternative Install Method
 Download the latest version from releases: [Release / Download](https://github.com/borsTiHD/pi-control/releases)  
