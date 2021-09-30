@@ -331,10 +331,10 @@ check_service() {
         fi
 
         printf "${COL_NC}%s ${INFO}\n" "Installing service..."
-        (cd "$install_dir" && node installer/service.js --install)
+        (cd "$install_dir" && node installer/service.cjs --install)
 
         printf "${COL_NC}%s ${INFO}\n\n" "Starting service..."
-        (cd "$install_dir" && node installer/service.js --start)
+        (cd "$install_dir" && node installer/service.cjs --start)
     else
         # User dont want to install service...
         printf "${COL_NC}%s ${INFO}\n" "You need to run ${APP_NAME} manually."
@@ -506,7 +506,7 @@ pi_control_deinstall() {
 
     # Removing service
     printf "${COL_NC}%s ${INFO}\n" "Removing service..."
-    (cd "$install_dir" && node installer/service.js --deinstall)
+    (cd "$install_dir" && node installer/service.cjs --deinstall)
 
     # Removing old installation
     printf "${COL_NC}%s ${INFO}\n" "Removing pi-control..."
