@@ -42,7 +42,7 @@ readonly APP_NAME="pi-control"
 
 # Const URLs
 readonly GIT_REPO="https://github.com/${AUTHOR}/${APP_NAME}"
-readonly GIT_BRANCH="feature/install-script" # Branch name for URLs, should be "main" # TODO!!! - Needs to set branch to main in url
+readonly GIT_BRANCH="main" # Branch name for URLs, should be "main" # TODO!!! - Needs to set branch to main in url
 readonly URL_INSTALL_SCRIPT="https://raw.githubusercontent.com/${AUTHOR}/${APP_NAME}/${GIT_BRANCH}/installer/basic-install.sh"
 readonly URL_VERSION_CHECK="https://raw.githubusercontent.com/${AUTHOR}/${APP_NAME}/${GIT_BRANCH}/installer/version.txt"
 readonly URL_LATEST_RELEASE="https://api.github.com/repos/${AUTHOR}/${APP_NAME}/releases/latest"
