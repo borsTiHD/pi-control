@@ -35,11 +35,33 @@ Examples: pm2 ('ecosystem.json' included), node-linux (you can use the script in
 
 -----
 
+## First time accessing the app
+
+After installation, you can access the app through your browser.  
+Go to: ```http://{hostname|ip}:8800```  
+  
+After a fresh installation no user is set up yet. Please follow the registration request.  
+Your user data will be stored locally and hashed with a unique key.  
+  
+If you forget your password, you can delete the file with the stored data ```/opt/pi-control/db.json```, then you will be asked to register again.
+
+-----
+
 ## Update the app
 
 For updating you can use the same installation script.  
 It also takes care of transferring your data to the new version.  
 For a manual update, the old app must be deleted and reinstalled.  
+
+-----
+
+## Changing Port
+
+You can change the default port (```8800```) by creating/editing the ```/opt/pi-control/.env``` file and adding the following value there:  ```PORT_PRODUCTION=8888```
+After the change, you need to restart the app and you can access the app with the new port.  
+Go to: ```http://{hostname|ip}:8888```
+
+-----
   
 # Contribution
 If you want to contribute to this project, please take a look into the wiki:  
