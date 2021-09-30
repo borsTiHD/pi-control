@@ -115,7 +115,7 @@ user_prompt() {
     # Asking user a question and returning true/false
     # Param 1 is the question
     printf "\n"
-    read -p "$1 (y/n)? " answer
+    read -p "$1 (y/n)? " answer < /dev/tty
     case ${answer:0:1} in
         y|Y|yes|Yes )
             true
