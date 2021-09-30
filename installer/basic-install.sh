@@ -323,12 +323,15 @@ check_service() {
         if check_if_node_linux_installed; then
             # Already installed
             printf "${COL_NC}%s ${INFO}\n\n" "Already installed 'node-linux' (global node dependency), trying to upgrade to latest version..."
-            npm update "node-linux"
+            npm update node-linux
         else
             # Not installed
             printf "${COL_NC}%s ${INFO}\n\n" "Installing 'node-linux' (global node dependency)..."
             npm install --global node-linux # 'node-linux' is the module to install services on linux
         fi
+
+        # Linking global module 'node-linux' to local repo
+        (cd "$install_dir" && npm link node-linux)
 
         printf "${COL_NC}%s ${INFO}\n" "Installing service..."
         (cd "$install_dir" && node installer/service.cjs --install)
