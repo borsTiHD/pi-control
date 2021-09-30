@@ -90,7 +90,7 @@ welcome_message() {
 }
 
 closing_message() {
-    printf "${COL_BLUE}\n\n" # Blue text
+    printf "${COL_BLUE}\n" # Blue text
     printf "+----------------------------------------------+\n"
     printf "|                                              |\n"
     printf "| ${APP_NAME} installed                         |\n"
