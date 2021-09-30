@@ -11,10 +11,17 @@ const APP_DIR = path.join(PROJECT_ROOT, 'dist', 'server')
 const APP_FILE = path.join(APP_DIR, 'app.cjs')
 
 // Create a new service object
+// https://github.com/coreybutler/node-linux
 const svc = new Service({
     name: pkg.name,
     description: pkg.description,
-    script: APP_FILE
+    script: APP_FILE,
+    env: [
+        {
+            name: 'NODE_ENV',
+            value: 'production'
+        }
+    ]
 })
 
 // Installing, deinstalling, or starting service
