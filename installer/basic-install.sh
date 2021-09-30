@@ -479,7 +479,7 @@ pi_control_install() {
             # filename is selected, break loop
             break;
         fi
-    done
+    done < /dev/tty
 
     # Removing existing downloadfile
     local target_file="${tmp_dir}${filename}"
