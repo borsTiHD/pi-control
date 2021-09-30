@@ -89,6 +89,28 @@ welcome_message() {
     printf "+----------------------------------------------+\n\n"
 }
 
+closing_message() {
+    printf "${COL_BLUE}\n\n" # Blue text
+    printf "+----------------------------------------------+\n"
+    printf "|                                              |\n"
+    printf "| ${APP_NAME} installed                         |\n"
+    printf "|                                              |\n"
+    printf "| More infos:                                  |\n"
+    printf "| - ${GIT_REPO}     |\n"
+    printf "|                                              |\n"
+    printf "| If you installed the service,                |\n"
+    printf "| you can control the app by these commands:   |\n"
+    printf "| - ${APP_NAME} start                           |\n"
+    printf "| - ${APP_NAME} stop                            |\n"
+    printf "| - ${APP_NAME} status                          |\n"
+    printf "|                                              |\n"
+    printf "| You can alternatively start                  |\n"
+    printf "| the app manually. Please read the            |\n"
+    printf "| instructions on the git repo.                |\n"
+    printf "|                                              |\n"
+    printf "+----------------------------------------------+\n\n"
+}
+
 user_prompt() {
     # Asking user a question and returning true/false
     # Param 1 is the question
@@ -298,14 +320,38 @@ check_service() {
     # Asking user if he wants to install app as an service
     if user_prompt "Do you wish to install ${APP_NAME} as an service?" ; then
         # User wish to install service
-        printf "${COL_NC}%s ${INFO}\n\n" "Installing 'node-linux'..."
-        npm install --global node-linux # 'node-linux' is the module to install services on linux
+        if check_if_node_linux_installed; then
+            # Already installed
+            printf "${COL_NC}%s ${INFO}\n\n" "Already installed 'node-linux' (global node dependency), trying to upgrade to latest version..."
+            npm update "node-linux"
+        else
+            # Not installed
+            printf "${COL_NC}%s ${INFO}\n\n" "Installing 'node-linux' (global node dependency)..."
+            npm install --global node-linux # 'node-linux' is the module to install services on linux
+        fi
 
-        printf "${COL_NC}%s ${INFO}\n\n" "Installing 'node-linux'service..."
+        printf "${COL_NC}%s ${INFO}\n" "Installing service..."
         (cd "$install_dir" && node installer/service.js --install)
+
+        printf "${COL_NC}%s ${INFO}\n\n" "Starting service..."
+        (cd "$install_dir" && node installer/service.js --start)
     else
         # User dont want to install service...
         printf "${COL_NC}%s ${INFO}\n" "You need to run ${APP_NAME} manually."
+    fi
+}
+
+check_if_node_linux_installed() {
+    # Check if node-linux is installed
+    local installed=$(npm list -g node-linux | grep node-linux)
+    printf "${COL_NC}%s ${INFO}\n" "Check if node-linux is installed:"
+    printf "${installed}\n\n"
+    
+    # Check if script executed with root permissions
+    if [ $installed != "" ]; then
+        true # Installed
+    else
+        false # Not installed
     fi
 }
 
@@ -460,7 +506,7 @@ pi_control_deinstall() {
 
     # Removing service
     printf "${COL_NC}%s ${INFO}\n" "Removing service..."
-    (cd "$install_dir" && node service.js --deinstall)
+    (cd "$install_dir" && node installer/service.js --deinstall)
 
     # Removing old installation
     printf "${COL_NC}%s ${INFO}\n" "Removing pi-control..."
@@ -544,11 +590,8 @@ main() {
     printf "\n${COL_NC}%s\n" "Checking service..."
     check_service # Checking pi-control
 
-    # TODO!!! - Run pi-control
-    printf "\n${TODO} - %s\n" "Need to run pi-control."
-
-    # TODO!!! - Closing message and info how the user can access pi-control
-    printf "\n${TODO} - %s\n" "Need closing message and info how the user can access pi-control."
+    # Script shows closing message and stopps
+    closing_message
 }
 
 # Starting...
