@@ -1,6 +1,6 @@
 const path = require('path')
 const Service = require('node-linux').Service
-const pkg = require('./package.json')
+const pkg = require('../package.json')
 
 // Getting Argvs
 const argv = process.argv.slice(2)
