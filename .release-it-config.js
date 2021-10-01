@@ -1,6 +1,6 @@
 export default {
     hooks: {
-        'after:bump': 'node ./src/build.js --only-bundle=true'
+        'after:bump': 'cross-env NODE_ENV=production node ./src/build.js'
     },
     git: {
         commitMessage: 'chore(release): 🚀 v${version}',
