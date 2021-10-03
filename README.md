@@ -68,3 +68,6 @@ Go to: ```http://{hostname|ip}:8888```
 # Contribution
 If you want to contribute to this project, please take a look into the wiki:  
 - https://github.com/borsTiHD/pi-control/wiki
+
+# Credits
+- [Mockup psd created by syifa5610 - www.freepik.com](https://www.freepik.com/psd/mockup)  
