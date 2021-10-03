@@ -3,6 +3,8 @@ Welcome to Pi-Control 🐱‍👤.
 This is an App for controlling your raspberry pi.  
 It was designed to help with information gathering, as well as to simplify control. 
 
+![Pi-Control Mockup](/screenshots/mockup.png?raw=true "Pi-Control Mockup")
+
 ## Requirements
 - **NodeJS**: `16.x`
 - **Yarn**: `1.22.x`
