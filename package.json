@@ -33,7 +33,7 @@
   },
   "devDependencies": {
     "@fontsource/poppins": "^4.5.0",
-    "@mdi/js": "^6.1.95",
+    "@mdi/js": "^6.3.95",
     "@nuxtjs/composition-api": "^0.29.2",
     "@nuxtjs/eslint-config": "^6.0.1",
     "@nuxtjs/eslint-module": "^3.0.2",
