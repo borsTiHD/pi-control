@@ -44,7 +44,7 @@
     "babel-eslint": "^10.1.0",
     "bcryptjs": "^2.4.3",
     "chart.js": "^3.6.0",
-    "concurrently": "^6.4.0",
+    "concurrently": "^6.5.1",
     "cookie-parser": "^1.4.6",
     "cors": "^2.8.5",
     "cross-env": "^7.0.3",
