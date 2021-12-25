@@ -69,7 +69,7 @@
     "socket.io-client": "^4.4.0",
     "swagger-jsdoc": "^6.1.0",
     "swagger-ui-express": "^4.3.0",
-    "vue-chart-3": "^2.0.3",
+    "vue-chart-3": "^3.0.4",
     "vue-socket.io": "^3.0.10",
     "vue-toastification": "^1.7.14",
     "vuex-persistedstate": "^4.1.0",
