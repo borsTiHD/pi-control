@@ -2,7 +2,7 @@
     <v-row v-if="getAlerts.length > 0" justify="center" align="center">
         <v-col cols="12" sm="8" md="6">
             <div id="alerts" class="mb-n3">
-                <app-alert v-for="(alert, key, index) in indexedAlerts" :key="index" :data="alert" />
+                <show-alert v-for="(alert, key, index) in indexedAlerts" :key="index" :data="alert" />
             </div>
         </v-col>
     </v-row>
@@ -11,12 +11,12 @@
 <script>
 import { mapGetters } from 'vuex'
 
-import appAlert from '@/components/alerts/Alert.vue'
+import ShowAlert from '@/components/alerts/ShowAlert.vue'
 
 export default {
-    name: 'Alerts',
+    name: 'ListAlerts',
     components: {
-        appAlert
+        ShowAlert
     },
     computed: {
         ...mapGetters({

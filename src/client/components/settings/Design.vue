@@ -84,14 +84,13 @@
 </template>
 
 <script>
+import { mapActions, mapGetters } from 'vuex'
 import Themes from '@/plugins/themes.js'
 import AppCustomDesign from '@/components/modal/CustomDesign.vue'
 import AppButton from '@/components/Button.vue'
 
-import { mapActions, mapGetters } from 'vuex'
-
 export default {
-    name: 'Design',
+    name: 'DesignSettings',
     components: {
         AppCustomDesign,
         AppButton

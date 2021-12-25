@@ -92,13 +92,12 @@
 </template>
 
 <script>
+import { mapGetters, mapActions } from 'vuex'
 import VueTerm from '@/components/terminal/VueTerm.vue'
 import AppButton from '@/components/Button.vue'
 
-import { mapGetters, mapActions } from 'vuex'
-
 export default {
-    name: 'Terminal',
+    name: 'TerminalPage',
     components: {
         VueTerm,
         AppButton

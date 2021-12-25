@@ -16,7 +16,7 @@
 import { mapGetters, mapActions } from 'vuex'
 
 export default {
-    name: 'Index',
+    name: 'IndexPage',
     auth: false,
     computed: {
         ...mapGetters({

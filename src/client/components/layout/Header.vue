@@ -25,7 +25,7 @@ import DonateChip from '~/components/display/DonateChip.vue'
 import UserMenu from '~/components/display/UserMenu.vue'
 
 export default {
-    name: 'Header',
+    name: 'AppHeader',
     components: {
         AppUpdateChip,
         AppPwaChip,

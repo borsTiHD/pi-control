@@ -87,7 +87,7 @@ import { mapGetters } from 'vuex'
 import Diskspace from '@/models/Diskspace'
 
 export default {
-    name: 'Diskspace',
+    name: 'DiskspaceInfo',
     data() {
         return {
             loading: false,

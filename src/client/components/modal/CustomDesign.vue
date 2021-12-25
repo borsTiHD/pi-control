@@ -65,8 +65,8 @@
 </template>
 
 <script>
-import Themes from '@/plugins/themes.js'
 import { mapActions, mapGetters } from 'vuex'
+import Themes from '@/plugins/themes.js'
 
 export default {
     name: 'CustomDesign',

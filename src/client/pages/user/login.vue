@@ -31,7 +31,7 @@ import { mapGetters } from 'vuex'
 import AuthenticationForm from '@/components/forms/AuthentiactionForm.vue'
 
 export default {
-    name: 'Login',
+    name: 'UserLogin',
     auth: false,
     components: {
         AuthenticationForm

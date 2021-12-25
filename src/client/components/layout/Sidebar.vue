@@ -98,7 +98,7 @@ import pkg from 'projRoot/package.json'
 import AppVersion from '~/components/display/AppVersion.vue'
 
 export default {
-    name: 'Sidebar',
+    name: 'AppSidebar',
     components: {
         AppVersion
     },

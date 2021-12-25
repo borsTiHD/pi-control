@@ -59,11 +59,11 @@
 </template>
 
 <script>
-import Process from '@/models/Process'
 import { mapGetters } from 'vuex'
+import Process from '@/models/Process'
 
 export default {
-    name: 'Processes',
+    name: 'ProcessesPage',
     components: {},
     data() {
         return {

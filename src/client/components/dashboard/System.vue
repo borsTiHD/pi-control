@@ -88,11 +88,11 @@
 </template>
 
 <script>
-import System from '@/models/System'
 import { mapGetters } from 'vuex'
+import System from '@/models/System'
 
 export default {
-    name: 'System',
+    name: 'SystemInfo',
     data() {
         return {
             loading: false,

@@ -12,7 +12,7 @@ import AutoRefresh from '~/components/settings/AutoRefresh.vue'
 import Design from '~/components/settings/Design.vue'
 
 export default {
-    name: 'Settings',
+    name: 'SettingsPage',
     components: {
         AutoRefresh,
         Design

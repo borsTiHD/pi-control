@@ -34,7 +34,7 @@ import System from '~/components/dashboard/System.vue'
 import Hardware from '~/components/dashboard/Hardware.vue'
 
 export default {
-    name: 'Dashboard',
+    name: 'DashboardPage',
     components: {
         CpuInfo,
         Memory,

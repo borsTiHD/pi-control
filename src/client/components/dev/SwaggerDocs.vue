@@ -13,7 +13,7 @@
 import { mapGetters } from 'vuex'
 
 export default {
-    name: 'Swagger',
+    name: 'SwaggerDocs',
     data() {
         return {
             loadingTestBtn: false,

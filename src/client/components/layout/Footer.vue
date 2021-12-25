@@ -12,6 +12,7 @@
 import pkg from 'projRoot/package.json'
 
 export default {
+    name: 'AppFooter',
     data() {
         return {
             date: `${new Date().getFullYear()}`

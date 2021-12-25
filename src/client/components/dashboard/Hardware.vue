@@ -88,11 +88,11 @@
 </template>
 
 <script>
-import Hardware from '@/models/Hardware'
 import { mapGetters } from 'vuex'
+import Hardware from '@/models/Hardware'
 
 export default {
-    name: 'Hardware',
+    name: 'HardwareInfo',
     data() {
         return {
             loading: false,

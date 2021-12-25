@@ -19,7 +19,7 @@ import TestTerminal from '~/components/dev/TestTerminal.vue'
 // import SocketIo from '~/components/dev/Socket.io.vue'
 
 export default {
-    name: 'Dev',
+    name: 'DevPage',
     components: {
         SwaggerDocs,
         TestsApp,

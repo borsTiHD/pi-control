@@ -89,7 +89,7 @@
 import AppButton from '@/components/Button.vue'
 
 export default {
-    name: 'Donate',
+    name: 'DonateChip',
     components: {
         AppButton
     },

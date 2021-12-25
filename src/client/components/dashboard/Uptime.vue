@@ -84,7 +84,7 @@ import Uptime from '@/models/Uptime'
 // import Device from '@/models/Device'
 
 export default {
-    name: 'Uptime',
+    name: 'UptimeInfo',
     data() {
         return {
             loading: false,
