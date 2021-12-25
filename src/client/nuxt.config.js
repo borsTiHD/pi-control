@@ -88,6 +88,13 @@ export default {
     // Root folder
     srcDir: '',
 
+    // Vue config
+    vue: {
+        config: {
+            devtools: isDev
+        }
+    },
+
     // Global page headers: https://go.nuxtjs.dev/config-head
     head: {
         titleTemplate: '%s',
