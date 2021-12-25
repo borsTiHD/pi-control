@@ -31,7 +31,7 @@ const PKG_FILE = path.join(PROJECT_ROOT, 'package.json')
 const pkg = JSON.parse(fs.readFileSync(PKG_FILE)) // import pkg from '../../package.json'
 
 // Webpage title, also used in global "titleMixin"
-const headTitle = isDev ? `${pkg.productName.replace(' 🐱‍👤', '')} - DEV` : pkg.productName.replace(' 🐱‍👤', '')
+const headTitle = isDev ? `${pkg.productName.replace(' 🥷', '')} - DEV` : pkg.productName.replace(' 🥷', '')
 
 // Alias
 const alias = {

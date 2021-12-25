@@ -1,7 +1,7 @@
-# Pi-Control 🐱‍👤
-Welcome to Pi-Control 🐱‍👤.  
+# Pi-Control 🥷
+Welcome to Pi-Control 🥷.  
 This is an App for controlling your raspberry pi.  
-It was designed to help with information gathering, as well as to simplify control. 
+It was designed to help with information gathering, as well as to simplify control.  
 
 ![Pi-Control Mockup](/screenshots/mockup.png?raw=true "Pi-Control Mockup")
 
@@ -14,7 +14,7 @@ It was designed to help with information gathering, as well as to simplify contr
 
 ## One-Step Automated Install
 
-Those who want to get started quickly and conveniently may install Pi-Control 🐱‍👤 using the following command:
+Those who want to get started quickly and conveniently may install Pi-Control 🥷 using the following command:
 
 ### `curl -sSL https://raw.githubusercontent.com/borsTiHD/pi-control/main/installer/basic-install.sh | sudo bash`
 

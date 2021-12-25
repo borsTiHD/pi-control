@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-# Installs and Updates Pi-Control 🐱‍👤
+# Installs and Updates Pi-Control 🥷
 # More infos about this project on Github.
 # https://github.com/borsTiHD/pi-control
 #
