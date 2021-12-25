@@ -32,6 +32,7 @@
     "nuxt-build-optimisations": "^1.0.7"
   },
   "devDependencies": {
+    "@babel/eslint-parser": "^7.16.5",
     "@fontsource/poppins": "^4.5.0",
     "@mdi/js": "^6.5.95",
     "@nuxtjs/composition-api": "^0.31.0",
@@ -41,7 +42,6 @@
     "@nuxtjs/vuetify": "^1.12.3",
     "@vuex-orm/core": "^0.36.4",
     "archiver": "^5.3.0",
-    "babel-eslint": "^10.1.0",
     "bcryptjs": "^2.4.3",
     "chart.js": "^3.6.0",
     "concurrently": "^6.5.1",
