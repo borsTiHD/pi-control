@@ -6,6 +6,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.5.0] - 2021-12-25
+### Changed
+- App: Changing emoji in title. The previous emoji was a special one from microsoft that not every device supports (especially not apple devices).
+- App: Improved installer und build script.
+- App: Updated lots of dependencies.
+
 ## [0.4.0] - 2021-09-30
 ### Added
 - App: Adding automated installation script.
