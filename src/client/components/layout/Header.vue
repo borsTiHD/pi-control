@@ -34,7 +34,7 @@ export default {
     },
     data() {
         return {
-            title: `${pkg.productName}`
+            title: this.$config.dev ? `${pkg.productName} - DEV` : `${pkg.productName}`
         }
     },
     computed: {
