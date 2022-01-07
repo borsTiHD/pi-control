@@ -5,28 +5,28 @@ Welcome to Pi-Control 🥷.
 This is an App for controlling your raspberry pi.  
 It was designed to help with information gathering, as well as to simplify control.  
 
-## Requirements
+## 🛠️ Requirements
 - **NodeJS**: `16.x`
 - **Yarn**: `1.22.x`
 - **Npm**: _not testet (optional)_
 
-## Compatibility list
+## 💎 Compatibility list
 | Model | Version | Check | Description |
 | --- | --- | --- | --- |
 | Raspberry Pi 4 Model B Rev 1.4 | Raspbian GNU/Linux 10 (buster) | ✅ | developed on it |
 | Raspberry Pi 3 Model B Plus Rev 1.3 | Raspbian GNU/Linux 10 (buster) | ✅ | tested |
 
-# Installation
+# ⚙️ Installation
 
-## One-Step Automated Install
-Those who want to get started quickly and conveniently may install Pi-Control 🥷 using the following command:
+## 💻 One-Step Automated Install
+Those who want to get started quickly and conveniently may install Pi-Control 🥷 using the following command/script:
 
 ### `curl -sSL https://raw.githubusercontent.com/borsTiHD/pi-control/main/installer/basic-install.sh | sudo bash`
 
 The script checks all needed dependencies and will ask you if you want to install an additional service.  
 With the service you can control the app: ```sudo service picontrol (start|stop|status)```  
 
-## Alternative Install Method
+## 🤓 Alternative Install Method
 Download the latest version from releases: [Release / Download](https://github.com/borsTiHD/pi-control/releases)  
 Create and change to the subdirectory ```/opt/pi-control```.  
 Extract the archive and install dependencies with ```yarn install```.  
@@ -42,7 +42,7 @@ Examples: pm2 ('ecosystem.json' included), node-linux (you can use the script in
 
 -----
 
-## First time accessing the app
+## 👀 First time accessing the app
 
 After installation, you can access the app through your browser.  
 Go to: ```http://{hostname|ip}:8800```  
@@ -54,7 +54,7 @@ If you forget your password, you can delete the file with the stored data ```/op
 
 -----
 
-## Update the app
+## ⌛ Update the app
 
 For updating you can use the same installation script.  
 It also takes care of transferring your data to the new version.  
@@ -62,7 +62,7 @@ For a manual update, the old app must be deleted and reinstalled.
 
 -----
 
-## Changing Port
+## 🤖 Changing Port
 
 You can change the default port (```8800```) by creating/editing the ```/opt/pi-control/.env``` file and adding the following value there:  ```PORT_PRODUCTION=8888```
 After the change, you need to restart the app and you can access the app with the new port.  
@@ -70,9 +70,9 @@ Go to: ```http://{hostname|ip}:8888```
 
 -----
   
-# Contribution
+# 🥰 Contribution
 If you want to contribute to this project, please take a look into the wiki:  
 - https://github.com/borsTiHD/pi-control/wiki
 
-# Credits
+# ⭐ Credits
 - [Mockup psd created by syifa5610 - www.freepik.com](https://www.freepik.com/psd/mockup)  
