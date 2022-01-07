@@ -1,6 +1,5 @@
 // import colors from 'vuetify/es5/util/colors'
 import path from 'path'
-import { fileURLToPath } from 'url'
 import fs from 'fs-extra'
 import dotenv from 'dotenv'
 import DEFAULT from '../config.js'
@@ -23,8 +22,7 @@ const PORT_FRONTEND = isDev ? DEV_PORT_FRONTEND : PORT_PRODUCTION // dev or prod
 const PORT_BACKEND = isDev ? DEV_PORT_BACKEND : PORT_PRODUCTION // dev or production
 
 // Path CONST
-const __dirname = path.dirname(fileURLToPath(import.meta.url))
-const PROJECT_ROOT = path.join(__dirname, '..', '..')
+const PROJECT_ROOT = process.cwd()
 const SRC_DIR = path.join(PROJECT_ROOT, 'src')
 const DIST_DIR = path.join(PROJECT_ROOT, 'dist')
 const PKG_FILE = path.join(PROJECT_ROOT, 'package.json')
@@ -33,7 +31,7 @@ const PKG_FILE = path.join(PROJECT_ROOT, 'package.json')
 const pkg = JSON.parse(fs.readFileSync(PKG_FILE)) // import pkg from '../../package.json'
 
 // Webpage title, also used in global "titleMixin"
-const headTitle = isDev ? `${pkg.productName.replace(' 🐱‍👤', '')} - DEV` : pkg.productName.replace(' 🐱‍👤', '')
+const headTitle = isDev ? `${pkg.productName.replace(' 🥷', '')} - DEV` : pkg.productName.replace(' 🥷', '')
 
 // Alias
 const alias = {
@@ -89,6 +87,13 @@ export default {
 
     // Root folder
     srcDir: '',
+
+    // Vue config
+    vue: {
+        config: {
+            devtools: isDev
+        }
+    },
 
     // Global page headers: https://go.nuxtjs.dev/config-head
     head: {

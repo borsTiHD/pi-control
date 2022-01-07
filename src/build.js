@@ -1,5 +1,4 @@
 import path from 'path'
-import { fileURLToPath } from 'url'
 import fs from 'fs-extra'
 import archiver from 'archiver'
 import webpack from 'webpack'
@@ -16,11 +15,8 @@ import colors from './colors.js'
 // Loading '.env' for 'GITHUB_TOKEN'
 dotenv.config()
 
-// we need to change up how __dirname is used for ES6 purposes
-const __dirname = path.dirname(fileURLToPath(import.meta.url))
-
 // Path CONST
-const PROJECT_ROOT = path.join(__dirname, '..')
+const PROJECT_ROOT = process.cwd()
 const DIST_DIR = path.join(PROJECT_ROOT, 'dist')
 const NUXT_DIR = path.join(PROJECT_ROOT, 'src', 'client')
 const BUILD_DIR = path.join(PROJECT_ROOT, 'build')
@@ -33,7 +29,6 @@ const pkg = JSON.parse(fs.readFileSync(PKG_FILE)) // import pkg from '../../pack
 // Arguments
 const argv = minimist(process.argv.slice(2))
 const RELEASE_IT = argv.release === 'true' // Argument: 'release' set 'true'
-const BUNDLE_ONLY = argv['only-bundle'] === 'true' // Argument: 'only-bundle' set 'true'
 
 // Changing Nuxt Config
 // nuxtConfig.srcDir = NUXT_DIR
@@ -45,36 +40,21 @@ const { Nuxt, Builder, Generator } = NuxtApp
 const nuxt = new Nuxt(nuxtConfig)
 
 // Starting
-if (BUNDLE_ONLY) {
-    onlyBundle()
+if (RELEASE_IT) {
+    releaseInit()
 } else {
-    init()
+    buildInit()
 }
 
 // Controlls building
-async function init() {
+async function buildInit() {
     let loader = createLoader()
     try {
-        // If we want to release our build,
-        // ask the user if the changelog got edited,
-        // if not, we script will stop and remind to do that
-        if (RELEASE_IT) {
-            clearInterval(loader)
-            logState('(ℹ) YOU WANT TO RELEASE THE APP')
-            const response = await prompts({
-                type: 'text',
-                name: 'answer',
-                message: 'Did you remember to adjust the changelog? (y/n)'
-                // validate: (value) => value < 18 ? 'Nightclub is 18+ only' : true
-            })
-
-            // If the answer wasn't 'y' or 'yes' the script will stop
-            if (!/(yes|y)/gmi.test(response.answer)) {
-                throw new Error('Question was not answered correclty. The user forgot to adjust the changelog.')
-            }
-            loader = createLoader()
-        }
-
+        // Here starts the build process.
+        // - Deleting old builds
+        // - Building client (nuxt app)
+        // - Building server (backend express app)
+        // - Bundling everything in an archive
         logState('(ℹ) DELETING OLD FILES')
         await deleteOldFiles()
 
@@ -86,17 +66,8 @@ async function init() {
         logState('(ℹ) BUILDING BACKEND')
         await buildWebpack()
 
-        // If we want to release our build,
-        // we dont want to archive in this step,
-        // we want to bundle our app, after we bump our version with 'release-it'!
-        if (!RELEASE_IT) {
-            logState('(ℹ) ARCHIVING APP')
-            await archiveProject()
-        }
-
-        clearInterval(loader)
-        logState('(ℹ) RELEASE HELPER')
-        await releaseHelper()
+        logState('(ℹ) ARCHIVING APP')
+        await archiveProject()
 
         clearInterval(loader)
         logState('(ℹ) FINISHED BUILDING APP - READY FOR RELEASING')
@@ -110,22 +81,37 @@ async function init() {
     }
 }
 
-// Only bundling 'DIST' folder
-async function onlyBundle() {
-    const loader = createLoader()
+// Controlls releasing
+async function releaseInit() {
     try {
-        logState('(ℹ) DELETING OLD FILES')
-        await deleteOldFiles('BUILD')
+        // If we want to release our build,
+        // ask the user if the changelog got edited,
+        // if not, we script will stop and remind to do that
+        logState('(ℹ) YOU WANT TO RELEASE THE APP?')
+        const response = await prompts({
+            type: 'text',
+            name: 'answer',
+            message: 'Did you remember to adjust the changelog? (y/n)'
+        })
 
-        logState('(ℹ) ARCHIVING APP')
-        await archiveProject()
+        // If the answer wasn't 'y' or 'yes' the script will stop
+        if (!/(yes|y)/gmi.test(response.answer)) {
+            throw new Error('Question was not answered correclty. The user forgot to adjust the changelog.')
+        }
 
-        clearInterval(loader)
-        logState('(ℹ) FINISHED BUNDLING APP')
+        // Release-it will take over.
+        // It bumps to a new version if the user wants.
+        // It will spawn the same build script here again, without the argument for releasing.
+        // This will fire the build process and bundling with the new bumped version...
+        // After everything bundled, release-it generates a new github release and upload the created archive to the github release
+        logState('(ℹ) STARTING RELEASE HELPER')
+        await releaseHelper()
+
+        logState('(ℹ) FINISHED RELEASING APP')
         return true
     } catch (error) {
-        clearInterval(loader)
-        console.error(`${colors.FgRed}%s${colors.Reset}`, '(❌) ERROR IN BUILD PROCESS')
+        console.error(`${colors.FgRed}%s${colors.Reset}`, `(❌) ${error.message}`)
+        console.error(`${colors.FgRed}%s${colors.Reset}`, '(❌) ERROR IN RELEASE PROCESS')
         console.error(`${colors.FgRed}%s${colors.Reset}`, '(❌) STOP EXECUTION OF CODE')
         return false
     }
@@ -247,13 +233,15 @@ async function archiveProject() {
     return new Promise((resolve, reject) => {
         // Adding files & folders
         archive
-            .directory(DIST_DIR, path.join(pkg.name, 'dist')) // Compiled app
-            .directory(SCRIPTS_DIR, path.join(pkg.name, 'scripts', 'server')) // Server scripts
+            // .directory(DIST_DIR, path.join(pkg.name, 'dist')) // Adding 'pkg.name,' on every file, will result in an subfolder with 'app-name' in the tar archive
+            .directory(DIST_DIR, path.join('dist')) // Compiled app
+            .directory(SCRIPTS_DIR, path.join('scripts', 'server')) // Server scripts
+            .directory(path.join(PROJECT_ROOT, 'installer'), path.join('installer')) // Installer with service script
             // .append(fs.createReadStream(PKG_FILE), { name: path.join(pkg.name, 'package.json') }) // Original Package.json
-            .append(JSON.stringify(newPkg), { name: path.join(pkg.name, 'package.json') }) // Modified Package.json
-            .append(fs.createReadStream(path.join(PROJECT_ROOT, 'ecosystem.json')), { name: path.join(pkg.name, 'ecosystem.json') }) // pm2 script
-            .append(fs.createReadStream(path.join(PROJECT_ROOT, 'README.md')), { name: path.join(pkg.name, 'README.md') }) // Readme
-            .append(fs.createReadStream(path.join(PROJECT_ROOT, 'CHANGELOG.md')), { name: path.join(pkg.name, 'CHANGELOG.md') }) // Changelog
+            .append(JSON.stringify(newPkg), { name: path.join('package.json') }) // Modified Package.json
+            .append(fs.createReadStream(path.join(PROJECT_ROOT, 'ecosystem.json')), { name: path.join('ecosystem.json') }) // pm2 script
+            .append(fs.createReadStream(path.join(PROJECT_ROOT, 'README.md')), { name: path.join('README.md') }) // Readme
+            .append(fs.createReadStream(path.join(PROJECT_ROOT, 'CHANGELOG.md')), { name: path.join('CHANGELOG.md') }) // Changelog
 
         // Archive events
         archive.on('error', (err) => reject(err))
@@ -275,11 +263,9 @@ async function releaseHelper() {
         return release(options).then((output) => {
             console.log(output) // { version, latestVersion, name, changelog }
         })
-        // console.log(`${colors.FgYellow}%s${colors.Reset}`, '(⚠) RELEASING NOT SUPPORTED RIGHT NOW - USE "yarn release" INSTEAD')
     }
-
-    // If no release has been specified, don't attempt to upload
-    console.log(`${colors.FgYellow}%s${colors.Reset}`, '(⚠) WITHOUT RELEASING')
+    // If no release has been specified, don't attempt to release it
+    console.log(`${colors.FgYellow}%s${colors.Reset}`, '(⚠) WARNING WITHOUT RELEASING')
     return true
 }
 

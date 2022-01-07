@@ -1,6 +1,6 @@
-import VuexORM from '@vuex-orm/core'
+import { install } from '@vuex-orm/core'
 import database from '@/database'
 
 export default ({ store }) => {
-    VuexORM.install(database)(store)
+    install(database)(store)
 }

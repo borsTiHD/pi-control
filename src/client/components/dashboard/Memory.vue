@@ -65,7 +65,7 @@ import { mapGetters } from 'vuex'
 import Memory from '@/models/Memory'
 
 export default {
-    name: 'Memory',
+    name: 'MemoryInfo',
     data() {
         return {
             loading: false,

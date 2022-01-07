@@ -66,7 +66,7 @@ import Temperature from '@/models/Temperature'
 import TemperatureVueChart from '~/components/graphs/TemperatureVueChart.vue'
 
 export default {
-    name: 'Temperature',
+    name: 'TemperatureInfo',
     components: {
         TemperatureVueChart
     },

@@ -4,7 +4,7 @@ export default {
     methods: {
         headTitle() {
             // Webpage title
-            const headTitle = this.$config.dev ? `${pkg.productName.replace(' 🐱‍👤', '')} - DEV` : pkg.productName.replace(' 🐱‍👤', '')
+            const headTitle = this.$config.dev ? `${pkg.productName.replace(' 🥷', '')} - DEV` : pkg.productName.replace(' 🥷', '')
             return headTitle
         }
     }

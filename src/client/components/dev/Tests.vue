@@ -29,7 +29,7 @@
 import { mapGetters } from 'vuex'
 
 export default {
-    name: 'Tests',
+    name: 'AppTests',
     data() {
         return {
             loadingTestBtn: false,

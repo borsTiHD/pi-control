@@ -1,56 +1,78 @@
-# Pi-Control 🐱‍👤
-Welcome to Pi-Control 🐱‍👤.  
-This is an App for controlling your raspberry pi.  
-It was designed to help with information gathering, as well as to simplify control. 
+![Pi-Control Mockup](/screenshots/mockup.png?raw=true "Pi-Control Mockup")
 
-## Requirements
+# Pi-Control 🥷
+Welcome to Pi-Control 🥷.  
+This is an App for controlling your raspberry pi.  
+It was designed to help with information gathering, as well as to simplify control.  
+
+## 🛠️ Requirements
 - **NodeJS**: `16.x`
 - **Yarn**: `1.22.x`
 - **Npm**: _not testet (optional)_
 
-## Install & running the app
+## 💎 Compatibility list
+| Model | Version | Check | Description |
+| --- | --- | --- | --- |
+| Raspberry Pi 4 Model B Rev 1.4 | Raspbian GNU/Linux 10 (buster) | ✅ | developed on it |
+| Raspberry Pi 3 Model B Plus Rev 1.3 | Raspbian GNU/Linux 10 (buster) | ✅ | tested |
+
+# ⚙️ Installation
+
+## 💻 One-Step Automated Install
+Those who want to get started quickly and conveniently may install Pi-Control 🥷 using the following command/script:
+
+### `curl -sSL https://raw.githubusercontent.com/borsTiHD/pi-control/main/installer/basic-install.sh | sudo bash`
+
+The script checks all needed dependencies and will ask you if you want to install an additional service.  
+With the service you can control the app: ```sudo service picontrol (start|stop|status)```  
+
+## 🤓 Alternative Install Method
 Download the latest version from releases: [Release / Download](https://github.com/borsTiHD/pi-control/releases)  
-Extract the archive, change to the subdirectory, install dependencies and start the app:  
+Create and change to the subdirectory ```/opt/pi-control```.  
+Extract the archive and install dependencies with ```yarn install```.  
 ```bash
-$ cd pi-control
-$ yarn install # npm install
-$ sudo yarn start # sudo npm start
+$ cd /opt/pi-control
+$ yarn install # or npm install
+$ sudo yarn start # or sudo npm start
 ```
 
-# Deploy with [pm2](https://pm2.keymetrics.io/) (run as a service with start on reboot, or crash)
-If you want to run the app in the background, or do you want to open the app automatically on restart, you can use pm2.
-```bash
-# maybe you need to add 'sudo' for every command, even to start 'pm2' service so it can edit files for example
+This way you need to manually start the app with the ```sudo yarn start``` command.  
+You can also take care of your own way of running the app in the background, etc.  
+Examples: pm2 ('ecosystem.json' included), node-linux (you can use the script in ```./installer/service.cjs```), etc.  
 
-# yarn pm2 install
-$ yarn global add pm2
+-----
 
-# or npm pm2 install
-$ npm install pm2 -g
+## 👀 First time accessing the app
 
-# start app (localhost:8800) - without 'sudo' the process has not enough rights for writing files
-$ sudo pm2 start ecosystem.json
-```
+After installation, you can access the app through your browser.  
+Go to: ```http://{hostname|ip}:8800```  
+  
+After a fresh installation no user is set up yet. Please follow the registration request.  
+Your user data will be stored locally and hashed with a unique key.  
+  
+If you forget your password, you can delete the file with the stored data ```/opt/pi-control/db.json```, then you will be asked to register again.
 
-### Additional pm2 commands
-```bash
-# check status by
-$ sudo pm2 ls
+-----
 
-# make pm2 auto-boot at server restart:
-$ sudo pm2 startup
+## ⌛ Update the app
 
-# remove auto-boot service
-$ sudo pm2 unstartup systemd
+For updating you can use the same installation script.  
+It also takes care of transferring your data to the new version.  
+For a manual update, the old app must be deleted and reinstalled.  
 
-# stopping service
-$ sudo pm2 stop pi-control
+-----
 
-# adding instances in ecosystem.config.js by setting the number to 'max' for instances on every cpu core
-# after a change in the setting file, you need to 'delete' saved apps in pm2
-$ sudo pm2 delete all
-```
+## 🤖 Changing Port
 
-# Contribution
+You can change the default port (```8800```) by creating/editing the ```/opt/pi-control/.env``` file and adding the following value there:  ```PORT_PRODUCTION=8888```
+After the change, you need to restart the app and you can access the app with the new port.  
+Go to: ```http://{hostname|ip}:8888```
+
+-----
+  
+# 🥰 Contribution
 If you want to contribute to this project, please take a look into the wiki:  
 - https://github.com/borsTiHD/pi-control/wiki
+
+# ⭐ Credits
+- [Mockup psd created by syifa5610 - www.freepik.com](https://www.freepik.com/psd/mockup)  

@@ -65,7 +65,7 @@ import { mapGetters } from 'vuex'
 import Swap from '@/models/Swap'
 
 export default {
-    name: 'Swap',
+    name: 'SwapInfo',
     data() {
         return {
             loading: false,

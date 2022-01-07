@@ -34,6 +34,7 @@ Vue.mixin(titleMixin)
 Vue.mixin(socketListening)
 
 export default {
+    name: 'DefaultLayout',
     components: {
         AppHeader,
         AppSidebar,

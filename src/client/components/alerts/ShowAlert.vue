@@ -37,7 +37,7 @@
 import { mapMutations } from 'vuex'
 
 export default {
-    name: 'Alert',
+    name: 'ShowAlert',
     props: {
         data: {
             type: Object,
