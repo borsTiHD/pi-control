@@ -1,19 +1,24 @@
+![Pi-Control Mockup](/screenshots/mockup.png?raw=true "Pi-Control Mockup")
+
 # Pi-Control 🥷
 Welcome to Pi-Control 🥷.  
 This is an App for controlling your raspberry pi.  
 It was designed to help with information gathering, as well as to simplify control.  
 
-![Pi-Control Mockup](/screenshots/mockup.png?raw=true "Pi-Control Mockup")
-
 ## Requirements
 - **NodeJS**: `16.x`
 - **Yarn**: `1.22.x`
 - **Npm**: _not testet (optional)_
-  
+
+## Compatibility list
+| Model | Version | Check | Description |
+| --- | --- | --- | --- |
+| Raspberry Pi 4 Model B Rev 1.4 | Raspbian GNU/Linux 10 (buster) | ✅ | developed on it |
+| Raspberry Pi 3 Model B Plus Rev 1.3 | Raspbian GNU/Linux 10 (buster) | ✅ | tested |
+
 # Installation
 
 ## One-Step Automated Install
-
 Those who want to get started quickly and conveniently may install Pi-Control 🥷 using the following command:
 
 ### `curl -sSL https://raw.githubusercontent.com/borsTiHD/pi-control/main/installer/basic-install.sh | sudo bash`
