@@ -7,6 +7,38 @@
  *          ErrorObject:
  *              description: Object with "_status", "info" and "error".
  *      schemas:
+ *          PackageList:
+ *              type: object
+ *              properties:
+ *                  _status:
+ *                      type: string
+ *                      description: Status of the request
+ *                      example: ok
+ *                  info:
+ *                      type: string
+ *                      description: Readable info what was done.
+ *                      example: Installed packages from host system determined
+ *                  data:
+ *                      type: object
+ *                      properties:
+ *                          packages:
+ *                              type: array
+ *                              description: Array contains parsed objects with 'name', 'version', and 'installed' properties.
+ *                              items:
+ *                                  type: object
+ *                                  properties:
+ *                                      name:
+ *                                          type: string
+ *                                          description: Name of the package.
+ *                                      version:
+ *                                          type: string
+ *                                          description: Version of the package.
+ *                                      installed:
+ *                                          type: string
+ *                                          description: Status of the package.
+ *                  TEST_DATA:
+ *                      type: boolean
+ *                      description: Only exists, if the host system is using test data.
  */
 
 /**
@@ -38,6 +70,10 @@ const router = express.Router()
  *          responses:
  *              200:
  *                  description: Returns an object with a list of installed packages from the host system.
+ *                  content:
+ *                      application/json:
+ *                          schema:
+ *                              $ref: '#/components/schemas/PackageList'
  *              500:
  *                  $ref: '#/components/responses/ErrorObject'
  */

@@ -12,14 +12,24 @@ import PackageList from '../../controllers/getPackageList.js'
  */
 const getList = asyncHandler(async(req, res, next) => {
     try {
-        const packages = await PackageList()
+        // Config with 'dev' and 'TEST_DATA' check
+        const config = {
+            DEV: process.env.NODE_ENV === 'development',
+            TEST_DATA: process.env.TEST_DATA
+        }
 
-        // Return results
-        res.json({
+        const packages = await PackageList(config)
+        const result = {
             _status: 'ok',
             info: 'Installed packages from host system determined',
             data: { packages }
-        })
+        }
+
+        // If we're using test data, we append the information on our result object
+        if (config.DEV && config.TEST_DATA) { result.TEST_DATA = true }
+
+        // Return results
+        res.json(result)
     } catch (error) {
         console.error(error)
         // REST return

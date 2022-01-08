@@ -17,9 +17,20 @@ async function nonWindows() {
 
         const { stdout } = await execFile(command, args, { maxBuffer: TEN_MEGABYTES })
 
-        // Parsing
-        const packages = stdout.trim()
-        return packages
+        // Parsing into Lines
+        const lines = stdout.trim().split('\n').slice(1)
+        const outputRegex = /^(?<name>.*?)\/.*?now[ \t]+(?<version>.*?)[ \t]+(?<installed>\[.+\])/gm
+
+        // Parsing all lines and return objects with details for every package
+        return lines.map((line) => {
+            outputRegex.lastIndex = 0
+            const match = outputRegex.exec(line)
+            if (match === null) {
+                throw new Error(`${ERROR_MESSAGE_PARSING_FAILED} - line: ${line}`) // If nothing matched
+            }
+            const { name, version, installed } = match.groups
+            return { name, version, installed }
+        })
     } catch (error) {
         console.error('[Controller] -> Error on executing shell script to get system packages:', error)
         throw new Error(ERROR_MESSAGE_PARSING_FAILED)
@@ -27,28 +38,30 @@ async function nonWindows() {
 }
 
 // Getting windows packages
-async function isWindows() {
-    try {
-        /*
-        const command = 'powershell'
-        const args = ['Get-ItemProperty HKLM:\\Software\\Wow6432Node\\Microsoft\\Windows\\CurrentVersion\\Uninstall\\* | Select-Object DisplayName, DisplayVersion | Format-Table –AutoSize'] // ', Publisher, InstallDate' https://www.howtogeek.com/165293/how-to-get-a-list-of-software-installed-on-your-pc-with-a-single-command/
-        // const args = ['Get-WmiObject -Class Win32_Product | select Name, Version'] // https://www.codetwo.com/admins-blog/how-to-check-installed-software-version/
-        const { stdout } = await execFile(command, args, { maxBuffer: TEN_MEGABYTES })
+async function isWindows(config) {
+    if (config.DEV && config.TEST_DATA) {
+        try {
+            /*
+            const command = 'powershell'
+            const args = ['Get-ItemProperty HKLM:\\Software\\Wow6432Node\\Microsoft\\Windows\\CurrentVersion\\Uninstall\\* | Select-Object DisplayName, DisplayVersion | Format-Table –AutoSize'] // ', Publisher, InstallDate' https://www.howtogeek.com/165293/how-to-get-a-list-of-software-installed-on-your-pc-with-a-single-command/
+            // const args = ['Get-WmiObject -Class Win32_Product | select Name, Version'] // https://www.codetwo.com/admins-blog/how-to-check-installed-software-version/
+            const { stdout } = await execFile(command, args, { maxBuffer: TEN_MEGABYTES })
 
-        // Parsing into Lines
-        const lines = stdout.trim().split('\n').slice(2)
+            // Parsing into Lines
+            const lines = stdout.trim().split('\n').slice(2)
 
-        // TODO
-        // Regex: /^(?<name>.*)[ \t]+(?<version>(\d+|\.+)+).+/gm
+            // TODO
+            // Regex: /^(?<name>.*)[ \t]+(?<version>(\d+|\.+)+).+/gm
 
-        const arr = []
-        lines.forEach((line) => {
-            const software = line.replace('\r', '').split()
-            arr.push(software)
-        })
-        */
+            const arr = []
+            lines.forEach((line) => {
+                const software = line.replace('\r', '').split()
+                arr.push(software)
+            })
+            */
 
-        const stdout = `Auflistung... Fertig
+            // Test data, crawled from linux
+            const stdout = `Auflistung... Fertig
             acl/oldstable,now 2.2.53-4 armhf  [Installiert,automatisch]
             apt/oldstable,now 1.8.2.3 armhf  [installiert]
             bash/oldstable,now 5.0-4 armhf  [installiert]
@@ -83,23 +96,34 @@ async function isWindows() {
             udisks2/oldstable,now 2.8.1-4 armhf  [Installiert,automatisch]
             zlib1g/oldstable,now 1:1.2.11.dfsg-1 armhf  [installiert]`
 
-        // Parsing into Lines
-        const lines = stdout.trim().split('\n').slice(1)
+            // Parsing into Lines
+            const lines = stdout.trim().split('\n').slice(1)
+            const outputRegex = /^(?<name>.*?)\/.*?XXnow[ \t]+(?<version>.*?)[ \t]+(?<installed>\[.+\])/gm
 
-        // const psOutputRegex = /^(?<name>.*?),now[ \t]+(?<version>.*?)[ \t]+(?<installed>\[.+\])/gm
-
-        return lines
-    } catch (error) {
-        console.error('[Controller] -> Error on executing powershell script to get system packages:', error)
-        throw new Error(ERROR_MESSAGE_PARSING_FAILED)
+            // Parsing all lines and return objects with details for every package
+            return lines.map((line) => {
+                outputRegex.lastIndex = 0
+                const match = outputRegex.exec(line)
+                if (match === null) {
+                    throw new Error(`${ERROR_MESSAGE_PARSING_FAILED} - line: ${line}`) // If nothing matched
+                }
+                const { name, version, installed } = match.groups
+                return { name, version, installed }
+            })
+        } catch (error) {
+            console.error('[Controller] -> Error on executing powershell script to get system packages:', error)
+            throw new Error(ERROR_MESSAGE_PARSING_FAILED)
+        }
     }
+    throw new Error('Windows is currently not supported')
 }
 
 // Export module
-export default async() => {
+export default async(config) => {
+    // Config: { DEV: config.DEV, TEST_DATA: config.TEST_DATA }
     // Determines collecting data depending on operating system
     if (isWin) {
-        return isWindows()
+        return isWindows(config)
     } else {
         return await nonWindows()
     }
