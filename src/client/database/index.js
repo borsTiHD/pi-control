@@ -1,6 +1,7 @@
 import { Database } from '@vuex-orm/core'
 import Device from '@/models/Device'
 import Process from '@/models/Process'
+import Package from '@/models/Package'
 import Uptime from '@/models/Uptime'
 import Temperature from '@/models/Temperature'
 import Hardware from '@/models/Hardware'
@@ -15,6 +16,7 @@ const database = new Database()
 // Registering Models
 database.register(Device)
 database.register(Process)
+database.register(Package)
 database.register(Uptime)
 database.register(Temperature)
 database.register(Hardware)

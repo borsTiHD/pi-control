@@ -7,6 +7,7 @@ import helpRouter from './routes/help.js'
 import authRouter from './routes/authentication.js'
 import scriptsRouter from './routes/scripts.js'
 import deviceRouter from './routes/device.js'
+import packageRouter from './routes/package.js'
 
 /**
  * middleware for checking authorization with jwt
@@ -26,4 +27,5 @@ export default function(app, baseUrl) {
     app.use(baseUrl + '/auth', authRouter) // Authentication
     app.use(baseUrl + '/scripts', authorized, scriptsRouter) // Scripts
     app.use(baseUrl + '/device', authorized, deviceRouter) // Device
+    app.use(baseUrl + '/package', authorized, packageRouter) // Package Manager
 }
