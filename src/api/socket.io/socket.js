@@ -9,6 +9,7 @@ import initUptimeRoom from './rooms/uptime.js'
 import initTemperatureRoom from './rooms/temperature.js'
 import initMemoryRoom from './rooms/memory.js'
 import initCpuRoom from './rooms/cpu.js'
+import initPackagesRoom from './rooms/packages.js'
 import initTestRoom from './rooms/testRoom.js'
 
 // Socket.io: Register passport as middleware for authentication with jwt
@@ -46,5 +47,6 @@ export default function(httpServer, config) {
     initTemperatureRoom(io, 'temperature', { duration: 5 * 1000, TEST_DATA: config.TEST_DATA, DEV: config.DEV })
     initMemoryRoom(io, 'memory', { duration: 5 * 1000, TEST_DATA: config.TEST_DATA, DEV: config.DEV })
     initCpuRoom(io, 'cpu', { duration: 5 * 1000, TEST_DATA: config.TEST_DATA, DEV: config.DEV })
+    initPackagesRoom(io, 'packages', { duration: 5 * 1000, TEST_DATA: config.TEST_DATA, DEV: config.DEV })
     initTestRoom(io, 'testRoom', 2000) // io object, room-name, interval duration
 }
