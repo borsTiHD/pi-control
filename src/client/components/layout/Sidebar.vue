@@ -129,6 +129,11 @@ export default {
                         to: '/processes'
                     },
                     {
+                        icon: this.$icons.mdiPackageVariantClosed,
+                        title: 'Packages',
+                        to: '/packages'
+                    },
+                    {
                         icon: this.$icons.mdiConsole,
                         title: 'Terminal',
                         to: '/terminal'
