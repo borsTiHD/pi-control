@@ -3,7 +3,7 @@
         <template #activator="{ on }">
             <v-btn
                 :x-small="xSmall" :small="small" :large="large" :x-large="xLarge"
-                :disabled="disabled" :loading="loading" :href="href" :target="target" :class="btnClass" :color="btnColor"
+                :disabled="disabled" :loading="loading" :href="href ? href : undefined" :target="target ? target : undefined" :class="btnClass" :color="btnColor"
                 :block="block" :outlined="outlined" :text="text" :depressed="depressed" :dark="dark" :light="light"
                 @click="handleClick" v-on="on"
             >
