@@ -11,7 +11,6 @@
                         {{ $icons.mdiPackageVariantClosed }}
                     </v-icon>
                     Packages
-
                     <v-tooltip right>
                         <template #activator="{ on, attrs }">
                             <div class="d-inline-block" v-bind="attrs" v-on="on">
@@ -29,12 +28,22 @@
                         </template>
                         <span>Rescan</span>
                     </v-tooltip>
-
                     <v-spacer />
-                    <display-amount :value="items.length" active-color="primary" :icon="$icons.mdiPackageVariantClosed" tooltip="Show all installed packages" @clicked="showUpgradable = false" />
+                    <app-button
+                        name="Check Updates"
+                        tooltip="Updates package list"
+                        btn-color="primary"
+                        small
+                        :loading="loading"
+                        :disabled="loading"
+                        @click="updateList"
+                    />
+                </v-card-title>
+                <v-divider class="mx-4" />
+                <v-card-text class="d-flex">
+                    <display-amount :value="items.length" active-color="success" :icon="$icons.mdiPackageVariantClosed" tooltip="Show all installed packages" @clicked="showUpgradable = false" />
                     <display-amount :value="upgradableItems.length" active-color="info" :icon="$icons.mdiPackageUp" tooltip="Show only upgradable packages" @clicked="showUpgradable = true" />
                     <v-spacer />
-
                     <v-text-field
                         v-model="table.search"
                         :append-icon="$icons.mdiMagnify"
@@ -43,8 +52,7 @@
                         hide-details
                         dense
                     />
-                </v-card-title>
-
+                </v-card-text>
                 <v-card-text>
                     <v-data-table
                         :headers="headers"
@@ -71,11 +79,13 @@
 <script>
 import { mapGetters } from 'vuex'
 import Package from '@/models/Package'
+import AppButton from '@/components/Button.vue'
 import DisplayAmount from '~/components/display/DisplayAmount.vue'
 
 export default {
     name: 'PackagesPage',
     components: {
+        AppButton,
         DisplayAmount
     },
     data() {
@@ -136,10 +146,10 @@ export default {
         this.getData()
     },
     methods: {
-        getData() {
+        async getData() {
             const url = '/package/list'
             this.loading = true
-            this.$axios.get(url)
+            return this.$axios.get(url)
                 .then(async(res) => {
                     const packages = res.data?.data?.packages
                     // console.log('[Packages] -> Host system installed packages:', packages)
@@ -151,6 +161,23 @@ export default {
                     })
                 }).catch((error) => {
                     console.error(error)
+                }).finally(() => {
+                    this.loading = false
+                })
+        },
+        updateList() {
+            const url = '/package/updatelist'
+            this.loading = true
+            this.$axios.get(url)
+                .then(async(res) => {
+                    if (res.data?._status === 'ok') {
+                        // Get new package list
+                        await this.getData()
+                        this.$toast.info(res.data?.info)
+                    }
+                }).catch((error) => {
+                    console.error(error)
+                    this.$toast.error('Error on updating package list')
                 }).finally(() => {
                     this.loading = false
                 })
