@@ -31,6 +31,10 @@
                     </v-tooltip>
 
                     <v-spacer />
+                    <display-amount :value="items.length" active-color="primary" :icon="$icons.mdiPackageVariantClosed" tooltip="Show all installed packages" @clicked="showUpgradable = false" />
+                    <display-amount :value="upgradableItems.length" active-color="info" :icon="$icons.mdiPackageUp" tooltip="Show only upgradable packages" @clicked="showUpgradable = true" />
+                    <v-spacer />
+
                     <v-text-field
                         v-model="table.search"
                         :append-icon="$icons.mdiMagnify"
@@ -44,7 +48,7 @@
                 <v-card-text>
                     <v-data-table
                         :headers="headers"
-                        :items="items"
+                        :items="showUpgradable ? upgradableItems : items"
                         :search="table.search"
                         :items-per-page="-1"
                         :loading="loading"
@@ -67,31 +71,35 @@
 <script>
 import { mapGetters } from 'vuex'
 import Package from '@/models/Package'
+import DisplayAmount from '~/components/display/DisplayAmount.vue'
 
 export default {
     name: 'PackagesPage',
-    components: {},
+    components: {
+        DisplayAmount
+    },
     data() {
         return {
             isWin: false,
             loading: false,
+            showUpgradable: false,
             table: {
                 search: '',
                 headers: [
                     {
                         text: 'Name',
                         value: 'name',
-                        tooltip: 'xxx'
+                        tooltip: 'Name of the package'
                     },
                     {
                         text: 'Version',
                         value: 'version',
-                        tooltip: 'xxx'
+                        tooltip: 'Version and operating system architecture of the package'
                     },
                     {
-                        text: 'Installed',
+                        text: 'Status',
                         value: 'installed',
-                        tooltip: 'xxx'
+                        tooltip: 'Status of the package'
                     }
                 ]
             }
@@ -111,6 +119,13 @@ export default {
             return Package.query()
                 .orderBy('id', 'asc')
                 .get()
+        },
+        upgradableItems() {
+            const items = this.items
+            return items.filter((item) => {
+                const regExp = /.*(upgradable|aktualisierbar).*/mi
+                return regExp.test(item.installed)
+            })
         },
         headers() {
             return this.table.headers
