@@ -31,7 +31,7 @@
                     <v-spacer />
                     <app-button
                         name="Check Updates"
-                        tooltip="Updates package list"
+                        tooltip="Update package list"
                         btn-color="primary"
                         small
                         :loading="loading"
