@@ -3,6 +3,7 @@ import asyncHandler from '../middleware/asyncHandler.js' // Middleware for handl
 
 // Controller
 import PackageList from '../../controllers/getPackageList.js'
+import UpdatePackageList from '../../controllers/updatePackageList.js'
 
 /**
  * Route get installed packages from host
@@ -41,6 +42,45 @@ const getList = asyncHandler(async(req, res, next) => {
     }
 })
 
+/**
+ * Route update packages from host - 'apt update'
+ * @name updateList
+ * @function
+ * @memberof module:routers/device
+ */
+const updateList = asyncHandler(async(req, res, next) => {
+    try {
+        // Config with 'dev' and 'TEST_DATA' check
+        const config = {
+            DEV: process.env.NODE_ENV === 'development',
+            TEST_DATA: process.env.TEST_DATA
+        }
+
+        const stdout = await UpdatePackageList(config)
+
+        const result = {
+            _status: 'ok',
+            info: 'Update package list successfully',
+            data: stdout
+        }
+
+        // If we're using test data, we append the information on our result object
+        if (config.DEV && config.TEST_DATA) { result.TEST_DATA = true }
+
+        // Return results
+        res.json(result)
+    } catch (error) {
+        console.error(error)
+        // REST return
+        res.status(500).json({
+            _status: 'error',
+            info: 'Update package list went wrong',
+            error: error.message
+        })
+    }
+})
+
 export default {
-    getList
+    getList,
+    updateList
 }
