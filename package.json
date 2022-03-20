@@ -33,7 +33,7 @@
   },
   "devDependencies": {
     "@babel/eslint-parser": "^7.16.5",
-    "@fontsource/poppins": "^4.5.0",
+    "@fontsource/poppins": "^4.5.3",
     "@mdi/js": "^6.5.95",
     "@nuxtjs/composition-api": "^0.31.0",
     "@nuxtjs/eslint-config": "^8.0.0",
