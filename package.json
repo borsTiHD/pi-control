@@ -37,7 +37,7 @@
     "@mdi/js": "^6.5.95",
     "@nuxtjs/composition-api": "^0.31.0",
     "@nuxtjs/eslint-config": "^8.0.0",
-    "@nuxtjs/eslint-module": "^3.0.2",
+    "@nuxtjs/eslint-module": "^3.1.0",
     "@nuxtjs/pwa": "^3.3.5",
     "@nuxtjs/vuetify": "^1.12.3",
     "@vuex-orm/core": "^0.36.4",
